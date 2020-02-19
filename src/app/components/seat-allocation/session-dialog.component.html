@@ -1,24 +1,27 @@
-<h2>Session</h2>
-<form class="example-form">
-    <mat-form-field appearance="fill" class="example-full-width">
-        <mat-label>Session Title</mat-label>
-        <input matInput>
-    </mat-form-field>
-
-    <mat-form-field class="example-full-width">
-        <mat-label>Session Programs</mat-label>
-        <input matInput
-               aria-label="Programs"
-               [matAutocomplete]="auto"
-               [formControl]="programCtrl">
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let program of filteredPrograms | async" [value]="program.name">
-            <span>{{program.name}}</span>
-          </mat-option>
-        </mat-autocomplete>
-    </mat-form-field>
-
-    <button mat-raised-button color="warn">Delete</button>
-    <button mat-raised-button (click)="onCancelClick()">Cancel</button>
-    <button mat-raised-button color="primary">Save</button>
-</form>
+<h2 mat-dialog-title class="text-center">Add Session</h2>
+<mat-dialog-content>
+  <form class="example-form w-100">
+      <mat-form-field class="example-full-width">
+          <mat-label>Session Name</mat-label>
+          <input matInput>
+      </mat-form-field>
+  
+      <mat-form-field class="example-full-width">
+          <mat-label>Programs</mat-label>
+          <input matInput
+                 aria-label="Programs"
+                 [matAutocomplete]="auto"
+                 [formControl]="programCtrl">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let program of filteredPrograms | async" [value]="program.name">
+              <span>{{program.name}}</span>
+            </mat-option>
+          </mat-autocomplete>
+      </mat-form-field>
+      <div class="button-wrap pt-2 pb-1">
+        <button mat-raised-button color="warn">Delete</button>
+        <button mat-raised-button class="mx-2" (click)="onCancelClick()">Cancel</button>
+        <button mat-raised-button color="primary">Save</button>
+      </div>
+  </form>
+</mat-dialog-content>

@@ -91,7 +91,6 @@ export class SeatAllocationComponent implements OnInit {
 
   openSessionDialog(): void {
     const dialogRef = this.sessionDialog.open(SessionDialogComponent, {
-      width: '45%',
       data: {name: 'Session Name', programs: 'Programs List'}
     });
 

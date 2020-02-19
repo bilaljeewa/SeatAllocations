@@ -121,6 +121,8 @@ button {
     .session-open {
         .table-wrap {
             .mat-table {
+                min-width: 350px;
+
                 .mat-header-row {
                     .mat-header-cell {
                         font: 700 15px/1.2 Montserrat;
