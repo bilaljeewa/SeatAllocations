@@ -2,14 +2,15 @@
     label {
         margin-bottom: 0rem;
     }
-    
+
     .top-tabs {
         mat-tab-group {
             .mat-tab-label-container {
                 .mat-tab-label {
                     padding: 0 20px;
                     min-width: inherit;
-                    @media ( max-width : 575.98px) {
+
+                    @media (max-width : 575.98px) {
                         padding: 0 10px;
                         font-size: 13px;
                     }
@@ -28,15 +29,7 @@
     }
 }
 
-.example-form {
-    min-width: 150px;
-    max-width: 500px;
-    width: 100%;
-  }
-  
-  .example-full-width {
-    width: 100%;
-  }
+
 
 @mixin custom-shadow ($x, $y, $blur, $color) {
     box-shadow: $x $y $blur $color;
@@ -78,6 +71,7 @@ button {
                 border-radius: 3px;
                 font-size: 13px;
                 line-height: 1;
+
                 @media (max-width: 1199.98px) {
                     font-size: 11px;
                     padding-top: 5px;
@@ -103,6 +97,7 @@ button {
                     font-size: 20px;
                     font-weight: 500;
                     color: #333;
+
                     @media (max-width: 1199.98px) {
                         font-size: 17px;
                     }
@@ -110,6 +105,7 @@ button {
 
                 p {
                     margin: 0;
+
                     @media (max-width: 1199.98px) {
                         font-size: 13px;
                     }
@@ -129,11 +125,12 @@ button {
                         color: rgba(0, 0, 0, 0.8);
                     }
                 }
-                
+
 
                 .mat-cell {
                     font: 500 15px/1.2 Montserrat;
                     color: rgba(0, 0, 0, 0.8);
+
                     &.mat-column-symbol {
                         justify-content: flex-end;
                     }
@@ -186,7 +183,8 @@ button {
                                 font: 500 15px/1.2 Montserrat;
                                 color: rgba(0, 0, 0, 0.8);
                                 max-width: 250px;
-                                @media ( max-width : 575.98px) {
+
+                                @media (max-width : 575.98px) {
                                     max-width: 100%;
                                 }
 
@@ -233,6 +231,35 @@ button {
 
                 }
             }
+        }
+    }
+}
+
+.popup-form {
+    .individual-list {
+        .icon-wrap{
+            .exclaim {
+               color: #f00;
+               margin: 0 10px 0 0;
+           }
+        }
+        ul{
+            font: 500 15px/1.2 Montserrat;
+            color: rgba(0, 0, 0, 0.8);
+            list-style-type: none;
+            li {
+                margin: 0 0 5px;
+                fa-icon {
+                    margin: 0 5px 0 0;
+                    font-size: 20px;
+                    vertical-align: middle;
+                    color: #2674e7;
+                }
+            }
+        }
+        p{
+            font: 500 15px/1.2 Montserrat;
+            color: rgba(0, 0, 0, 0.8);
         }
     }
 }

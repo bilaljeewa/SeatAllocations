@@ -1,12 +1,11 @@
 <h2 mat-dialog-title class="text-center">Add Session</h2>
 <mat-dialog-content>
-  <form class="example-form w-100">
-      <mat-form-field class="example-full-width">
+  <form class="popup-form w-100">
+      <mat-form-field class="fld d-block">
           <mat-label>Session Name</mat-label>
           <input matInput>
       </mat-form-field>
-  
-      <mat-form-field class="example-full-width">
+      <mat-form-field class="d-block">
           <mat-label>Programs</mat-label>
           <input matInput
                  aria-label="Programs"
@@ -18,7 +17,22 @@
             </mat-option>
           </mat-autocomplete>
       </mat-form-field>
-      <div class="button-wrap pt-2 pb-1">
+      <div class="d-block individual-list">
+        <div class="media">
+          <div class="icon-wrap">
+            <fa-icon class="exclaim" [icon]="faExclamationTriangle"></fa-icon>
+          </div>
+          <div class="media-body">
+            <p>Changes will remove allocation of following individuals</p>
+            <ul class="m-0 p-0">
+              <li><fa-icon class="exclaim" [icon]="faCaretRight"></fa-icon>Tom Jones</li>
+              <li><fa-icon class="exclaim" [icon]="faCaretRight"></fa-icon>Tom Jones</li>
+              <li><fa-icon class="exclaim" [icon]="faCaretRight"></fa-icon>Tom Jones</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="button-wrap pt-3 pt-lg-4 pb-1 text-right">
         <button mat-raised-button color="warn">Delete</button>
         <button mat-raised-button class="mx-2" (click)="onCancelClick()">Cancel</button>
         <button mat-raised-button color="primary">Save</button>

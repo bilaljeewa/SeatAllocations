@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { faExclamationTriangle, faCaretUp, faSyncAlt, faInfo, faFilePdf, faChevronUp, faTrashAlt, faEllipsisV ,faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationTriangle, faCaretUp, faSyncAlt, faInfo, faFilePdf, faChevronUp, faTrashAlt, faEllipsisV ,faCheckCircle, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
@@ -54,6 +54,7 @@ export class SeatAllocationComponent implements OnInit {
   faCheckCircle = faCheckCircle;
   
   
+  
   visible = true;
   selectable = true;
   removable = true;
@@ -91,6 +92,7 @@ export class SeatAllocationComponent implements OnInit {
 
   openSessionDialog(): void {
     const dialogRef = this.sessionDialog.open(SessionDialogComponent, {
+      width: '600px',
       data: {name: 'Session Name', programs: 'Programs List'}
     });
 
@@ -109,10 +111,12 @@ export class SeatAllocationComponent implements OnInit {
   styleUrls: ['./seat-allocation.component.scss']
 })
 export class SessionDialogComponent {
+  faExclamationTriangle = faExclamationTriangle;
+  faCaretRight = faCaretRight;
 
   programCtrl = new FormControl();
   filteredPrograms: Observable<SessionPrograms[]>;
-
+  
   programs: SessionPrograms[] = [
     {
       name: 'Arkansas'
