@@ -5,22 +5,29 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '../app/material/material.module';
-import { SeatAllocationComponent } from './components/seat-allocation/seat-allocation.component';
+import { SeatAllocationComponent, SessionDialogComponent } from './components/seat-allocation/seat-allocation.component';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    SeatAllocationComponent
+    SeatAllocationComponent,
+    SessionDialogComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    FormsModule,
+    ReactiveFormsModule
+  ],
+  entryComponents: [
+    SessionDialogComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
