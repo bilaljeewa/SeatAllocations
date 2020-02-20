@@ -3,24 +3,20 @@
     <div class="button-wrap text-right mb-2 mb-md-3">
         <button mat-raised-button color="primary" (click)="openSessionDialog()">Add Session</button>
     </div>
-    <div class="session-wrap p-2 p-md-3 mb-3 mb-sm-4">
+    <div class="session-wrap p-2 p-md-3 mb-3 mb-sm-4" *ngFor="let item of advancedSessions; let i=index">
         <div class="session-list">
             <div class="row form-row">
                 <div class="media-title  pt-xl-4 col-xl-2">
-                    <h2 class="heading m-0 ">Session A</h2>
+                    <h2 class="heading m-0 "> {{item.sessionName}} </h2>
                 </div>
                 <div class="session-body col-xl-10 col-lg-12">
                     <div class="row form-row">
                         <div class="col-lg-3 col-md-4">
-                            <mat-form-field class="sessionProgramsChips w-100">
-                                <mat-chip-list #chipList aria-label="Fruit selection">
-                                    <mat-chip *ngFor="let item of sessionPrograms" [selectable]="selectable"
-                                        [removable]="removable" (removed)="remove(item)">
-                                        {{item}}
-                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                    </mat-chip>
-                                </mat-chip-list>
-                            </mat-form-field>
+                            <mat-chip-list class="sessionProgramsChips w-100">
+                                <mat-chip *ngFor="let program of item.sessionsPrograms">
+                                    {{program.name}} <mat-icon matChipRemove>cancel</mat-icon>
+                                </mat-chip>
+                            </mat-chip-list>
                         </div>
                         <div class="col-lg-7 col-md-8 session-inner-list mb-2 mb-md-0 mb-sm-3">
                             <div class="row form-row align-items-center h-100">
@@ -56,7 +52,8 @@
                                 <button mat-icon-button color="warn">
                                     <fa-icon class="exclaim" [icon]="faExclamationTriangle"></fa-icon>
                                 </button>
-                                <button mat-raised-button color="primary" class="mx-2">Edit</button>
+                                <button mat-raised-button color="primary" class="mx-2"
+                                    (click)="openSessionDialog(item, i)">Edit</button>
                                 <button mat-icon-button color="primary">
                                     <fa-icon class="caret" [icon]="faCaretUp"></fa-icon>
                                 </button>
@@ -344,69 +341,6 @@
                             <div class="top-buttons d-flex align-items-center justify-content-end pt-2 pt-md-3">
                                 <button mat-raised-button class="mx-2">Cancel</button>
                                 <button mat-raised-button color="primary" class="mx-2">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="session-wrap p-2 p-md-3 mb-3 mb-sm-4">
-        <div class="session-list">
-            <div class="row form-row">
-                <div class="media-title  pt-xl-4 col-xl-2">
-                    <h2 class="heading m-0 ">Session A</h2>
-                </div>
-                <div class="session-body col-xl-10 col-lg-12">
-                    <div class="row form-row">
-                        <div class="col-lg-3 col-md-4">
-                            <mat-form-field class="sessionProgramsChips w-100">
-                                <mat-chip-list #chipList aria-label="Fruit selection">
-                                    <mat-chip *ngFor="let item of sessionPrograms" [selectable]="selectable"
-                                        [removable]="removable" (removed)="remove(item)">
-                                        {{item}}
-                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                    </mat-chip>
-                                </mat-chip-list>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-lg-7 col-md-8 session-inner-list mb-2 mb-md-0 mb-sm-3">
-                            <div class="row form-row align-items-center h-100">
-                                <div class="col-sm-3 col-6 mb-2 mb-sm-0">
-                                    <div class="list-wrap text-center border">
-                                        <h3>3</h3>
-                                        <p>Tables</p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3 col-6 mb-2 mb-sm-0">
-                                    <div class="list-wrap text-center border">
-                                        <h3>100</h3>
-                                        <p>Total Seats</p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3 col-6 mb-2 mb-sm-0">
-                                    <div class="list-wrap text-center border">
-                                        <h3>80</h3>
-                                        <p>Allocated</p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3 col-6 mb-2 mb-sm-0">
-                                    <div class="list-wrap text-center border">
-                                        <h3>20</h3>
-                                        <p>Unallocated</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-12 ">
-                            <div class="d-flex align-items-center justify-content-lg-center justify-content-end h-100 action">
-                                <button mat-icon-button color="warn">
-                                    <fa-icon class="exclaim" [icon]="faExclamationTriangle"></fa-icon>
-                                </button>
-                                <button mat-raised-button color="primary" class="mx-2">Edit</button>
-                                <button mat-icon-button color="primary">
-                                    <fa-icon class="caret" [icon]="faCaretDown"></fa-icon>
-                                </button>
                             </div>
                         </div>
                     </div>
