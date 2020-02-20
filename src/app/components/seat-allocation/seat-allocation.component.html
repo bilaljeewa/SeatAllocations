@@ -103,15 +103,15 @@
                                                                 </mat-checkbox>
                                                             </mat-cell>
                                                         </ng-container>
-    
+
                                                         <!-- Name Column -->
                                                         <ng-container matColumnDef="name">
                                                             <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
                                                             <mat-cell *matCellDef="let element"> {{element.name}}
                                                             </mat-cell>
                                                         </ng-container>
-    
-    
+
+
                                                         <!-- Symbol Column -->
                                                         <ng-container matColumnDef="symbol">
                                                             <mat-header-cell *matHeaderCellDef> </mat-header-cell>
@@ -119,10 +119,10 @@
                                                                 <button mat-icon-button color="primary">
                                                                     <fa-icon class="exclaim" [icon]="faInfo"></fa-icon>
                                                                 </button>
-    
+
                                                             </mat-cell>
                                                         </ng-container>
-    
+
                                                         <mat-header-row *matHeaderRowDef="displayedColumns">
                                                         </mat-header-row>
                                                         <mat-row *matRowDef="let row; columns: displayedColumns;"
@@ -220,14 +220,14 @@
                                                     </span>
                                                 </mat-cell>
                                             </ng-container>
-    
+
                                             <!-- Name Column -->
                                             <ng-container matColumnDef="name">
                                                 <mat-header-cell *matHeaderCellDef> </mat-header-cell>
                                                 <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
                                             </ng-container>
-    
-    
+
+
                                             <!-- Symbol Column -->
                                             <ng-container matColumnDef="symbol">
                                                 <mat-header-cell mat-header-cell *matHeaderCellDef> </mat-header-cell>
@@ -242,16 +242,101 @@
                                                         [matMenuTriggerFor]="beforeMenu">
                                                         <fa-icon class="exclaim" [icon]="faEllipsisV"></fa-icon>
                                                     </button>
-                                                    <mat-menu #beforeMenu="matMenu" xPosition="before">
-                                                        <button mat-menu-item>Item 1</button>
+                                                    <mat-menu class="m-mi" #beforeMenu="matMenu" xPosition="before">
+                                                        <button mat-menu-item>Item 11</button>
                                                         <button mat-menu-item>Item 2</button>
                                                     </mat-menu>
                                                 </mat-cell>
                                             </ng-container>
-    
-                                            <mat-header-row class="d-none" *matHeaderRowDef="fernolumns"></mat-header-row>
+
+                                            <mat-header-row class="d-none" *matHeaderRowDef="fernolumns">
+                                            </mat-header-row>
                                             <mat-row *matRowDef="let row; columns: fernolumns;"></mat-row>
                                         </mat-table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-list-inner mb-2">
+                                <div class="table-top border p-2">
+                                    <h4 class="table-head">Table "Roses"</h4>
+                                    <div class="table-in">
+                                        <div class="row form-row align-items-center">
+                                            <div class="col-sm-2">
+                                                <div class="count-wrap">
+                                                    <span
+                                                        class="d-flex align-items-center justify-content-center">8</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-7 allocated">
+                                                <p class="py-1 m-0 d-flex justify-content-between alloc">
+                                                    <span class="title">Allocated Seats</span>
+                                                    <span class="badge">5</span>
+                                                </p>
+                                                <p class="py-1 m-0 d-flex justify-content-between unalloc">
+                                                    <span class="title"></span>
+                                                    <span class="badge full">300</span>
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-3 color-pick text-right">
+                                                <div class="d-flex align-items-center justify-content-end">
+                                                    <div class="color-btn">
+                                                        <p>
+                                                            <!--Color Picker Here-->
+                                                        </p>
+                                                        <button mat-raised-button color="primary">Edit</button>
+                                                    </div>
+                                                    <div class="toggle-up ml-2">
+                                                        <button mat-icon-button color="primary">
+                                                            <fa-icon class="" [icon]="faChevronDown"></fa-icon>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-list-inner mb-2">
+                                <div class="table-top border p-2">
+                                    <h4 class="table-head">Table "Grass Tree"</h4>
+                                    <div class="table-in">
+                                        <div class="row form-row align-items-center">
+                                            <div class="col-sm-2">
+                                                <div class="count-wrap">
+                                                    <span
+                                                        class="d-flex align-items-center justify-content-center">8</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-7 allocated">
+                                                <p class="py-1 m-0 d-flex justify-content-between alloc">
+                                                    <span class="title">Allocated Seats</span>
+                                                    <span class="badge">5</span>
+                                                </p>
+                                                <p class="py-1 m-0 d-flex justify-content-between unalloc">
+                                                    <span class="title">Unallocated Seats</span>
+                                                    <span class="badge">3</span>
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-3 color-pick text-right">
+                                                <div class="d-flex align-items-center justify-content-end">
+                                                    <div class="color-btn">
+                                                        <p>
+                                                            <!--Color Picker Here-->
+                                                        </p>
+                                                        <button mat-raised-button color="primary">Edit</button>
+                                                    </div>
+                                                    <div class="toggle-up ml-2">
+                                                        <button mat-icon-button color="primary">
+                                                            <fa-icon class="" [icon]="faChevronDown"></fa-icon>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -259,6 +344,69 @@
                             <div class="top-buttons d-flex align-items-center justify-content-end pt-2 pt-md-3">
                                 <button mat-raised-button class="mx-2">Cancel</button>
                                 <button mat-raised-button color="primary" class="mx-2">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="session-wrap p-2 p-md-3 mb-3 mb-sm-4">
+        <div class="session-list">
+            <div class="row form-row">
+                <div class="media-title  pt-xl-4 col-xl-2">
+                    <h2 class="heading m-0 ">Session A</h2>
+                </div>
+                <div class="session-body col-xl-10 col-lg-12">
+                    <div class="row form-row">
+                        <div class="col-lg-3 col-md-4">
+                            <mat-form-field class="sessionProgramsChips w-100">
+                                <mat-chip-list #chipList aria-label="Fruit selection">
+                                    <mat-chip *ngFor="let item of sessionPrograms" [selectable]="selectable"
+                                        [removable]="removable" (removed)="remove(item)">
+                                        {{item}}
+                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-lg-7 col-md-8 session-inner-list mb-2 mb-md-0 mb-sm-3">
+                            <div class="row form-row align-items-center h-100">
+                                <div class="col-sm-3 col-6 mb-2 mb-sm-0">
+                                    <div class="list-wrap text-center border">
+                                        <h3>3</h3>
+                                        <p>Tables</p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-6 mb-2 mb-sm-0">
+                                    <div class="list-wrap text-center border">
+                                        <h3>100</h3>
+                                        <p>Total Seats</p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-6 mb-2 mb-sm-0">
+                                    <div class="list-wrap text-center border">
+                                        <h3>80</h3>
+                                        <p>Allocated</p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-6 mb-2 mb-sm-0">
+                                    <div class="list-wrap text-center border">
+                                        <h3>20</h3>
+                                        <p>Unallocated</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-12 ">
+                            <div class="d-flex align-items-center justify-content-lg-center justify-content-end h-100 action">
+                                <button mat-icon-button color="warn">
+                                    <fa-icon class="exclaim" [icon]="faExclamationTriangle"></fa-icon>
+                                </button>
+                                <button mat-raised-button color="primary" class="mx-2">Edit</button>
+                                <button mat-icon-button color="primary">
+                                    <fa-icon class="caret" [icon]="faCaretDown"></fa-icon>
+                                </button>
                             </div>
                         </div>
                     </div>

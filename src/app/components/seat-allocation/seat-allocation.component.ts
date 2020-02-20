@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { faExclamationTriangle, faCaretUp, faSyncAlt, faInfo, faFilePdf, faChevronUp, faTrashAlt, faEllipsisV ,faCheckCircle, faCaretRight } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationTriangle, faCaretUp, faCaretDown , faSyncAlt, faInfo, faFilePdf, faChevronUp, faChevronDown ,  faTrashAlt, faEllipsisV ,faCheckCircle, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
@@ -52,6 +52,8 @@ export class SeatAllocationComponent implements OnInit {
   faTrashAlt = faTrashAlt;
   faEllipsisV = faEllipsisV;
   faCheckCircle = faCheckCircle;
+  faCaretDown = faCaretDown;
+  faChevronDown = faChevronDown;
   
   
   
