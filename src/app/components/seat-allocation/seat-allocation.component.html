@@ -73,14 +73,12 @@
                                     <mat-tab label="Unallocated">
                                         <div class="py-2 py-md-3">
                                             <div class="button-wrap text-right">
-                                                <button mat-raised-button color="primary" class="ml-2 mb-2">Auto Assign
-                                                    All</button>
-                                                <button mat-raised-button color="primary" class="ml-2 mb-2">Auto Assign
-                                                    To
-                                                    Ferns</button>
-                                                <button mat-raised-button color="primary" class="ml-2 mb-2">Assign
-                                                    Selection
-                                                    To Ferns</button>
+                                                <button mat-raised-button color="primary" class="ml-2 mb-2">
+                                                    Auto Assign All</button>
+                                                <button mat-raised-button color="primary" class="ml-2 mb-2">
+                                                    Auto Assign To Ferns</button>
+                                                <button mat-raised-button color="primary" class="ml-2 mb-2">
+                                                    Assign Selection To Ferns</button>
                                             </div>
                                             <div class="table-wrap">
                                                 <div class="table-responsive">
@@ -160,23 +158,27 @@
                                     <span>Print</span>
                                     <fa-icon class="mx-2 printpdf" [icon]="faFilePdf"></fa-icon>
                                 </button>
-                                <button mat-raised-button color="primary" class="ml-2">Add Table</button>
+                                <button mat-raised-button color="primary" class="ml-2"
+                                    (click)="addEditSessionTable(i)">Add Table</button>
                             </div>
-                            <div class="table-list-inner mb-2">
-                                <div class="table-top border p-2">
-                                    <h4 class="table-head">Table "Ferns"</h4>
+                            <div class="table-list-inner mb-2" *ngFor="let tableItem of item.tables; let j=index">
+                                <div class="table-top p-2" [ngStyle]="{'border': '1px solid' + tableItem.tableColor}">
+                                    <h4 class="table-head">Table "{{tableItem.tableName}}"</h4>
                                     <div class="table-in">
                                         <div class="row form-row align-items-center">
                                             <div class="col-sm-2">
                                                 <div class="count-wrap">
-                                                    <span
-                                                        class="d-flex align-items-center justify-content-center">8</span>
+                                                    <span class="d-flex align-items-center justify-content-center"
+                                                        [style.background]="tableItem.tableColor" style="color: white;">
+                                                        8
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div class="col-sm-7 allocated">
                                                 <p class="py-1 m-0 d-flex justify-content-between alloc">
                                                     <span class="title">Allocated Seats</span>
-                                                    <span class="badge">5</span>
+                                                    <span class="badge" [style.color]="tableItem.tableColor"
+                                                        style="background: white;">5</span>
                                                 </p>
                                                 <p class="py-1 m-0 d-flex justify-content-between unalloc">
                                                     <span class="title">Unallocated Seats</span>
@@ -187,9 +189,13 @@
                                                 <div class="d-flex align-items-center justify-content-end">
                                                     <div class="color-btn">
                                                         <p>
-                                                            <!--Color Picker Here-->
+                                                            <input matInput [style.background]="tableItem.tableColor"
+                                                                [colorPicker]="tableItem.tableColor"
+                                                                cpPosition="bottom-left"
+                                                                (colorPickerChange)="tableItem.tableColor=$event">
                                                         </p>
-                                                        <button mat-raised-button color="primary">Edit</button>
+                                                        <button mat-raised-button color="primary"
+                                                            (click)="addEditSessionTable(i, j)">Edit</button>
                                                     </div>
                                                     <div class="toggle-up ml-2">
                                                         <button mat-icon-button color="primary">
@@ -197,9 +203,7 @@
                                                         </button>
                                                     </div>
                                                 </div>
-
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -253,91 +257,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="table-list-inner mb-2">
-                                <div class="table-top border p-2">
-                                    <h4 class="table-head">Table "Roses"</h4>
-                                    <div class="table-in">
-                                        <div class="row form-row align-items-center">
-                                            <div class="col-sm-2">
-                                                <div class="count-wrap">
-                                                    <span
-                                                        class="d-flex align-items-center justify-content-center">8</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7 allocated">
-                                                <p class="py-1 m-0 d-flex justify-content-between alloc">
-                                                    <span class="title">Allocated Seats</span>
-                                                    <span class="badge">5</span>
-                                                </p>
-                                                <p class="py-1 m-0 d-flex justify-content-between unalloc">
-                                                    <span class="title"></span>
-                                                    <span class="badge full">300</span>
-                                                </p>
-                                            </div>
-                                            <div class="col-sm-3 color-pick text-right">
-                                                <div class="d-flex align-items-center justify-content-end">
-                                                    <div class="color-btn">
-                                                        <p>
-                                                            <!--Color Picker Here-->
-                                                        </p>
-                                                        <button mat-raised-button color="primary">Edit</button>
-                                                    </div>
-                                                    <div class="toggle-up ml-2">
-                                                        <button mat-icon-button color="primary">
-                                                            <fa-icon class="" [icon]="faChevronDown"></fa-icon>
-                                                        </button>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="table-list-inner mb-2">
-                                <div class="table-top border p-2">
-                                    <h4 class="table-head">Table "Grass Tree"</h4>
-                                    <div class="table-in">
-                                        <div class="row form-row align-items-center">
-                                            <div class="col-sm-2">
-                                                <div class="count-wrap">
-                                                    <span
-                                                        class="d-flex align-items-center justify-content-center">8</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7 allocated">
-                                                <p class="py-1 m-0 d-flex justify-content-between alloc">
-                                                    <span class="title">Allocated Seats</span>
-                                                    <span class="badge">5</span>
-                                                </p>
-                                                <p class="py-1 m-0 d-flex justify-content-between unalloc">
-                                                    <span class="title">Unallocated Seats</span>
-                                                    <span class="badge">3</span>
-                                                </p>
-                                            </div>
-                                            <div class="col-sm-3 color-pick text-right">
-                                                <div class="d-flex align-items-center justify-content-end">
-                                                    <div class="color-btn">
-                                                        <p>
-                                                            <!--Color Picker Here-->
-                                                        </p>
-                                                        <button mat-raised-button color="primary">Edit</button>
-                                                    </div>
-                                                    <div class="toggle-up ml-2">
-                                                        <button mat-icon-button color="primary">
-                                                            <fa-icon class="" [icon]="faChevronDown"></fa-icon>
-                                                        </button>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="top-buttons d-flex align-items-center justify-content-end pt-2 pt-md-3">
                                 <button mat-raised-button class="mx-2">Cancel</button>
                                 <button mat-raised-button color="primary" class="mx-2">Save</button>

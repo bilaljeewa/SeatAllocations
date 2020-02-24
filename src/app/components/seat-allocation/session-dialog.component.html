@@ -1,29 +1,28 @@
 <h2 mat-dialog-title class="text-center">{{data.session ? 'Edit' : 'Add'}} Session</h2>
 <mat-dialog-content>
-  <form class="popup-form w-100">
-    <mat-form-field class="fld d-block">
-      <mat-label>Session Name</mat-label>
-      <input matInput [(ngModel)]="sessionName" [ngModelOptions]="{standalone: true}">
-    </mat-form-field>
-    <mat-error *ngIf="!sessionName && errorMessage">Please enter a session name</mat-error>
+  <mat-form-field class="fld d-block">
+    <mat-label>Session Name</mat-label>
+    <input matInput [(ngModel)]="sessionName" [ngModelOptions]="{standalone: true}">
+  </mat-form-field>
+  <mat-error *ngIf="!sessionName && errorMessage">Please enter a session name</mat-error>
 
-    <mat-form-field class="d-block">
-      <mat-chip-list #chipList aria-label="Program selection">
-        <mat-chip *ngFor="let program of sessionPrograms" selectable="true" (removed)="remove(program)">
-          {{program.name}} <mat-icon matChipRemove>cancel</mat-icon>
-        </mat-chip>
-        <input placeholder="New Program..." #programInput [formControl]="programCtrl" [matAutocomplete]="auto"
-          [matChipInputFor]="chipList">
-      </mat-chip-list>
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-        <mat-option *ngFor="let program of filteredPrograms | async" [value]="program">
-          {{program.name}}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-    <mat-error *ngIf="sessionPrograms.length == 0 && errorMessage">Please select atleast one program</mat-error>
+  <mat-form-field class="d-block">
+    <mat-chip-list #chipList aria-label="Program selection">
+      <mat-chip *ngFor="let program of sessionPrograms" selectable="true" (removed)="remove(program)">
+        {{program.name}} <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="New Program..." #programInput [formControl]="programCtrl" [matAutocomplete]="auto"
+        [matChipInputFor]="chipList">
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+      <mat-option *ngFor="let program of filteredPrograms | async" [value]="program">
+        {{program.name}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-error *ngIf="sessionPrograms.length == 0 && errorMessage">Please select atleast one program</mat-error>
 
-    <!-- <div class="d-block individual-list">
+  <!-- <div class="d-block individual-list">
       <div class="media">
         <div class="icon-wrap">
           <fa-icon class="exclaim" [icon]="faExclamationTriangle"></fa-icon>
@@ -44,10 +43,12 @@
         </div>
       </div>
     </div> -->
-    <div class="button-wrap pt-3 pt-lg-4 pb-1 text-right">
-      <button *ngIf="data.session" mat-raised-button color="warn">Delete</button>
-      <button mat-raised-button class="mx-2" (click)="onCancelClick()">Cancel</button>
-      <button mat-raised-button color="primary" (click)="saveSession()">Save</button>
-    </div>
-  </form>
+  <div class="button-wrap pt-3 pt-lg-4 pb-1 text-right">
+    <button *ngIf="data.session" mat-raised-button color="warn">Delete</button>
+    <button mat-raised-button class="mx-2" (click)="onCancelClick()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="saveSession()">
+      <ng-container *ngIf="data.session; else elseTemplate"> Update </ng-container>
+      <ng-template #elseTemplate> Save </ng-template>
+    </button>
+  </div>
 </mat-dialog-content>

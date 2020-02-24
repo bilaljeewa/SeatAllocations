@@ -1,0 +1,33 @@
+<h2 mat-dialog-title class="text-center">Table <span
+        *ngIf="data.sessionTable?.tableName">"{{data.sessionTable.tableName}}"</span>
+</h2>
+<mat-dialog-content>
+    <form [formGroup]="tableForm" novalidate autocomplete="off">
+        <mat-form-field class="fld d-block">
+            <mat-label>Table Name</mat-label>
+            <input matInput formControlName="tableName">
+            <mat-error *ngIf="tableName.hasError('required')">Please enter a Table Name</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fld d-block">
+            <mat-label>No. of Seats</mat-label>
+            <input matInput formControlName="tableSeats">
+            <mat-error *ngIf="tableSeats.hasError('required')">Please enter No. of Seats</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="fld d-block">
+            <input matInput [style.background]="tableForm.value.tableColor" [colorPicker]="tableForm.value.tableColor"
+                cpPosition="bottom" (colorPickerChange)="getColor($event)">
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div class="button-wrap pt-3 pt-lg-4 pb-1 text-right">
+        <button *ngIf="data.sessionTable" mat-raised-button color="warn">Delete</button>
+        <button mat-raised-button class="mx-2" (click)="onClose()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="saveSessionTable()">
+            <ng-container *ngIf="data.sessionTable; else elseTemplate"> Update </ng-container>
+            <ng-template #elseTemplate> Save </ng-template>
+        </button>
+    </div>
+</mat-dialog-actions>

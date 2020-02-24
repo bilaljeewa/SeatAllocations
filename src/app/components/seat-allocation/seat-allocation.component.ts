@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 
@@ -69,12 +69,12 @@ export class SeatAllocationComponent implements OnInit {
   fernolumns: string[] = ['image', 'name', 'symbol'];
 
   constructor(
-    public sessionDialog: MatDialog) { }
+    private sessionDialog: MatDialog) { }
 
   ngOnInit() { }
 
   // open dialog box to add/edit session
-  openSessionDialog(session = null, index = null): void {
+  openSessionDialog(session = null, index = null) {
     let newSession = session;
     const dialogRef = this.sessionDialog.open(SessionDialogComponent, {
       width: '600px',
@@ -82,15 +82,38 @@ export class SeatAllocationComponent implements OnInit {
       disableClose: true
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(this.advancedSessions)
       if (result) {
         if (newSession) {
 
         } else {
           this.advancedSessions.push({
             sessionName: result.sessionName,
-            sessionsPrograms: result.sessionsPrograms
+            sessionsPrograms: result.sessionsPrograms,
+            tables: []
           })
+        }
+      }
+    });
+  }
+
+  // open dialog box to add/edit session table
+  addEditSessionTable(sessionIndex, sessionTableIndex = null) {
+    let dialogRef = this.sessionDialog.open(SessionTableDialogComponent, {
+      panelClass: "mat-dialog-lg",
+      width: "500px",
+      data: {
+        sessionTable: this.advancedSessions[sessionIndex].tables[sessionTableIndex]
+      },
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe(response => {
+      if (response) {
+        if (sessionTableIndex != null) {
+          this.advancedSessions[sessionIndex].tables[sessionTableIndex].tableName = response.tableName;
+          this.advancedSessions[sessionIndex].tables[sessionTableIndex].tableSeats = response.tableSeats;
+          this.advancedSessions[sessionIndex].tables[sessionTableIndex].tableColor = response.tableColor;
+        } else {
+          this.advancedSessions[sessionIndex].tables.push(response);
         }
       }
     });
@@ -138,12 +161,12 @@ export class SessionDialogComponent {
       map((program: string | null) => program ? this._filter(program) : this.programs.slice()));
   }
 
-  onCancelClick(): void {
+  onCancelClick() {
     this.dialogRef.close();
   }
 
   // remove program
-  remove(program: string): void {
+  remove(program: string) {
     const index = this.sessionPrograms.indexOf(program);
     this.programs.push(program)
     this.programCtrl.setValue(null);
@@ -153,7 +176,7 @@ export class SessionDialogComponent {
   }
 
   // select any program
-  selected(event: MatAutocompleteSelectedEvent): void {
+  selected(event: MatAutocompleteSelectedEvent) {
     this.sessionPrograms.push(event.option.value);
     this.programs = this.programs.filter(ele => ele.id != event.option.value.id)
     this.programInput.nativeElement.value = '';
@@ -161,7 +184,7 @@ export class SessionDialogComponent {
   }
 
   // async filter the programs
-  private _filter(value: any): string[] {
+  private _filter(value: any) {
     const filterValue = value.name.toLowerCase();
     return this.programs.filter(program => program.name.toLowerCase().indexOf(filterValue) === 0);
   }
@@ -178,4 +201,59 @@ export class SessionDialogComponent {
       sessionsPrograms: this.sessionPrograms
     });
   }
+}
+
+
+@Component({
+  selector: "session-table-dialog",
+  templateUrl: "session-table-dialog.component.html",
+  styleUrls: ["./seat-allocation.component.scss"]
+})
+export class SessionTableDialogComponent {
+  // declare variables 
+  tableForm: FormGroup;
+
+  constructor(
+    public dialogRef: MatDialogRef<SessionTableDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private formBuilder: FormBuilder) {
+    this.buildForm();
+  }
+
+  buildForm() {
+    this.tableForm = this.formBuilder.group({
+      tableName: [this.data.sessionTable ? this.data.sessionTable.tableName : "", Validators.required],
+      tableSeats: [this.data.sessionTable ? this.data.sessionTable.tableSeats : "", Validators.required],
+      tableColor: [this.data.sessionTable ? this.data.sessionTable.tableColor : "#ffffff"]
+    });
+  }
+
+  // close the dialog box
+  onClose() {
+    this.dialogRef.close();
+  }
+
+  // get color and set in the form control
+  getColor(color: string) {
+    this.tableForm.patchValue({
+      tableColor: color
+    })
+  }
+
+  // save the session table
+  saveSessionTable() {
+    if (!this.tableForm.valid) {
+      return;
+    }
+    this.dialogRef.close(this.tableForm.value);
+  }
+
+  // Form validations start
+  get tableName() {
+    return this.tableForm.get("tableName");
+  }
+  get tableSeats() {
+    return this.tableForm.get("tableSeats");
+  }
+  // Form validations end
 }
