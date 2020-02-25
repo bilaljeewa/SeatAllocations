@@ -1,9 +1,16 @@
 :host ::ng-deep {
-
+    .mat-expansion-panel{
+        box-shadow: none;
+        border-radius: 0;
+    }
     label {
         margin-bottom: 0rem;
     }
-
+    .table-top {
+        .mat-content {
+            display: block;
+        }
+    }
     .top-tabs {
         mat-tab-group {
             .mat-tab-label-container {
@@ -19,9 +26,28 @@
             }
         }
     }
+    .session-wrap {
+    
+        .session-list {
+    
+            .mat-expansion-panel-content {
+                border-top: 1px solid #ddd;
+            }
+        }
+    }
 }
 
+.prevent-click {
+    pointer-events: none;
+}
 
+.authorize-click {
+    pointer-events: auto;
+}
+
+button.toggle-panel {
+    pointer-events: auto;
+}
 
 @mixin custom-shadow ($x, $y, $blur, $color) {
     box-shadow: $x $y $blur $color;
@@ -34,10 +60,16 @@ button {
 
 
 .session-wrap {
-    @include custom-shadow(0, 0, 10px, rgba(0, 0, 0, 0.1));
+    /*@include custom-shadow(0, 0, 10px, rgba(0, 0, 0, 0.1));*/
 
     .session-list {
+        box-shadow: none !important;
+        border: 1px solid #dee2e6;
 
+        .mat-expansion-panel-header {
+            height: auto !important;
+            
+        }        
 
         .media-title {
             width: 130px;
@@ -152,6 +184,9 @@ button {
 
                 .table-list-inner {
                     .table-top {
+                        .mat-content {
+                            display: block;
+                        }
                         .table-head {
                             font: 500 20px/1.2 Montserrat;
                             color: rgba(0, 0, 0, 0.8);
@@ -229,18 +264,21 @@ button {
 
 .popup-form {
     .individual-list {
-        .icon-wrap{
+        .icon-wrap {
             .exclaim {
-               color: #f00;
-               margin: 0 10px 0 0;
-           }
+                color: #f00;
+                margin: 0 10px 0 0;
+            }
         }
-        ul{
+
+        ul {
             font: 500 15px/1.2 Montserrat;
             color: rgba(0, 0, 0, 0.8);
             list-style-type: none;
+
             li {
                 margin: 0 0 5px;
+
                 fa-icon {
                     margin: 0 5px 0 0;
                     font-size: 20px;
@@ -249,7 +287,8 @@ button {
                 }
             }
         }
-        p{
+
+        p {
             font: 500 15px/1.2 Montserrat;
             color: rgba(0, 0, 0, 0.8);
         }

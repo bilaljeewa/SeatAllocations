@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatExpansionPanel } from '@angular/material/expansion';
 
 export interface SessionUnallocated {
   name: string;
@@ -31,6 +32,10 @@ const ELEMENT_DATA: SessionUnallocated[] = [
   styleUrls: ['./seat-allocation.component.scss']
 })
 export class SeatAllocationComponent implements OnInit {
+
+  parentPanelXpandStatus=false;
+  customCollapsedHeight: string = 'auto';
+  customExpandedHeight: string = 'auto';
   /**FontAwesome Declaration**/
   faExclamationTriangle = faExclamationTriangle;
   faCaretUp = faCaretUp;
