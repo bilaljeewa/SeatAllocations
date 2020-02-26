@@ -1,16 +1,24 @@
 :host ::ng-deep {
-    .mat-expansion-panel{
+    .dropdown-btn {
+        border: unset !important;
+        border-bottom: 1px solid #adadad !important;
+    }
+
+    .mat-expansion-panel {
         box-shadow: none;
         border-radius: 0;
     }
+
     label {
         margin-bottom: 0rem;
     }
+
     .table-top {
         .mat-content {
             display: block;
         }
     }
+
     .top-tabs {
         mat-tab-group {
             .mat-tab-label-container {
@@ -26,12 +34,25 @@
             }
         }
     }
+
     .session-wrap {
-    
+
         .session-list {
-    
+
             .mat-expansion-panel-content {
                 border-top: 1px solid #ddd;
+            }
+        }
+    }
+
+    .session-create-custom {
+        .mat-dialog-content {
+            max-height: none;
+            overflow: visible;
+    
+            .dropdown-list {
+                height: 30vh;
+                overflow: auto;
             }
         }
     }
@@ -68,8 +89,8 @@ button {
 
         .mat-expansion-panel-header {
             height: auto !important;
-            
-        }        
+
+        }
 
         .media-title {
             width: 130px;
@@ -187,6 +208,7 @@ button {
                         .mat-content {
                             display: block;
                         }
+
                         .table-head {
                             font: 500 20px/1.2 Montserrat;
                             color: rgba(0, 0, 0, 0.8);
@@ -294,3 +316,4 @@ button {
         }
     }
 }
+

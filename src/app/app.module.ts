@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 import { AppComponent } from './app.component';
 import { MaterialModule } from '../app/material/material.module';
@@ -23,7 +24,8 @@ import { SeatAllocationComponent, SessionDialogComponent, SessionTableDialogComp
     FontAwesomeModule,
     FormsModule,
     ReactiveFormsModule,
-    ColorPickerModule
+    ColorPickerModule,
+    NgMultiSelectDropDownModule.forRoot()
   ],
   entryComponents: [
     SessionDialogComponent,

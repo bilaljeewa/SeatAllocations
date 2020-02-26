@@ -1,3 +1,4 @@
+<div class="session-create-custom">
 <h2 mat-dialog-title class="text-center">{{data.session ? 'Edit' : 'Add'}} Session</h2>
 <mat-dialog-content>
   <mat-form-field class="fld d-block">
@@ -6,22 +7,9 @@
   </mat-form-field>
   <mat-error *ngIf="!sessionName && errorMessage">Please enter a session name</mat-error>
 
-  <mat-form-field class="d-block">
-    <mat-chip-list #chipList aria-label="Program selection">
-      <mat-chip *ngFor="let program of sessionPrograms" selectable="true" (removed)="remove(program)">
-        {{program.name}} <mat-icon matChipRemove>cancel</mat-icon>
-      </mat-chip>
-      <input placeholder="New Program..." #programInput [formControl]="programCtrl" [matAutocomplete]="auto"
-        [matChipInputFor]="chipList">
-    </mat-chip-list>
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-      <mat-option *ngFor="let program of filteredPrograms | async" [value]="program">
-        {{program.name}}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-  <mat-error *ngIf="sessionPrograms.length == 0 && errorMessage">Please select atleast one program</mat-error>
-
+  <ng-multiselect-dropdown color="accent" class="w-100" [placeholder]="'Session Programs'" [data]="programs"
+    [(ngModel)]="sessionPrograms" [settings]="dropdownSettings">
+  </ng-multiselect-dropdown>
   <!-- <div class="d-block individual-list">
       <div class="media">
         <div class="icon-wrap">
@@ -52,3 +40,5 @@
     </button>
   </div>
 </mat-dialog-content>
+
+</div>

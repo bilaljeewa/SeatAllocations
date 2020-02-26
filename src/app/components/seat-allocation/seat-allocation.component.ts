@@ -139,7 +139,7 @@ export class SeatAllocationComponent implements OnInit {
   // main expansion pannel open and closed controls handeling starts
   afterPanelClosed(i) {
     var preval = this.mainPanelIcon;
-    if(preval < i) {
+    if (preval < i) {
       this.mainPanelIcon = preval;
     } else {
       this.mainPanelIcon = -1;
@@ -158,7 +158,7 @@ export class SeatAllocationComponent implements OnInit {
 
   innerPanelClosed(j) {
     var preval = this.innerPanelIcon;
-    if(preval < j) {
+    if (preval < j) {
       this.innerPanelIcon = preval;
     } else {
       this.innerPanelIcon = -1;
@@ -176,7 +176,15 @@ export class SessionDialogComponent {
   faExclamationTriangle = faExclamationTriangle;
   faCaretRight = faCaretRight;
 
-  sessionName: string = '';
+  dropdownSettings = {
+    singleSelection: false,
+    idField: 'id',
+    textField: 'name',
+    selectAllText: 'Select All',
+    unSelectAllText: 'UnSelect All',
+    itemsShowLimit: 5,
+    allowSearchFilter: true
+  };
   programs: any[] = [
     { id: 1, name: 'Dinner Gala' },
     { id: 2, name: 'Sponsors' },
@@ -184,56 +192,22 @@ export class SessionDialogComponent {
     { id: 4, name: 'Trip' },
     { id: 5, name: 'Holiday' }
   ];
-  errorMessage: Boolean = false;
-
-  programCtrl = new FormControl();
-  filteredPrograms: Observable<string[]>;
+  sessionName: string = '';
   sessionPrograms = [];
-  sessionData: any;
-  @ViewChild('programInput', { static: false }) programInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
+  errorMessage: Boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<SessionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
     if (this.data.session) {
-      // this.sessionData = this.data.session;
       this.sessionName = this.data.session.sessionName;
       this.sessionPrograms = this.data.session.sessionsPrograms;
     }
-
-    this.filteredPrograms = this.programCtrl.valueChanges.pipe(
-      startWith(null),
-      map((program: string | null) => program ? this._filter(program) : this.programs.slice()));
   }
 
   onCancelClick() {
     this.dialogRef.close();
-  }
-
-  // remove program
-  remove(program: string) {
-    const index = this.sessionPrograms.indexOf(program);
-    this.programs.push(program)
-    this.programCtrl.setValue(null);
-    if (index >= 0) {
-      this.sessionPrograms.splice(index, 1);
-    }
-  }
-
-  // select any program
-  selected(event: MatAutocompleteSelectedEvent) {
-    this.sessionPrograms.push(event.option.value);
-    this.programs = this.programs.filter(ele => ele.id != event.option.value.id)
-    this.programInput.nativeElement.value = '';
-    this.programCtrl.setValue(null);
-  }
-
-  // async filter the programs
-  private _filter(value: any) {
-    const filterValue = value.name.toLowerCase();
-    return this.programs.filter(program => program.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
   // save the session
