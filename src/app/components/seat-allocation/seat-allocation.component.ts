@@ -33,7 +33,8 @@ const ELEMENT_DATA: SessionUnallocated[] = [
 })
 export class SeatAllocationComponent implements OnInit {
 
-  parentPanelXpandStatus=false;
+  mainPanelIcon: number = -1;
+  innerPanelIcon: number = -1;
   customCollapsedHeight: string = 'auto';
   customExpandedHeight: string = 'auto';
   /**FontAwesome Declaration**/
@@ -123,6 +124,47 @@ export class SeatAllocationComponent implements OnInit {
       }
     });
   }
+
+  // expansion panel code for future use starts
+  // beforePanelClosed(panel){
+  //   panel.isExpanded = false;
+  //   console.log("Panel going to close!");
+  // }
+  // beforePanelOpened(panel){
+  //   panel.isExpanded = true;
+  //   console.log("Panel going to  open!");
+  // }
+  // expansion panel code for future use ends
+
+  // main expansion pannel open and closed controls handeling starts
+  afterPanelClosed(i) {
+    var preval = this.mainPanelIcon;
+    if(preval < i) {
+      this.mainPanelIcon = preval;
+    } else {
+      this.mainPanelIcon = -1;
+    }
+  }
+
+  afterPanelOpened(i) {
+    this.mainPanelIcon = i;
+  }
+  // main expansion pannel open and closed controls handeling ends
+
+  // inner expansion pannel open and closed constrols handeling starts
+  innerPannelOpened(j) {
+    this.innerPanelIcon = j;
+  }
+
+  innerPanelClosed(j) {
+    var preval = this.innerPanelIcon;
+    if(preval < j) {
+      this.innerPanelIcon = preval;
+    } else {
+      this.innerPanelIcon = -1;
+    }
+  }
+  // inner expansion pannel open and closed constrols handeling ends
 }
 
 @Component({
