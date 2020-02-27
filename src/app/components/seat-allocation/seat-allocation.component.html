@@ -1,7 +1,8 @@
 <div class="form-wrap p-sm-2 px-2 py-3 p-md-4">
     <h1 class="heading-main mb-2 mb-sm-3 mb-md-4 text-center">Session</h1>
     <div class="button-wrap text-right mb-2 mb-md-3">
-        <button mat-raised-button color="primary" (click)="openSessionDialog(null, null, $event)">Add Session</button>
+        <button mat-raised-button color="primary" (click)="openSessionDialog(); do($event);">
+            Add Session</button>
     </div>
     <mat-accordion>
         <div class="session-wrap p-2 p-md-3 mb-3 mb-sm-4" *ngFor="let item of advancedSessions; let i=index">
@@ -55,14 +56,15 @@
                                         <fa-icon class="exclaim" [icon]="faExclamationTriangle"></fa-icon>
                                     </button>
                                     <button mat-raised-button color="primary" class="mx-2"
-                                        (click)="openSessionDialog(item, i)">Edit</button>
+                                        (click)="openSessionDialog(item, i); do($event);">Edit</button>
                                     <!--EXPANSION ICON-->
-                                    <button mat-icon-button color="primary" (click)="mainExpansionPanel.toggle();">
+                                    <button mat-icon-button color="primary"
+                                        (click)="mainExpansionPanel.toggle(); do($event);">
                                         <ng-container *ngIf="mainPanelIcon === i ; else elseTemplate">
-                                            <fa-icon class="caret" [icon]="faCaretUp" (click)="do($event)"></fa-icon>
+                                            <fa-icon class="caret" [icon]="faCaretUp"></fa-icon>
                                         </ng-container>
                                         <ng-template #elseTemplate>
-                                            <fa-icon class="caret" [icon]="faCaretDown" (click)="do($event)"></fa-icon>
+                                            <fa-icon class="caret" [icon]="faCaretDown"></fa-icon>
                                         </ng-template>
                                     </button>
                                 </div>
@@ -106,7 +108,8 @@
                                                                         </mat-checkbox>
                                                                     </mat-header-cell>
                                                                     <mat-cell *matCellDef="let row">
-                                                                        <mat-checkbox (click)="$event.stopPropagation()"
+                                                                        <mat-checkbox
+                                                                            (click)="$event.stopPropagation(); do($event);"
                                                                             (change)="$event ? selection.toggle(row) : null"
                                                                             [checked]="selection.isSelected(row)">
                                                                         </mat-checkbox>
@@ -140,7 +143,7 @@
                                                                 </mat-header-row>
                                                                 <mat-row
                                                                     *matRowDef="let row; columns: displayedColumns;"
-                                                                    (click)="selection.toggle(row)">
+                                                                    (click)="selection.toggle(row); do($event);">
                                                                 </mat-row>
                                                             </mat-table>
                                                         </div>
@@ -181,7 +184,7 @@
                                             <fa-icon class="mx-2 printpdf" [icon]="faFilePdf"></fa-icon>
                                         </button>
                                         <button mat-raised-button color="primary" class="ml-2"
-                                            (click)="addEditSessionTable(i, null, $event)">Add Table</button>
+                                            (click)="addEditSessionTable(i); do($event);">Add Table</button>
                                     </div>
                                     <mat-accordion>
                                         <div class="table-list-inner mb-2"
@@ -223,21 +226,19 @@
                                                                             (colorPickerChange)="tableItem.tableColor=$event">
                                                                     </p>
                                                                     <button mat-raised-button color="primary"
-                                                                        (click)="addEditSessionTable(i, j)">Edit</button>
+                                                                        (click)="addEditSessionTable(i, j); do($event);">Edit</button>
                                                                 </div>
                                                                 <div class="toggle-up ml-2">
                                                                     <button mat-icon-button color="primary"
-                                                                        (click)="innerExpansionPanel.toggle()">
+                                                                        (click)="innerExpansionPanel.toggle(); do($event);">
                                                                         <ng-container
                                                                             *ngIf="innerPanelIcon === j; else elseTemplate">
-                                                                            <fa-icon class="" [icon]="faChevronUp"
-                                                                                (click)="do($event)">
+                                                                            <fa-icon class="" [icon]="faChevronUp">
                                                                             </fa-icon>
 
                                                                         </ng-container>
                                                                         <ng-template #elseTemplate>
-                                                                            <fa-icon class="" [icon]="faChevronDown"
-                                                                                (click)="do($event)">
+                                                                            <fa-icon class="" [icon]="faChevronDown">
                                                                             </fa-icon>
                                                                         </ng-template>
 
