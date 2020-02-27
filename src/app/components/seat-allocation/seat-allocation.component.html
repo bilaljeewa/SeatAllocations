@@ -64,7 +64,6 @@
                                         <ng-template #elseTemplate>
                                             <fa-icon class="caret" [icon]="faCaretDown" (click)="do($event)"></fa-icon>
                                         </ng-template>
-
                                     </button>
                                 </div>
                             </div>
@@ -182,7 +181,7 @@
                                             <fa-icon class="mx-2 printpdf" [icon]="faFilePdf"></fa-icon>
                                         </button>
                                         <button mat-raised-button color="primary" class="ml-2"
-                                            (click)="addEditSessionTable(i)">Add Table</button>
+                                            (click)="addEditSessionTable(i, null, $event)">Add Table</button>
                                     </div>
                                     <mat-accordion>
                                         <div class="table-list-inner mb-2"
@@ -231,12 +230,14 @@
                                                                         (click)="innerExpansionPanel.toggle()">
                                                                         <ng-container
                                                                             *ngIf="innerPanelIcon === j; else elseTemplate">
-                                                                            <fa-icon class="" [icon]="faChevronUp">
+                                                                            <fa-icon class="" [icon]="faChevronUp"
+                                                                                (click)="do($event)">
                                                                             </fa-icon>
 
                                                                         </ng-container>
                                                                         <ng-template #elseTemplate>
-                                                                            <fa-icon class="" [icon]="faChevronDown">
+                                                                            <fa-icon class="" [icon]="faChevronDown"
+                                                                                (click)="do($event)">
                                                                             </fa-icon>
                                                                         </ng-template>
 
