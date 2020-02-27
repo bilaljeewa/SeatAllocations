@@ -59,10 +59,10 @@
                                     <!--EXPANSION ICON-->
                                     <button mat-icon-button color="primary" (click)="mainExpansionPanel.toggle();">
                                         <ng-container *ngIf="mainPanelIcon === i ; else elseTemplate">
-                                            <fa-icon class="caret" [icon]="faCaretUp"></fa-icon>
+                                            <fa-icon class="caret" [icon]="faCaretUp" (click)="do($event)"></fa-icon>
                                         </ng-container>
                                         <ng-template #elseTemplate>
-                                            <fa-icon class="caret" [icon]="faCaretDown"></fa-icon>
+                                            <fa-icon class="caret" [icon]="faCaretDown" (click)="do($event)"></fa-icon>
                                         </ng-template>
 
                                     </button>

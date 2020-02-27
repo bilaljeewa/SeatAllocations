@@ -163,6 +163,10 @@ export class SeatAllocationComponent implements OnInit {
     }
   }
   // inner expansion pannel open and closed constrols handeling ends
+
+  do(event) {
+    event.preventDefault();
+  }
 }
 
 @Component({
