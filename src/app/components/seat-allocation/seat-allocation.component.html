@@ -1,7 +1,7 @@
 <div class="form-wrap p-sm-2 px-2 py-3 p-md-4">
     <h1 class="heading-main mb-2 mb-sm-3 mb-md-4 text-center">Session</h1>
     <div class="button-wrap text-right mb-2 mb-md-3">
-        <button mat-raised-button color="primary" (click)="openSessionDialog()">Add Session</button>
+        <button mat-raised-button color="primary" (click)="openSessionDialog(null, null, $event)">Add Session</button>
     </div>
     <mat-accordion>
         <div class="session-wrap p-2 p-md-3 mb-3 mb-sm-4" *ngFor="let item of advancedSessions; let i=index">
@@ -56,7 +56,7 @@
                                     </button>
                                     <button mat-raised-button color="primary" class="mx-2"
                                         (click)="openSessionDialog(item, i)">Edit</button>
-                                        <!--EXPANSION ICON-->
+                                    <!--EXPANSION ICON-->
                                     <button mat-icon-button color="primary" (click)="mainExpansionPanel.toggle();">
                                         <ng-container *ngIf="mainPanelIcon === i ; else elseTemplate">
                                             <fa-icon class="caret" [icon]="faCaretUp"></fa-icon>
@@ -64,7 +64,7 @@
                                         <ng-template #elseTemplate>
                                             <fa-icon class="caret" [icon]="faCaretDown"></fa-icon>
                                         </ng-template>
-                                        
+
                                     </button>
                                 </div>
                             </div>
@@ -75,7 +75,8 @@
             </div>
             <!--EXPANSION HEAD END-->
             <!--EXPANDED BODY-->
-            <mat-expansion-panel class="border border-top-0" #mainExpansionPanel [hideToggle]="true" (afterCollapse)="afterPanelClosed(i)" (afterExpand)="afterPanelOpened(i)">
+            <mat-expansion-panel class="border border-top-0" #mainExpansionPanel [hideToggle]="true"
+                (afterCollapse)="afterPanelClosed(i)" (afterExpand)="afterPanelOpened(i)">
                 <div class="session-open mt-3 ">
                     <div class="session-open-wrap">
                         <div class="row">
@@ -99,7 +100,8 @@
                                                                 <!-- Checkbox Column -->
                                                                 <ng-container matColumnDef="select">
                                                                     <mat-header-cell *matHeaderCellDef>
-                                                                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                                                                        <mat-checkbox
+                                                                            (change)="$event ? masterToggle() : null"
                                                                             [checked]="selection.hasValue() && isAllSelected()"
                                                                             [indeterminate]="selection.hasValue() && !isAllSelected()">
                                                                         </mat-checkbox>
@@ -111,29 +113,34 @@
                                                                         </mat-checkbox>
                                                                     </mat-cell>
                                                                 </ng-container>
-        
+
                                                                 <!-- Name Column -->
                                                                 <ng-container matColumnDef="name">
-                                                                    <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-                                                                    <mat-cell *matCellDef="let element"> {{element.name}}
+                                                                    <mat-header-cell *matHeaderCellDef> Name
+                                                                    </mat-header-cell>
+                                                                    <mat-cell *matCellDef="let element">
+                                                                        {{element.name}}
                                                                     </mat-cell>
                                                                 </ng-container>
-        
-        
+
+
                                                                 <!-- Symbol Column -->
                                                                 <ng-container matColumnDef="symbol">
-                                                                    <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+                                                                    <mat-header-cell *matHeaderCellDef>
+                                                                    </mat-header-cell>
                                                                     <mat-cell *matCellDef="let element">
                                                                         <button mat-icon-button color="primary">
-                                                                            <fa-icon class="exclaim" [icon]="faInfo"></fa-icon>
+                                                                            <fa-icon class="exclaim" [icon]="faInfo">
+                                                                            </fa-icon>
                                                                         </button>
-        
+
                                                                     </mat-cell>
                                                                 </ng-container>
-        
+
                                                                 <mat-header-row *matHeaderRowDef="displayedColumns">
                                                                 </mat-header-row>
-                                                                <mat-row *matRowDef="let row; columns: displayedColumns;"
+                                                                <mat-row
+                                                                    *matRowDef="let row; columns: displayedColumns;"
                                                                     (click)="selection.toggle(row)">
                                                                 </mat-row>
                                                             </mat-table>
@@ -144,12 +151,15 @@
                                             <mat-tab label="Allocated">
                                                 <div class="py-2 py-md-3">
                                                     <div class="button-wrap text-right">
-                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">Auto Assign
+                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">Auto
+                                                            Assign
                                                             All</button>
-                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">Auto Assign
+                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">Auto
+                                                            Assign
                                                             To
                                                             Ferns</button>
-                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">Assign
+                                                        <button mat-raised-button color="primary"
+                                                            class="ml-2 mb-2">Assign
                                                             Selection
                                                             To Ferns</button>
                                                     </div>
@@ -175,15 +185,19 @@
                                             (click)="addEditSessionTable(i)">Add Table</button>
                                     </div>
                                     <mat-accordion>
-                                        <div class="table-list-inner mb-2" *ngFor="let tableItem of item.tables; let j=index">
-                                            <div class="table-top p-2" [ngStyle]="{'border': '1px solid' + tableItem.tableColor}">
+                                        <div class="table-list-inner mb-2"
+                                            *ngFor="let tableItem of item.tables; let j=index">
+                                            <div class="table-top p-2"
+                                                [ngStyle]="{'border': '1px solid' + tableItem.tableColor}">
                                                 <h4 class="table-head">Table "{{tableItem.tableName}}"</h4>
                                                 <div class="table-in">
                                                     <div class="row form-row align-items-center">
                                                         <div class="col-sm-2">
                                                             <div class="count-wrap">
-                                                                <span class="d-flex align-items-center justify-content-center"
-                                                                    [style.background]="tableItem.tableColor" style="color: white;">
+                                                                <span
+                                                                    class="d-flex align-items-center justify-content-center"
+                                                                    [style.background]="tableItem.tableColor"
+                                                                    style="color: white;">
                                                                     8
                                                                 </span>
                                                             </div>
@@ -203,7 +217,8 @@
                                                             <div class="d-flex align-items-center justify-content-end">
                                                                 <div class="color-btn">
                                                                     <p>
-                                                                        <input matInput [style.background]="tableItem.tableColor"
+                                                                        <input matInput
+                                                                            [style.background]="tableItem.tableColor"
                                                                             [colorPicker]="tableItem.tableColor"
                                                                             cpPosition="bottom-left"
                                                                             (colorPickerChange)="tableItem.tableColor=$event">
@@ -212,15 +227,19 @@
                                                                         (click)="addEditSessionTable(i, j)">Edit</button>
                                                                 </div>
                                                                 <div class="toggle-up ml-2">
-                                                                    <button mat-icon-button color="primary" (click)="innerExpansionPanel.toggle()">
-                                                                        <ng-container *ngIf="innerPanelIcon === j; else elseTemplate">
-                                                                            <fa-icon class="" [icon]="faChevronUp"></fa-icon>
-                                                                            
+                                                                    <button mat-icon-button color="primary"
+                                                                        (click)="innerExpansionPanel.toggle()">
+                                                                        <ng-container
+                                                                            *ngIf="innerPanelIcon === j; else elseTemplate">
+                                                                            <fa-icon class="" [icon]="faChevronUp">
+                                                                            </fa-icon>
+
                                                                         </ng-container>
                                                                         <ng-template #elseTemplate>
-                                                                            <fa-icon class="" [icon]="faChevronDown"></fa-icon>
+                                                                            <fa-icon class="" [icon]="faChevronDown">
+                                                                            </fa-icon>
                                                                         </ng-template>
-                                                                        
+
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -228,7 +247,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <mat-expansion-panel #innerExpansionPanel [hideToggle]="true" (afterCollapse)="innerPanelClosed(j)" (afterExpand)="innerPannelOpened(j)">
+                                            <mat-expansion-panel #innerExpansionPanel [hideToggle]="true"
+                                                (afterCollapse)="innerPanelClosed(j)"
+                                                (afterExpand)="innerPannelOpened(j)">
                                                 <div class="table-wrap py-3 py-sm-3 d-block">
                                                     <div class="table-responsive">
                                                         <mat-table [dataSource]="dataSource" class="w-100">
@@ -243,38 +264,46 @@
                                                                     </span>
                                                                 </mat-cell>
                                                             </ng-container>
-                
+
                                                             <!-- Name Column -->
                                                             <ng-container matColumnDef="name">
                                                                 <mat-header-cell *matHeaderCellDef> </mat-header-cell>
-                                                                <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+                                                                <mat-cell *matCellDef="let element"> {{element.name}}
+                                                                </mat-cell>
                                                             </ng-container>
-                
-                
+
+
                                                             <!-- Symbol Column -->
                                                             <ng-container matColumnDef="symbol">
-                                                                <mat-header-cell mat-header-cell *matHeaderCellDef> </mat-header-cell>
+                                                                <mat-header-cell mat-header-cell *matHeaderCellDef>
+                                                                </mat-header-cell>
                                                                 <mat-cell *matCellDef="let element">
                                                                     <button mat-icon-button color="primary">
-                                                                        <fa-icon class="exclaim" [icon]="faInfo"></fa-icon>
+                                                                        <fa-icon class="exclaim" [icon]="faInfo">
+                                                                        </fa-icon>
                                                                     </button>
                                                                     <button mat-icon-button color="warn">
-                                                                        <fa-icon class="exclaim" [icon]="faTrashAlt"></fa-icon>
+                                                                        <fa-icon class="exclaim" [icon]="faTrashAlt">
+                                                                        </fa-icon>
                                                                     </button>
                                                                     <button mat-icon-button color="primary"
                                                                         [matMenuTriggerFor]="beforeMenu">
-                                                                        <fa-icon class="exclaim" [icon]="faEllipsisV"></fa-icon>
+                                                                        <fa-icon class="exclaim" [icon]="faEllipsisV">
+                                                                        </fa-icon>
                                                                     </button>
-                                                                    <mat-menu class="m-mi" #beforeMenu="matMenu" xPosition="before">
+                                                                    <mat-menu class="m-mi" #beforeMenu="matMenu"
+                                                                        xPosition="before">
                                                                         <button mat-menu-item>Item 11</button>
                                                                         <button mat-menu-item>Item 2</button>
                                                                     </mat-menu>
                                                                 </mat-cell>
                                                             </ng-container>
-                
-                                                            <mat-header-row class="d-none" *matHeaderRowDef="fernolumns">
+
+                                                            <mat-header-row class="d-none"
+                                                                *matHeaderRowDef="fernolumns">
                                                             </mat-header-row>
-                                                            <mat-row *matRowDef="let row; columns: fernolumns;"></mat-row>
+                                                            <mat-row *matRowDef="let row; columns: fernolumns;">
+                                                            </mat-row>
                                                         </mat-table>
                                                     </div>
                                                 </div>

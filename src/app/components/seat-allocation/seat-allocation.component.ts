@@ -1,13 +1,9 @@
-import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { faExclamationTriangle, faCaretUp, faCaretDown, faSyncAlt, faInfo, faFilePdf, faChevronUp, faChevronDown, faTrashAlt, faEllipsisV, faCheckCircle, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { map, startWith } from 'rxjs/operators';
-import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
-import { MatExpansionPanel } from '@angular/material/expansion';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 export interface SessionUnallocated {
   name: string;
@@ -80,7 +76,9 @@ export class SeatAllocationComponent implements OnInit {
   ngOnInit() { }
 
   // open dialog box to add/edit session
-  openSessionDialog(session = null, index = null) {
+  openSessionDialog(session = null, index = null, event = null) {
+    if (event)
+      event.preventDefault();
     let newSession = session;
     const dialogRef = this.sessionDialog.open(SessionDialogComponent, {
       width: '600px',
