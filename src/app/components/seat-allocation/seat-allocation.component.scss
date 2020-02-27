@@ -13,6 +13,7 @@
         margin-bottom: 0rem;
     }
 
+    
     .table-top {
         .mat-content {
             display: block;
@@ -86,6 +87,7 @@ button {
     .session-list {
         box-shadow: none !important;
         border: 1px solid #dee2e6;
+        border-bottom: none;
 
         .mat-expansion-panel-header {
             height: auto !important;

@@ -136,6 +136,19 @@ $mat-dark-theme-background: (background: $dark-background,
 @include mat-core($fontConfig);
 
 // Theme Config
+html {
+    font-size: 100%;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif !important;
+}
 
 body {
     --primary-color: #2674e7;
@@ -221,16 +234,4 @@ $altTheme: mat-dark-theme($theme-primary, $theme-accent, $theme-warn);
 .mat-standard-chip {
     padding: .5em .85em;
     min-height: 2.5em;
-}
-
-@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800&display=swap');
-
-html,
-body {
-    height: 100%;
-}
-
-body {
-    margin: 0;
-    font-family: 'Montserrat', sans-serif !important;
 }
