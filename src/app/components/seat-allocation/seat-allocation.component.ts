@@ -76,9 +76,7 @@ export class SeatAllocationComponent implements OnInit {
   ngOnInit() { }
 
   // open dialog box to add/edit session
-  openSessionDialog(session = null, index = null, event = null) {
-    if (event)
-      event.preventDefault();
+  openSessionDialog(session = null, index = null) {
     let newSession = session;
     const dialogRef = this.sessionDialog.open(SessionDialogComponent, {
       width: '600px',
@@ -101,9 +99,7 @@ export class SeatAllocationComponent implements OnInit {
   }
 
   // open dialog box to add/edit session table
-  addEditSessionTable(sessionIndex, sessionTableIndex = null, event = null) {
-    if (event)
-      event.preventDefault();
+  addEditSessionTable(sessionIndex, sessionTableIndex = null) {
     let dialogRef = this.sessionDialog.open(SessionTableDialogComponent, {
       panelClass: "mat-dialog-lg",
       width: "500px",
