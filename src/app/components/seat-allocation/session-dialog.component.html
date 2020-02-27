@@ -8,7 +8,7 @@
     <mat-error *ngIf="!sessionName && errorMessage">Please enter a session name</mat-error>
     <div class="multi-select-drop">
       <label class="mt-lg-2 mb-0 mt-md-0" for="">Session Programs</label>
-      <ng-multiselect-dropdown color="accent" class="w-100" [placeholder]="'Session Programs'" [data]="programs"
+      <ng-multiselect-dropdown color="accent" class="w-100" [data]="programs"
         [(ngModel)]="sessionPrograms" [settings]="dropdownSettings">
       </ng-multiselect-dropdown>
     </div>
