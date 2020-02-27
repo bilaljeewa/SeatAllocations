@@ -101,7 +101,9 @@ export class SeatAllocationComponent implements OnInit {
   }
 
   // open dialog box to add/edit session table
-  addEditSessionTable(sessionIndex, sessionTableIndex = null) {
+  addEditSessionTable(sessionIndex, sessionTableIndex = null, event = null) {
+    if (event)
+      event.preventDefault();
     let dialogRef = this.sessionDialog.open(SessionTableDialogComponent, {
       panelClass: "mat-dialog-lg",
       width: "500px",
@@ -163,6 +165,10 @@ export class SeatAllocationComponent implements OnInit {
     }
   }
   // inner expansion pannel open and closed constrols handeling ends
+
+  do(event) {
+    event.preventDefault();
+  }
 }
 
 @Component({
