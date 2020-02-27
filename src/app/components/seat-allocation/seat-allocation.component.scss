@@ -1,7 +1,56 @@
 :host ::ng-deep {
+
+    .multiselect-dropdown {
+        padding-bottom: 1.25em;
+    }
+
+    .dropdown-list {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
+        border: none !important;
+        margin: 0 !important;
+    }
+
+    .multiselect-item-checkbox input[type=checkbox]+div:before {
+        color: #2674e7 !important;
+        border: 2px solid #2674e7 !important;
+    }
+
+    .multiselect-dropdown span:not(.selected-item) {
+        color: rgba(0, 0, 0, 0.54);
+        font-size: 14px;
+        letter-spacing: 1.5px;
+    }
+
+    .multiselect-item-checkbox input[type=checkbox]:checked+div:before {
+        background: #2674e7 !important;
+    }
+
     .dropdown-btn {
         border: unset !important;
-        border-bottom: 1px solid #adadad !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.42) !important;
+        border-radius: 0 !important;
+        outline: none;
+        padding: 6px 0px !important;
+
+        .selected-item {
+            margin-top: 4px;
+            border: 1px solid #2674e7 !important;
+            background: #2674e7 !important;
+        }
+
+        .dropdown-down {
+            border-top: 5px solid rgba(0, 0, 0, 0.54) !important;
+        }
+
+        .dropdown-up {
+            border-bottom: 5px solid rgba(0, 0, 0, 0.54) !important;
+        }
+
+        .dropdown-down,
+        .dropdown-up {
+            border-left: 5px solid transparent !important;
+            border-right: 5px solid transparent !important;
+        }
     }
 
     .mat-expansion-panel {
@@ -13,7 +62,7 @@
         margin-bottom: 0rem;
     }
 
-    
+
     .table-top {
         .mat-content {
             display: block;
@@ -54,6 +103,13 @@
             .dropdown-list {
                 height: 30vh;
                 overflow: auto;
+            }
+
+            .multi-select-drop {
+                label {
+                    font-size: 14px;
+                    font-weight: 500;
+                }
             }
         }
     }
