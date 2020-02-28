@@ -20,8 +20,6 @@
                 cpPosition="bottom" (colorPickerChange)="getColor($event)">
         </mat-form-field>
     </form>
-</mat-dialog-content>
-<mat-dialog-actions>
     <div class="button-wrap pt-3 pt-lg-4 pb-1 text-right">
         <button *ngIf="data.sessionTable" mat-raised-button color="warn">Delete</button>
         <button mat-raised-button class="mx-2" (click)="onClose()">Cancel</button>
@@ -30,4 +28,5 @@
             <ng-template #elseTemplate> Save </ng-template>
         </button>
     </div>
-</mat-dialog-actions>
+</mat-dialog-content>
+

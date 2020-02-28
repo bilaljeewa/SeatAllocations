@@ -149,6 +149,13 @@ body {
     margin: 0;
     font-family: 'Montserrat', sans-serif !important;
 }
+button{
+    outline: none !important;
+}
+label{
+    padding-left: 0 !important;
+    margin-left: 0 !important
+}
 
 body {
     --primary-color: #2674e7;
