@@ -5,6 +5,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SeatallocationService } from 'src/app/services/seatallocation.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface SessionUnallocated {
   name: string;
@@ -78,25 +79,27 @@ export class SeatAllocationComponent implements OnInit {
   ngOnInit() { }
 
   // open dialog box to add/edit session
-  openSessionDialog(session = null, index = null) {
+  openSessionDialog(session = null, sessionIndex = null) {
     let existingSession = session;
     const dialogRef = this.sessionDialog.open(SessionDialogComponent, {
       width: '600px',
       data: { session: existingSession },
       disableClose: true
     });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        if (existingSession) {
-          this.advancedSessions[index].sessionName = result.sessionName
-          this.advancedSessions[index].sessionsPrograms = result.sessionsPrograms
+    dialogRef.afterClosed().subscribe(response => {
+      if (response.type == 'addEdit') {
+        if (sessionIndex != null) {
+          this.advancedSessions[sessionIndex].sessionName = response.result.sessionName
+          this.advancedSessions[sessionIndex].sessionsPrograms = response.result.sessionsPrograms
         } else {
           this.advancedSessions.push({
-            sessionName: result.sessionName,
-            sessionsPrograms: result.sessionsPrograms,
+            sessionName: response.result.sessionName,
+            sessionsPrograms: response.result.sessionsPrograms,
             tables: []
           })
         }
+      } else if (response.type == 'delete') {
+        this.advancedSessions.splice(sessionIndex, 1);
       }
     });
   }
@@ -112,14 +115,19 @@ export class SeatAllocationComponent implements OnInit {
       disableClose: true
     });
     dialogRef.afterClosed().subscribe(response => {
-      if (response) {
+      if (response.type == 'addEdit') {
         if (sessionTableIndex != null) {
-          this.advancedSessions[sessionIndex].tables[sessionTableIndex].TableName = response.TableName;
-          this.advancedSessions[sessionIndex].tables[sessionTableIndex].NumSeats = response.NumSeats;
-          this.advancedSessions[sessionIndex].tables[sessionTableIndex].Colour = response.Colour;
+          this.advancedSessions[sessionIndex].tables[sessionTableIndex].EventID = response.result.EventID;
+          this.advancedSessions[sessionIndex].tables[sessionTableIndex].SessionID = response.result.SessionID;
+          this.advancedSessions[sessionIndex].tables[sessionTableIndex].TableID = response.result.TableID;
+          this.advancedSessions[sessionIndex].tables[sessionTableIndex].TableName = response.result.TableName;
+          this.advancedSessions[sessionIndex].tables[sessionTableIndex].NumSeats = response.result.NumSeats;
+          this.advancedSessions[sessionIndex].tables[sessionTableIndex].Colour = response.result.Colour;
         } else {
-          this.advancedSessions[sessionIndex].tables.push(response);
+          this.advancedSessions[sessionIndex].tables.push(response.result);
         }
+      } else if (response.type == 'delete') {
+        this.advancedSessions[sessionIndex].tables.splice(sessionTableIndex, 1);
       }
     });
   }
@@ -201,7 +209,8 @@ export class SessionDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<SessionDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private matSnackBar: MatSnackBar) {
 
     if (this.data.session) {
       this.sessionName = this.data.session.sessionName;
@@ -209,8 +218,11 @@ export class SessionDialogComponent {
     }
   }
 
-  onCancelClick() {
-    this.dialogRef.close();
+  // close the dialog box
+  onClose() {
+    this.dialogRef.close({
+      type: 'close'
+    });
   }
 
   // save the session
@@ -221,9 +233,22 @@ export class SessionDialogComponent {
     }
     this.errorMessage = false;
     this.dialogRef.close({
-      sessionName: this.sessionName,
-      sessionsPrograms: this.sessionPrograms
+      type: 'addEdit',
+      result: {
+        sessionName: this.sessionName,
+        sessionsPrograms: this.sessionPrograms
+      }
     });
+  }
+
+  // delete the table
+  onDelete() {
+    this.matSnackBar.open(`Delete ${this.data.session.sessionName}?`, 'DELETE', { duration: 5000 })
+      .onAction().subscribe(() => {
+        this.dialogRef.close({
+          type: 'delete'
+        });
+      });
   }
 }
 
@@ -239,7 +264,8 @@ export class SessionTableDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<SessionTableDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private matSnackBar: MatSnackBar) {
     this.buildForm();
   }
 
@@ -249,14 +275,16 @@ export class SessionTableDialogComponent {
       SessionID: [this.data.sessionTable ? this.data.sessionTable.SessionID : 0],
       TableID: [this.data.sessionTable ? this.data.sessionTable.TableID : 0],
       TableName: [this.data.sessionTable ? this.data.sessionTable.TableName : "", Validators.required],
-      NumSeats: [this.data.sessionTable ? this.data.sessionTable.NumSeats : "", Validators.required],
+      NumSeats: [this.data.sessionTable ? this.data.sessionTable.NumSeats : "", [Validators.required, Validators.pattern("^[0-9]*$")]],
       Colour: [this.data.sessionTable ? this.data.sessionTable.Colour : "#ffffff"]
     });
   }
 
   // close the dialog box
   onClose() {
-    this.dialogRef.close();
+    this.dialogRef.close({
+      type: 'close'
+    });
   }
 
   // get color and set in the form control
@@ -271,7 +299,20 @@ export class SessionTableDialogComponent {
     if (!this.tableForm.valid) {
       return;
     }
-    this.dialogRef.close(this.tableForm.value);
+    this.dialogRef.close({
+      type: 'addEdit',
+      result: this.tableForm.value
+    });
+  }
+
+  // delete the table
+  onDelete() {
+    this.matSnackBar.open(`Delete ${this.data.sessionTable.TableName}?`, 'DELETE', { duration: 5000 })
+      .onAction().subscribe(() => {
+        this.dialogRef.close({
+          type: 'delete'
+        });
+      });
   }
 
   // Form validations start

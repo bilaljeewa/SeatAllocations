@@ -8,8 +8,8 @@
     <mat-error *ngIf="!sessionName && errorMessage">Please enter a session name</mat-error>
     <div class="multi-select-drop">
       <label class="mt-lg-2 mb-0 mt-md-0" for="">Session Programs</label>
-      <ng-multiselect-dropdown color="accent" class="w-100" [data]="programs"
-        [(ngModel)]="sessionPrograms" [settings]="dropdownSettings">
+      <ng-multiselect-dropdown color="accent" class="w-100" [data]="programs" [(ngModel)]="sessionPrograms"
+        [settings]="dropdownSettings">
       </ng-multiselect-dropdown>
     </div>
 
@@ -34,14 +34,14 @@
         </div>
       </div>
     </div> -->
+
     <div class="button-wrap pt-3 pt-lg-4 pb-1 text-right">
-      <button *ngIf="data.session" mat-raised-button color="warn">Delete</button>
-      <button mat-raised-button class="mx-2" (click)="onCancelClick()">Cancel</button>
+      <button *ngIf="data.session" mat-raised-button color="warn" (click)="onDelete()">Delete</button>
+      <button mat-raised-button class="mx-2" (click)="onClose()">Cancel</button>
       <button mat-raised-button color="primary" (click)="saveSession()">
         <ng-container *ngIf="data.session; else elseTemplate"> Update </ng-container>
         <ng-template #elseTemplate> Save </ng-template>
       </button>
     </div>
   </mat-dialog-content>
-
 </div>
