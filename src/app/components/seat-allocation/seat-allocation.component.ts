@@ -176,6 +176,15 @@ export class SeatAllocationComponent implements OnInit {
   do(event) {
     event.preventDefault();
   }
+
+  // remove session programs from the chip cancle icon
+  onRemoveSessionProgram(program, index = null) {
+    this.advancedSessions[index].sessionsPrograms.splice(
+      this.advancedSessions[index].sessionsPrograms.findIndex(function(x){
+        return x.id === program.id
+      })
+    )
+  }
 }
 
 @Component({
