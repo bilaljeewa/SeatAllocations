@@ -77,16 +77,17 @@ export class SeatAllocationComponent implements OnInit {
 
   // open dialog box to add/edit session
   openSessionDialog(session = null, index = null) {
-    let newSession = session;
+    let existingSession = session;
     const dialogRef = this.sessionDialog.open(SessionDialogComponent, {
       width: '600px',
-      data: { session: newSession },
+      data: { session: existingSession },
       disableClose: true
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        if (newSession) {
-
+        if (existingSession) {
+          this.advancedSessions[index].sessionName = result.sessionName
+          this.advancedSessions[index].sessionsPrograms = result.sessionsPrograms
         } else {
           this.advancedSessions.push({
             sessionName: result.sessionName,
