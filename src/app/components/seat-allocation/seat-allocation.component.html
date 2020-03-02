@@ -10,14 +10,16 @@
             <div class="session-list p-2">
                 <div class="row form-row">
                     <div class="mb-2 mb-xl-0 media-title col-xl-2 col-lg-12">
-                        <h2 class="heading m-0 "> {{item.sessionName}} </h2>
+                        <h2 class="heading m-0 "> {{item.SessionName}} </h2>
                     </div>
                     <div class="session-body col-xl-10 col-lg-12">
                         <div class="row form-row">
                             <div class="col-lg-3 col-md-4">
                                 <mat-chip-list class="sessionProgramsChips w-100">
-                                    <mat-chip *ngFor="let program of item.sessionsPrograms">
-                                        {{program.name}} <mat-icon matChipRemove (click)="onRemoveSessionProgram(program, i)">cancel</mat-icon>
+                                    <mat-chip *ngFor="let program of item.Programs; let k = index;">
+                                        {{program.name}}
+                                        <mat-icon matChipRemove (click)="removeSessionProgram(k, i)">
+                                            cancel </mat-icon>
                                     </mat-chip>
                                 </mat-chip-list>
                             </div>
@@ -25,25 +27,25 @@
                                 <div class="row form-row align-items-center h-100">
                                     <div class="col-sm-3 col-6 mb-2 mb-sm-0">
                                         <div class="list-wrap text-center border">
-                                            <h3>3</h3>
+                                            <h3>{{item.TotalTables}}</h3>
                                             <p>Tables</p>
                                         </div>
                                     </div>
                                     <div class="col-sm-3 col-6 mb-2 mb-sm-0">
                                         <div class="list-wrap text-center border">
-                                            <h3>100</h3>
+                                            <h3>{{item.TotalSeats}}</h3>
                                             <p>Total Seats</p>
                                         </div>
                                     </div>
                                     <div class="col-sm-3 col-6 mb-2 mb-sm-0">
                                         <div class="list-wrap text-center border">
-                                            <h3>80</h3>
+                                            <h3>{{item.TotalAllocated}}</h3>
                                             <p>Allocated</p>
                                         </div>
                                     </div>
                                     <div class="col-sm-3 col-6 mb-2 mb-sm-0">
                                         <div class="list-wrap text-center border">
-                                            <h3>20</h3>
+                                            <h3>{{item.TotalUnAllocated}}</h3>
                                             <p>Unallocated</p>
                                         </div>
                                     </div>
@@ -153,17 +155,12 @@
                                             <mat-tab label="Allocated">
                                                 <div class="py-2 py-md-3">
                                                     <div class="button-wrap text-right">
-                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">Auto
-                                                            Assign
-                                                            All</button>
-                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">Auto
-                                                            Assign
-                                                            To
-                                                            Ferns</button>
+                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">
+                                                            Auto Assign All</button>
+                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">
+                                                            Auto Assign To Ferns</button>
                                                         <button mat-raised-button color="primary"
-                                                            class="ml-2 mb-2">Assign
-                                                            Selection
-                                                            To Ferns</button>
+                                                            class="ml-2 mb-2">Assign Selection To Ferns</button>
                                                     </div>
                                                 </div>
                                             </mat-tab>

@@ -74,6 +74,7 @@ export class SeatAllocationComponent implements OnInit {
 
   constructor(
     private sessionDialog: MatDialog,
+    private matSnackBar: MatSnackBar,
     private seatallocationService: SeatallocationService) { }
 
   ngOnInit() { }
@@ -89,13 +90,19 @@ export class SeatAllocationComponent implements OnInit {
     dialogRef.afterClosed().subscribe(response => {
       if (response.type == 'addEdit') {
         if (sessionIndex != null) {
-          this.advancedSessions[sessionIndex].sessionName = response.result.sessionName
-          this.advancedSessions[sessionIndex].sessionsPrograms = response.result.sessionsPrograms
+          this.advancedSessions[sessionIndex].SessionName = response.result.SessionName
+          this.advancedSessions[sessionIndex].Programs = response.result.Programs
         } else {
           this.advancedSessions.push({
-            sessionName: response.result.sessionName,
-            sessionsPrograms: response.result.sessionsPrograms,
-            tables: []
+            EventID: response.result.EventID,
+            SessionID: response.result.SessionID,
+            SessionName: response.result.SessionName,
+            Programs: response.result.Programs,
+            tables: [],
+            TotalTables: 0,
+            TotalSeats: 0,
+            TotalAllocated: 0,
+            TotalUnAllocated: 0,
           })
         }
       } else if (response.type == 'delete') {
@@ -125,9 +132,15 @@ export class SeatAllocationComponent implements OnInit {
           this.advancedSessions[sessionIndex].tables[sessionTableIndex].Colour = response.result.Colour;
         } else {
           this.advancedSessions[sessionIndex].tables.push(response.result);
+          this.advancedSessions[sessionIndex].TotalTables = this.advancedSessions[sessionIndex].TotalTables + 1;
         }
+        this.advancedSessions[sessionIndex].TotalSeats = 0;
+        this.advancedSessions[sessionIndex].tables.map(ele => {
+          this.advancedSessions[sessionIndex].TotalSeats = parseInt(ele.NumSeats) + this.advancedSessions[sessionIndex].TotalSeats;
+        })
       } else if (response.type == 'delete') {
         this.advancedSessions[sessionIndex].tables.splice(sessionTableIndex, 1);
+        this.advancedSessions[sessionIndex].TotalTables = this.advancedSessions[sessionIndex].TotalTables - 1;
       }
     });
   }
@@ -171,19 +184,18 @@ export class SeatAllocationComponent implements OnInit {
       this.innerPanelIcon = -1;
     }
   }
-  // inner expansion pannel open and closed constrols handeling ends
+  // inner expansion pannel open and closed constrols handling ends
 
   do(event) {
     event.preventDefault();
   }
 
-  // remove session programs from the chip cancle icon
-  onRemoveSessionProgram(program, index = null) {
-    this.advancedSessions[index].sessionsPrograms.splice(
-      this.advancedSessions[index].sessionsPrograms.findIndex(function(x){
-        return x.id === program.id
-      })
-    )
+  // remove session program from the session programs chips
+  removeSessionProgram(programIndex: number, sessionIndex: number) {
+    this.matSnackBar.open(`Delete ${this.advancedSessions[sessionIndex].Programs[programIndex].name}?`, 'DELETE', { duration: 5000 })
+      .onAction().subscribe(() => {
+        this.advancedSessions[sessionIndex].Programs.splice(programIndex, 1);
+      });
   }
 }
 
@@ -212,7 +224,7 @@ export class SessionDialogComponent {
     { id: 4, name: 'Trip' },
     { id: 5, name: 'Holiday' }
   ];
-  sessionName: string = '';
+  SessionName: string = '';
   sessionPrograms = [];
   errorMessage: Boolean = false;
 
@@ -222,8 +234,8 @@ export class SessionDialogComponent {
     private matSnackBar: MatSnackBar) {
 
     if (this.data.session) {
-      this.sessionName = this.data.session.sessionName;
-      this.sessionPrograms = this.data.session.sessionsPrograms;
+      this.SessionName = this.data.session.SessionName;
+      this.sessionPrograms = this.data.session.Programs;
     }
   }
 
@@ -236,7 +248,7 @@ export class SessionDialogComponent {
 
   // save the session
   saveSession() {
-    if (!this.sessionName || this.sessionPrograms.length == 0) {
+    if (!this.SessionName || this.sessionPrograms.length == 0) {
       this.errorMessage = true;
       return;
     }
@@ -244,15 +256,15 @@ export class SessionDialogComponent {
     this.dialogRef.close({
       type: 'addEdit',
       result: {
-        sessionName: this.sessionName,
-        sessionsPrograms: this.sessionPrograms
+        SessionName: this.SessionName,
+        Programs: this.sessionPrograms
       }
     });
   }
 
   // delete the table
   onDelete() {
-    this.matSnackBar.open(`Delete ${this.data.session.sessionName}?`, 'DELETE', { duration: 5000 })
+    this.matSnackBar.open(`Delete ${this.data.session.SessionName}?`, 'DELETE', { duration: 5000 })
       .onAction().subscribe(() => {
         this.dialogRef.close({
           type: 'delete'
@@ -280,11 +292,11 @@ export class SessionTableDialogComponent {
 
   buildForm() {
     this.tableForm = this.formBuilder.group({
-      EventID: [this.data.sessionTable ? this.data.sessionTable.EventID : 0],
+      EventID: [this.data.sessionTable ? this.data.sessionTable.EventID : ""],
       SessionID: [this.data.sessionTable ? this.data.sessionTable.SessionID : 0],
       TableID: [this.data.sessionTable ? this.data.sessionTable.TableID : 0],
       TableName: [this.data.sessionTable ? this.data.sessionTable.TableName : "", Validators.required],
-      NumSeats: [this.data.sessionTable ? this.data.sessionTable.NumSeats : "", [Validators.required, Validators.pattern("^[0-9]*$")]],
+      NumSeats: [this.data.sessionTable ? this.data.sessionTable.NumSeats : 0, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.min(1)]],
       Colour: [this.data.sessionTable ? this.data.sessionTable.Colour : "#ffffff"]
     });
   }
@@ -306,6 +318,7 @@ export class SessionTableDialogComponent {
   // save the session table
   saveSessionTable() {
     if (!this.tableForm.valid) {
+      this.tableForm.markAllAsTouched();
       return;
     }
     this.dialogRef.close({
