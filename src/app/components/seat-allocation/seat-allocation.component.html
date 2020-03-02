@@ -17,7 +17,7 @@
                             <div class="col-lg-3 col-md-4">
                                 <mat-chip-list class="sessionProgramsChips w-100">
                                     <mat-chip *ngFor="let program of item.sessionsPrograms">
-                                        {{program.name}} <mat-icon matChipRemove>cancel</mat-icon>
+                                        {{program.name}} <mat-icon matChipRemove (click)="onRemoveSessionProgram(program, i)">cancel</mat-icon>
                                     </mat-chip>
                                 </mat-chip-list>
                             </div>
