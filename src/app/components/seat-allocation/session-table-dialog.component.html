@@ -1,22 +1,22 @@
 <h2 mat-dialog-title class="text-center">Table <span
-        *ngIf="data.sessionTable?.tableName">"{{data.sessionTable.tableName}}"</span>
+        *ngIf="data.sessionTable?.TableName">"{{data.sessionTable.TableName}}"</span>
 </h2>
 <mat-dialog-content>
     <form [formGroup]="tableForm" novalidate autocomplete="off">
         <mat-form-field class="fld d-block">
             <mat-label>Table Name</mat-label>
-            <input matInput formControlName="tableName">
-            <mat-error *ngIf="tableName.hasError('required')">Please enter a Table Name</mat-error>
+            <input matInput formControlName="TableName">
+            <mat-error *ngIf="TableName.hasError('required')">Please enter a Table Name</mat-error>
         </mat-form-field>
 
         <mat-form-field class="fld d-block">
             <mat-label>No. of Seats</mat-label>
-            <input matInput formControlName="tableSeats">
-            <mat-error *ngIf="tableSeats.hasError('required')">Please enter No. of Seats</mat-error>
+            <input matInput formControlName="NumSeats">
+            <mat-error *ngIf="NumSeats.hasError('required')">Please enter No. of Seats</mat-error>
         </mat-form-field>
 
         <mat-form-field class="fld d-block">
-            <input matInput [style.background]="tableForm.value.tableColor" [colorPicker]="tableForm.value.tableColor"
+            <input matInput [style.background]="tableForm.value.Colour" [colorPicker]="tableForm.value.Colour"
                 cpPosition="bottom" (colorPickerChange)="getColor($event)">
         </mat-form-field>
     </form>
