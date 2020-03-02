@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { SeatallocationService } from 'src/app/services/seatallocation.service';
 
 export interface SessionUnallocated {
   name: string;
@@ -71,7 +72,8 @@ export class SeatAllocationComponent implements OnInit {
   fernolumns: string[] = ['image', 'name', 'symbol'];
 
   constructor(
-    private sessionDialog: MatDialog) { }
+    private sessionDialog: MatDialog,
+    private seatallocationService: SeatallocationService) { }
 
   ngOnInit() { }
 
@@ -111,9 +113,9 @@ export class SeatAllocationComponent implements OnInit {
     dialogRef.afterClosed().subscribe(response => {
       if (response) {
         if (sessionTableIndex != null) {
-          this.advancedSessions[sessionIndex].tables[sessionTableIndex].tableName = response.tableName;
-          this.advancedSessions[sessionIndex].tables[sessionTableIndex].tableSeats = response.tableSeats;
-          this.advancedSessions[sessionIndex].tables[sessionTableIndex].tableColor = response.tableColor;
+          this.advancedSessions[sessionIndex].tables[sessionTableIndex].TableName = response.TableName;
+          this.advancedSessions[sessionIndex].tables[sessionTableIndex].NumSeats = response.NumSeats;
+          this.advancedSessions[sessionIndex].tables[sessionTableIndex].Colour = response.Colour;
         } else {
           this.advancedSessions[sessionIndex].tables.push(response);
         }
@@ -224,7 +226,6 @@ export class SessionDialogComponent {
   }
 }
 
-
 @Component({
   selector: "session-table-dialog",
   templateUrl: "session-table-dialog.component.html",
@@ -243,9 +244,12 @@ export class SessionTableDialogComponent {
 
   buildForm() {
     this.tableForm = this.formBuilder.group({
-      tableName: [this.data.sessionTable ? this.data.sessionTable.tableName : "", Validators.required],
-      tableSeats: [this.data.sessionTable ? this.data.sessionTable.tableSeats : "", Validators.required],
-      tableColor: [this.data.sessionTable ? this.data.sessionTable.tableColor : "#ffffff"]
+      EventID: [this.data.sessionTable ? this.data.sessionTable.EventID : 0],
+      SessionID: [this.data.sessionTable ? this.data.sessionTable.SessionID : 0],
+      TableID: [this.data.sessionTable ? this.data.sessionTable.TableID : 0],
+      TableName: [this.data.sessionTable ? this.data.sessionTable.TableName : "", Validators.required],
+      NumSeats: [this.data.sessionTable ? this.data.sessionTable.NumSeats : "", Validators.required],
+      Colour: [this.data.sessionTable ? this.data.sessionTable.Colour : "#ffffff"]
     });
   }
 
@@ -257,7 +261,7 @@ export class SessionTableDialogComponent {
   // get color and set in the form control
   getColor(color: string) {
     this.tableForm.patchValue({
-      tableColor: color
+      Colour: color
     })
   }
 
@@ -270,11 +274,11 @@ export class SessionTableDialogComponent {
   }
 
   // Form validations start
-  get tableName() {
-    return this.tableForm.get("tableName");
+  get TableName() {
+    return this.tableForm.get("TableName");
   }
-  get tableSeats() {
-    return this.tableForm.get("tableSeats");
+  get NumSeats() {
+    return this.tableForm.get("NumSeats");
   }
   // Form validations end
 }

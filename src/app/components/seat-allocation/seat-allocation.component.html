@@ -190,15 +190,15 @@
                                         <div class="table-list-inner mb-2"
                                             *ngFor="let tableItem of item.tables; let j=index">
                                             <div class="table-top p-2"
-                                                [ngStyle]="{'border': '1px solid' + tableItem.tableColor}">
-                                                <h4 class="table-head">Table "{{tableItem.tableName}}"</h4>
+                                                [ngStyle]="{'border': '1px solid' + tableItem.Colour}">
+                                                <h4 class="table-head">Table "{{tableItem.TableName}}"</h4>
                                                 <div class="table-in">
                                                     <div class="row form-row align-items-center">
                                                         <div class="col-sm-2">
                                                             <div class="count-wrap">
                                                                 <span
                                                                     class="d-flex align-items-center justify-content-center"
-                                                                    [style.background]="tableItem.tableColor"
+                                                                    [style.background]="tableItem.Colour"
                                                                     style="color: white;">
                                                                     8
                                                                 </span>
@@ -207,7 +207,7 @@
                                                         <div class="col-sm-7 allocated">
                                                             <p class="py-1 m-0 d-flex justify-content-between alloc">
                                                                 <span class="title">Allocated Seats</span>
-                                                                <span class="badge" [style.color]="tableItem.tableColor"
+                                                                <span class="badge" [style.color]="tableItem.Colour"
                                                                     style="background: white;">5</span>
                                                             </p>
                                                             <p class="py-1 m-0 d-flex justify-content-between unalloc">
@@ -220,10 +220,10 @@
                                                                 <div class="color-btn">
                                                                     <p>
                                                                         <input matInput
-                                                                            [style.background]="tableItem.tableColor"
-                                                                            [colorPicker]="tableItem.tableColor"
+                                                                            [style.background]="tableItem.Colour"
+                                                                            [colorPicker]="tableItem.Colour"
                                                                             cpPosition="bottom-left"
-                                                                            (colorPickerChange)="tableItem.tableColor=$event">
+                                                                            (colorPickerChange)="tableItem.Colour=$event">
                                                                     </p>
                                                                     <button mat-raised-button color="primary"
                                                                         (click)="addEditSessionTable(i, j); do($event);">Edit</button>
