@@ -261,7 +261,7 @@ export class SessionDialogComponent {
 
   dropdownSettings = {
     singleSelection: false,
-    idField: 'EventFunctionCode',
+    idField: 'EventFunctionId',
     textField: 'Name',
     selectAllText: 'Select All',
     unSelectAllText: 'UnSelect All',
@@ -283,7 +283,7 @@ export class SessionDialogComponent {
     if (this.data.session) {
       this.SessionName = this.data.session.SessionName;
       this.data.session.Programs.map(ele => {
-        let program = this.data.programs.filter(ele1 => ele1.EventFunctionId == ele)
+        let program = this.data.programs.filter(ele1 => ele1.EventFunctionId == ele.trim())
         this.sessionPrograms.push(program[0]);
       })
     }
@@ -297,12 +297,16 @@ export class SessionDialogComponent {
   }
 
   // save the session
-  saveSession() {
+  async saveSession() {
     if (!this.SessionName || this.sessionPrograms.length == 0) {
       this.errorMessage = true;
       return;
     }
     this.errorMessage = false;
+    let filteredPrograms = new Array();
+    this.sessionPrograms.map(ele => {
+      filteredPrograms.push(ele.EventFunctionId);
+    })
     let sessionData = new Array();
     if (this.data.session) {
       sessionData.push({
@@ -334,7 +338,7 @@ export class SessionDialogComponent {
     sessionData.push({
       "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
       "Name": "Programs",
-      "Value": this.sessionPrograms.toString()
+      "Value": filteredPrograms.toString()
     })
     sessionData.push({
       "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
