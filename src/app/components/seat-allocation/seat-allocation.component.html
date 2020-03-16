@@ -16,10 +16,10 @@
                         <div class="row form-row">
                             <div class="col-lg-3 col-md-4">
                                 <mat-chip-list class="sessionProgramsChips w-100">
-                                    <mat-chip *ngFor="let program of item.Programs; let k = index;">
-                                        {{program.name}}
-                                        <mat-icon matChipRemove (click)="removeSessionProgram(k, i)">
-                                            cancel </mat-icon>
+                                    <mat-chip *ngFor="let program of item.programNames; let k = index;">
+                                        {{program}}
+                                        <!-- <mat-icon matChipRemove (click)="removeSessionProgram(k, i)">
+                                            cancel </mat-icon> -->
                                     </mat-chip>
                                 </mat-chip-list>
                             </div>
@@ -45,7 +45,7 @@
                                     </div>
                                     <div class="col-sm-3 col-6 mb-2 mb-sm-0">
                                         <div class="list-wrap text-center border">
-                                            <h3>{{item.TotalUnAllocated}}</h3>
+                                            <h3>{{item.TotalUnallocated}}</h3>
                                             <p>Unallocated</p>
                                         </div>
                                     </div>

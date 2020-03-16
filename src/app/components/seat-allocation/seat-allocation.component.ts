@@ -54,6 +54,7 @@ export class SeatAllocationComponent implements OnInit {
   selection = new SelectionModel<SessionUnallocated>(true, []);
 
   advancedSessions = [];
+  programs = new Array();
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
@@ -77,37 +78,82 @@ export class SeatAllocationComponent implements OnInit {
     private matSnackBar: MatSnackBar,
     private seatallocationService: SeatallocationService) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    localStorage.setItem('EventID', 'ANNCONF');
+    this.getPrograms();
+  }
+
+  // fetch the programs as per the current EventID
+  getPrograms() {
+    this.seatallocationService.getPrograms(localStorage.getItem("eventID")).subscribe(
+      result => {
+        this.programs = result;
+        this.getSessions();
+      }, error => {
+        console.log(error);
+      }
+    )
+  }
+
+  // fetch the sessions as per the current EventID
+  getSessions() {
+    this.seatallocationService.getSessions(localStorage.getItem("eventID")).subscribe(
+      result => {
+        this.advancedSessions = [];
+        if (result.length > 0) {
+          result.map((ele: any, index) => {
+            this.advancedSessions[index] = []
+            ele.Properties.$values.map(ele1 => {
+              if (ele1.Name == 'Programs') {
+                this.advancedSessions[index][ele1.Name] = ele1.Value.split(",");
+                this.advancedSessions[index]["programNames"] = []
+                ele1.Value.split(",").map(ele2 => {
+                  let Name = this.programs.filter(ele => ele.EventFunctionId == ele2.trim());
+                  this.advancedSessions[index]["programNames"].push(Name.length > 0 ? Name[0].Name : '')
+                })
+              } else {
+                this.advancedSessions[index][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
+              }
+            })
+          })
+        }
+      }, error => {
+        console.log(error);
+      }
+    )
+  }
 
   // open dialog box to add/edit session
   openSessionDialog(session = null, sessionIndex = null) {
     let existingSession = session;
     const dialogRef = this.sessionDialog.open(SessionDialogComponent, {
       width: '600px',
-      data: { session: existingSession },
+      data: { session: existingSession, programs: this.programs },
       disableClose: true
     });
     dialogRef.afterClosed().subscribe(response => {
-      if (response.type == 'addEdit') {
-        if (sessionIndex != null) {
-          this.advancedSessions[sessionIndex].SessionName = response.result.SessionName
-          this.advancedSessions[sessionIndex].Programs = response.result.Programs
-        } else {
-          this.advancedSessions.push({
-            EventID: response.result.EventID,
-            SessionID: response.result.SessionID,
-            SessionName: response.result.SessionName,
-            Programs: response.result.Programs,
-            tables: [],
-            TotalTables: 0,
-            TotalSeats: 0,
-            TotalAllocated: 0,
-            TotalUnAllocated: 0,
-          })
-        }
-      } else if (response.type == 'delete') {
-        this.advancedSessions.splice(sessionIndex, 1);
+      if (response.type == 'addEdit' || response.type == 'delete') {
+        this.getPrograms();
+        // if (sessionIndex != null) {
+        //   this.advancedSessions[sessionIndex].SessionName = response.result.SessionName
+        //   this.advancedSessions[sessionIndex].Programs = response.result.Programs
+        // } else {
+        //   this.advancedSessions.push({
+        //     EventID: response.result.EventID,
+        //     SessionID: response.result.SessionID,
+        //     SessionName: response.result.SessionName,
+        //     Programs: response.result.Programs,
+        //     tables: [],
+        //     TotalTables: 0,
+        //     TotalSeats: 0,
+        //     TotalAllocated: 0,
+        //     TotalUnAllocated: 0,
+        //   })
+        // }
       }
+      // else if (response.type == 'delete') {
+      //   this.advancedSessions.splice(sessionIndex, 1);
+      // }
     });
   }
 
@@ -210,20 +256,13 @@ export class SessionDialogComponent {
 
   dropdownSettings = {
     singleSelection: false,
-    idField: 'id',
-    textField: 'name',
+    idField: 'EventFunctionCode',
+    textField: 'Name',
     selectAllText: 'Select All',
     unSelectAllText: 'UnSelect All',
     itemsShowLimit: 5,
     allowSearchFilter: true
   };
-  programs: any[] = [
-    { id: 1, name: 'Dinner Gala' },
-    { id: 2, name: 'Sponsors' },
-    { id: 3, name: 'Lunch' },
-    { id: 4, name: 'Trip' },
-    { id: 5, name: 'Holiday' }
-  ];
   SessionName: string = '';
   sessionPrograms = [];
   errorMessage: Boolean = false;
@@ -231,7 +270,8 @@ export class SessionDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<SessionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private matSnackBar: MatSnackBar) {
+    private matSnackBar: MatSnackBar,
+    private seatallocationService: SeatallocationService) {
 
     if (this.data.session) {
       this.SessionName = this.data.session.SessionName;
@@ -253,22 +293,92 @@ export class SessionDialogComponent {
       return;
     }
     this.errorMessage = false;
-    this.dialogRef.close({
-      type: 'addEdit',
-      result: {
-        SessionName: this.SessionName,
-        Programs: this.sessionPrograms
-      }
-    });
+    let sessionData = new Array();
+    if (this.data.session) {
+      sessionData.push({
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+        "Name": "Ordinal",
+        "Value": { "$type": "System.Int32", "$value": this.data.session.Ordinal }
+      })
+    }
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "TotalUnallocated",
+      "Value": { "$type": "System.Int32", "$value": this.data.session ? this.data.session.TotalUnallocated : 0 }
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "TotalAllocated",
+      "Value": { "$type": "System.Int32", "$value": this.data.session ? this.data.session.TotalAllocated : 0 }
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "TotalSeats",
+      "Value": { "$type": "System.Int32", "$value": this.data.session ? this.data.session.TotalSeats : 0 }
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "TotalTables",
+      "Value": { "$type": "System.Int32", "$value": this.data.session ? this.data.session.TotalTables : 0 }
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "Programs",
+      "Value": this.sessionPrograms.toString()
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "SessionName",
+      "Value": this.SessionName
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "EventID",
+      "Value": this.data.session ? this.data.session.EventID : localStorage.getItem('EventID')
+    })
+
+    if (this.data.session) {
+      this.seatallocationService.updateSession({ sessionID: this.data.session.Ordinal, session: sessionData }).subscribe(
+        result => {
+          if (result) {
+            this.dialogRef.close({
+              type: 'addEdit',
+              result
+            });
+          }
+        }, error => {
+          console.log(error);
+        }
+      )
+    } else {
+      this.seatallocationService.addSession({ session: sessionData }).subscribe(
+        result => {
+          if (result) {
+            this.dialogRef.close({
+              type: 'addEdit',
+              result
+            });
+          }
+        }, error => {
+          console.log(error);
+        }
+      )
+    }
   }
 
   // delete the table
   onDelete() {
     this.matSnackBar.open(`Delete ${this.data.session.SessionName}?`, 'DELETE', { duration: 5000 })
       .onAction().subscribe(() => {
-        this.dialogRef.close({
-          type: 'delete'
-        });
+        this.seatallocationService.deleteSession(this.data.session.Ordinal).subscribe(
+          result => {
+            this.dialogRef.close({
+              type: 'delete'
+            });
+          }, error => {
+            console.log(error);
+          }
+        )
       });
   }
 }

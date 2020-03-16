@@ -9,7 +9,7 @@
     margin: 0 !important;
   }
 
-  .multiselect-item-checkbox input[type="checkbox"] + div:before {
+  .multiselect-item-checkbox input[type="checkbox"]+div:before {
     color: #2674e7 !important;
     border: 2px solid #2674e7 !important;
   }
@@ -20,7 +20,7 @@
     letter-spacing: 1.5px;
   }
 
-  .multiselect-item-checkbox input[type="checkbox"]:checked + div:before {
+  .multiselect-item-checkbox input[type="checkbox"]:checked+div:before {
     background: #2674e7 !important;
   }
 
@@ -96,10 +96,9 @@
       max-height: none;
       overflow: visible;
 
-      .dropdown-list {
-        height: 30vh;
-        overflow: auto;
-      }
+      // .dropdown-list {
+  //   height: 30vh;
+  //   overflow: auto;// }
 
       .multi-select-drop {
         label {
@@ -306,6 +305,7 @@ button {
                 }
               }
             }
+
             .color-btn {
               input {
                 width: 30px;
