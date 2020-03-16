@@ -230,7 +230,7 @@ export class SeatallocationService {
         'RequestVerificationToken': this.token
       })
     }
-    let url = this.baseUrl + 'api/Psc_Event_Session';
+    let url = this.baseUrl + 'api/Psc_Event_Session?EventID' + eventID;
     return this.httpClient.get(url, httpOptions)
       .pipe(map((res: any) => {
         return res.Items.$values

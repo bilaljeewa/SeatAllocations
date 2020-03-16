@@ -6,6 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dial
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SeatallocationService } from 'src/app/services/seatallocation.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToastrService } from 'ngx-toastr';
 
 export interface SessionUnallocated {
   name: string;
@@ -55,6 +56,7 @@ export class SeatAllocationComponent implements OnInit {
 
   advancedSessions = [];
   programs = new Array();
+  eventID = "";
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
@@ -76,29 +78,31 @@ export class SeatAllocationComponent implements OnInit {
   constructor(
     private sessionDialog: MatDialog,
     private matSnackBar: MatSnackBar,
+    private toast: ToastrService,
     private seatallocationService: SeatallocationService) { }
 
   ngOnInit() {
-    localStorage.setItem('EventID', 'ANNCONF');
-    console.log(window.location.href)
+    let currentURL = window.location.href;
+    this.eventID = currentURL.substring(currentURL.indexOf("EventKey=") + 9, currentURL.indexOf("&"));
+    // localStorage.setItem('eventID', currentURL.substring(currentURL.indexOf("EventKey=") + 9, currentURL.indexOf("&")));
     this.getPrograms();
   }
 
   // fetch the programs as per the current EventID
   getPrograms() {
-    this.seatallocationService.getPrograms(localStorage.getItem("eventID")).subscribe(
+    this.seatallocationService.getPrograms(this.eventID).subscribe(
       result => {
         this.programs = result;
         this.getSessions();
       }, error => {
-        console.log(error);
+        this.toast.error("Something went wrong!! Please try again later!!", "Error");
       }
     )
   }
 
   // fetch the sessions as per the current EventID
   getSessions() {
-    this.seatallocationService.getSessions(localStorage.getItem("eventID")).subscribe(
+    this.seatallocationService.getSessions(this.eventID).subscribe(
       result => {
         this.advancedSessions = [];
         if (result.length > 0) {
@@ -119,7 +123,7 @@ export class SeatAllocationComponent implements OnInit {
           })
         }
       }, error => {
-        console.log(error);
+        this.toast.error("Something went wrong!! Please try again later!!", "Error");
       }
     )
   }
@@ -129,7 +133,7 @@ export class SeatAllocationComponent implements OnInit {
     let existingSession = session;
     const dialogRef = this.sessionDialog.open(SessionDialogComponent, {
       width: '600px',
-      data: { session: existingSession, programs: this.programs },
+      data: { session: existingSession, programs: this.programs, eventID: this.eventID },
       disableClose: true
     });
     dialogRef.afterClosed().subscribe(response => {
@@ -272,11 +276,16 @@ export class SessionDialogComponent {
     public dialogRef: MatDialogRef<SessionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private matSnackBar: MatSnackBar,
+    private toast: ToastrService,
     private seatallocationService: SeatallocationService) {
+    this.sessionPrograms = [];
 
     if (this.data.session) {
       this.SessionName = this.data.session.SessionName;
-      this.sessionPrograms = this.data.session.Programs;
+      this.data.session.Programs.map(ele => {
+        let program = this.data.programs.filter(ele1 => ele1.EventFunctionId == ele)
+        this.sessionPrograms.push(program[0]);
+      })
     }
   }
 
@@ -335,33 +344,39 @@ export class SessionDialogComponent {
     sessionData.push({
       "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
       "Name": "EventID",
-      "Value": this.data.session ? this.data.session.EventID : localStorage.getItem('EventID')
+      "Value": this.data.session ? this.data.session.EventID : this.data.eventID
     })
 
     if (this.data.session) {
       this.seatallocationService.updateSession({ sessionID: this.data.session.Ordinal, session: sessionData }).subscribe(
         result => {
           if (result) {
+            this.toast.success(`${this.SessionName} is updated successfully`, "Updated Success");
             this.dialogRef.close({
               type: 'addEdit',
               result
             });
+          } else {
+            this.toast.error("Something went wrong!! Please try again later!!", "Error");
           }
         }, error => {
-          console.log(error);
+          this.toast.error("Something went wrong!! Please try again later!!", "Error");
         }
       )
     } else {
       this.seatallocationService.addSession({ session: sessionData }).subscribe(
         result => {
           if (result) {
+            this.toast.success(`${this.SessionName} is added successfully`, "Added Success");
             this.dialogRef.close({
               type: 'addEdit',
               result
             });
+          } else {
+            this.toast.error("Something went wrong!! Please try again later!!", "Error");
           }
         }, error => {
-          console.log(error);
+          this.toast.error("Something went wrong!! Please try again later!!", "Error");
         }
       )
     }
@@ -373,11 +388,12 @@ export class SessionDialogComponent {
       .onAction().subscribe(() => {
         this.seatallocationService.deleteSession(this.data.session.Ordinal).subscribe(
           result => {
+            this.toast.success(`${this.data.session.SessionName} is deleted successfully`, "Deleted Success");
             this.dialogRef.close({
               type: 'delete'
             });
           }, error => {
-            console.log(error);
+            this.toast.error("Something went wrong!! Please try again later!!", "Error");
           }
         )
       });

@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './app.component';
 import { MaterialModule } from '../app/material/material.module';
@@ -27,6 +28,7 @@ import { SeatAllocationComponent, SessionDialogComponent, SessionTableDialogComp
     FormsModule,
     ReactiveFormsModule,
     ColorPickerModule,
+    ToastrModule.forRoot(),
     NgMultiSelectDropDownModule.forRoot()
   ],
   entryComponents: [
