@@ -80,6 +80,7 @@ export class SeatAllocationComponent implements OnInit {
 
   ngOnInit() {
     localStorage.setItem('EventID', 'ANNCONF');
+    console.log(window.location.href)
     this.getPrograms();
   }
 
