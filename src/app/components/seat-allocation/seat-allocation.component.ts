@@ -101,10 +101,12 @@ export class SeatAllocationComponent implements OnInit {
   }
 
   // fetch the sessions as per the current EventID
-  getSessions() {
+  async getSessions() {
     this.seatallocationService.getSessions(this.eventID).subscribe(
       result => {
         this.advancedSessions = [];
+        this.mainPanelIcon = -1;
+        this.innerPanelIcon = -1;
         if (result.length > 0) {
           result.map((ele: any, index) => {
             this.advancedSessions[index] = []
@@ -121,6 +123,30 @@ export class SeatAllocationComponent implements OnInit {
               }
             })
           })
+          this.getTables();
+        }
+      }, error => {
+        this.toast.error("Something went wrong!! Please try again later!!", "Error");
+      }
+    )
+  }
+
+  // fetch the tables as per the current EventID
+  async getTables() {
+    this.seatallocationService.getTables(this.eventID).subscribe(
+      result => {
+        let abc = [];
+        if (result.length > 0) {
+          result.map((ele: any, index) => {
+            abc[index] = []
+            ele.Properties.$values.map(ele1 => {
+              abc[index][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
+            })
+          })
+          this.advancedSessions.map(ele => {
+            ele['tables'] = abc.filter(ele1 => ele1.SessionID == ele.Ordinal);
+          })
+          console.log(this.advancedSessions)
         }
       }, error => {
         this.toast.error("Something went wrong!! Please try again later!!", "Error");
@@ -139,22 +165,6 @@ export class SeatAllocationComponent implements OnInit {
     dialogRef.afterClosed().subscribe(response => {
       if (response.type == 'addEdit' || response.type == 'delete') {
         this.getPrograms();
-        // if (sessionIndex != null) {
-        //   this.advancedSessions[sessionIndex].SessionName = response.result.SessionName
-        //   this.advancedSessions[sessionIndex].Programs = response.result.Programs
-        // } else {
-        //   this.advancedSessions.push({
-        //     EventID: response.result.EventID,
-        //     SessionID: response.result.SessionID,
-        //     SessionName: response.result.SessionName,
-        //     Programs: response.result.Programs,
-        //     tables: [],
-        //     TotalTables: 0,
-        //     TotalSeats: 0,
-        //     TotalAllocated: 0,
-        //     TotalUnAllocated: 0,
-        //   })
-        // }
       }
       // else if (response.type == 'delete') {
       //   this.advancedSessions.splice(sessionIndex, 1);
@@ -168,31 +178,19 @@ export class SeatAllocationComponent implements OnInit {
       panelClass: "mat-dialog-lg",
       width: "500px",
       data: {
-        sessionTable: this.advancedSessions[sessionIndex].tables[sessionTableIndex]
+        sessionTable: this.advancedSessions[sessionIndex].tables[sessionTableIndex],
+        session: this.advancedSessions[sessionIndex],
+        eventID: this.eventID
       },
       disableClose: true
     });
     dialogRef.afterClosed().subscribe(response => {
-      if (response.type == 'addEdit') {
-        if (sessionTableIndex != null) {
-          this.advancedSessions[sessionIndex].tables[sessionTableIndex].EventID = response.result.EventID;
-          this.advancedSessions[sessionIndex].tables[sessionTableIndex].SessionID = response.result.SessionID;
-          this.advancedSessions[sessionIndex].tables[sessionTableIndex].TableID = response.result.TableID;
-          this.advancedSessions[sessionIndex].tables[sessionTableIndex].TableName = response.result.TableName;
-          this.advancedSessions[sessionIndex].tables[sessionTableIndex].NumSeats = response.result.NumSeats;
-          this.advancedSessions[sessionIndex].tables[sessionTableIndex].Colour = response.result.Colour;
-        } else {
-          this.advancedSessions[sessionIndex].tables.push(response.result);
-          this.advancedSessions[sessionIndex].TotalTables = this.advancedSessions[sessionIndex].TotalTables + 1;
-        }
-        this.advancedSessions[sessionIndex].TotalSeats = 0;
-        this.advancedSessions[sessionIndex].tables.map(ele => {
-          this.advancedSessions[sessionIndex].TotalSeats = parseInt(ele.NumSeats) + this.advancedSessions[sessionIndex].TotalSeats;
-        })
-      } else if (response.type == 'delete') {
-        this.advancedSessions[sessionIndex].tables.splice(sessionTableIndex, 1);
-        this.advancedSessions[sessionIndex].TotalTables = this.advancedSessions[sessionIndex].TotalTables - 1;
+      if (response.type == 'addEdit' || response.type == 'delete') {
+        this.getPrograms();
       }
+      // else if (response.type == 'delete') {
+      //   this.advancedSessions[sessionIndex].tables.splice(sessionTableIndex, 1);
+      // }
     });
   }
 
@@ -417,15 +415,14 @@ export class SessionTableDialogComponent {
     public dialogRef: MatDialogRef<SessionTableDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private formBuilder: FormBuilder,
+    private seatallocationService: SeatallocationService,
+    private toast: ToastrService,
     private matSnackBar: MatSnackBar) {
     this.buildForm();
   }
 
   buildForm() {
     this.tableForm = this.formBuilder.group({
-      EventID: [this.data.sessionTable ? this.data.sessionTable.EventID : ""],
-      SessionID: [this.data.sessionTable ? this.data.sessionTable.SessionID : 0],
-      TableID: [this.data.sessionTable ? this.data.sessionTable.TableID : 0],
       TableName: [this.data.sessionTable ? this.data.sessionTable.TableName : "", Validators.required],
       NumSeats: [this.data.sessionTable ? this.data.sessionTable.NumSeats : 0, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.min(1)]],
       Colour: [this.data.sessionTable ? this.data.sessionTable.Colour : "#ffffff"]
@@ -452,20 +449,138 @@ export class SessionTableDialogComponent {
       this.tableForm.markAllAsTouched();
       return;
     }
-    this.dialogRef.close({
-      type: 'addEdit',
-      result: this.tableForm.value
-    });
+    let tableData = new Array();
+    if (this.data.sessionTable) {
+      tableData.push({
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+        "Name": "Ordinal",
+        "Value": { "$type": "System.Int32", "$value": this.data.sessionTable.Ordinal }
+      })
+    }
+    tableData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "Colour",
+      "Value": this.tableForm.value.Colour
+    })
+    tableData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "NumSeats",
+      "Value": { "$type": "System.Int32", "$value": this.tableForm.value.NumSeats }
+    })
+    tableData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "TableName",
+      "Value": this.tableForm.value.TableName
+    })
+    tableData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "SessionID",
+      "Value": { "$type": "System.Int32", "$value": this.data.session.Ordinal }
+    })
+    tableData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "EventID",
+      "Value": this.data.sessionTable ? this.data.sessionTable.EventID : this.data.eventID
+    })
+
+    let sessionData = new Array();
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "Ordinal",
+      "Value": { "$type": "System.Int32", "$value": this.data.session.Ordinal }
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "TotalUnallocated",
+      "Value": { "$type": "System.Int32", "$value": this.data.session.TotalUnallocated }
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "TotalAllocated",
+      "Value": { "$type": "System.Int32", "$value": this.data.session.TotalAllocated }
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "TotalSeats",
+      "Value": { "$type": "System.Int32", "$value": this.data.session.TotalSeats }
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "TotalTables",
+      "Value": { "$type": "System.Int32", "$value": this.data.sessionTable ? this.data.session.TotalTables : this.data.session.TotalTables + 1 }
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "Programs",
+      "Value": this.data.session.Programs.join()
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "SessionName",
+      "Value": this.data.session.SessionName
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "EventID",
+      "Value": this.data.session.EventID
+    })
+
+    if (this.data.sessionTable) {
+      this.seatallocationService.updateTable({ tableID: this.data.sessionTable.Ordinal, table: tableData }).subscribe(
+        result => {
+          if (result) this.updateSession(sessionData);
+          else this.toast.error("Something went wrong!! Please try again later!!", "Error");
+        }, error => {
+          this.toast.error("Something went wrong!! Please try again later!!", "Error");
+        }
+      )
+    } else {
+      this.seatallocationService.addTable({ table: tableData }).subscribe(
+        result => {
+          if (result) this.updateSession(sessionData);
+          else this.toast.error("Something went wrong!! Please try again later!!", "Error");
+        }, error => {
+          this.toast.error("Something went wrong!! Please try again later!!", "Error");
+        }
+      )
+    }
   }
 
   // delete the table
   onDelete() {
     this.matSnackBar.open(`Delete ${this.data.sessionTable.TableName}?`, 'DELETE', { duration: 5000 })
       .onAction().subscribe(() => {
-        this.dialogRef.close({
-          type: 'delete'
-        });
+        this.seatallocationService.deleteTable(this.data.sessionTable.Ordinal).subscribe(
+          result => {
+            this.toast.success(`${this.data.sessionTable.TableName} is deleted successfully`, "Deleted Success");
+            this.dialogRef.close({
+              type: 'delete'
+            });
+          }, error => {
+            this.toast.error("Something went wrong!! Please try again later!!", "Error");
+          }
+        )
       });
+  }
+
+  // update Session
+  updateSession(sessionData) {
+    this.seatallocationService.updateSession({ sessionID: this.data.session.Ordinal, session: sessionData }).subscribe(
+      result => {
+        if (result) {
+          if (this.data.sessionTable) this.toast.success(`${this.tableForm.value.TableName} is updated successfully`, "Updated Success");
+          else this.toast.success(`${this.tableForm.value.TableName} is added successfully`, "Added Success");
+          this.dialogRef.close({
+            type: 'addEdit',
+            result
+          });
+        } else {
+          this.toast.error("Something went wrong!! Please try again later!!", "Error");
+        }
+      }, error => {
+        this.toast.error("Something went wrong!! Please try again later!!", "Error");
+      }
+    )
   }
 
   // Form validations start

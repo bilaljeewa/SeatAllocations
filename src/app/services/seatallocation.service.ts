@@ -24,7 +24,7 @@ export class SeatallocationService {
     this.baseUrl = clientContext.baseUrl;
   }
 
-  // get programs for session
+  // get programs for session starts
   public getPrograms(eventID): Observable<Programs[]> {
     if (this.live) return this.getLivePrograms(eventID);
     else return this.getFakedPrograms(eventID);
@@ -216,8 +216,11 @@ export class SeatallocationService {
     }]
     return of(data).pipe(delay(500));
   }
+  // get programs for session ends
 
-  // get sessions
+
+
+  // get sessions starts
   public getSessions(eventID): Observable<Sessions[]> {
     if (this.live) return this.getLiveSessions(eventID);
     else return this.getFakedSessions(eventID);
@@ -412,8 +415,11 @@ export class SeatallocationService {
     ]
     return of(data).pipe(delay(500));
   }
+  // get sessions ends
 
-  // add session
+
+
+  // add session starts
   public addSession(data): Observable<Sessions> {
     if (this.live) return this.addLiveSession(data);
     else return this.addFakedSession(data);
@@ -543,8 +549,11 @@ export class SeatallocationService {
     }
     return of(data1).pipe(delay(500));
   }
+  // add session ends
 
-  // update session
+
+
+  // update session starts
   public updateSession(data): Observable<Sessions> {
     if (this.live) return this.updateLiveSession(data);
     else return this.updateFakedSession(data);
@@ -674,8 +683,11 @@ export class SeatallocationService {
     }
     return of(data1).pipe(delay(500));
   }
+  // update session ends
 
-  // delete session
+
+
+  // delete session starts
   public deleteSession(sessionID): Observable<any> {
     if (this.live) return this.deleteLiveSession(sessionID);
     else return this.deleteFakedSession(sessionID);
@@ -695,4 +707,497 @@ export class SeatallocationService {
   private deleteFakedSession(sessionID): Observable<any> {
     return of("").pipe(delay(500));
   }
+  // delete session ends
+
+
+
+  // get tables starts
+  public getTables(eventID): Observable<Sessions[]> {
+    if (this.live) return this.getLiveTables(eventID);
+    else return this.getFakedTables(eventID);
+  }
+
+  private getLiveTables(eventID): Observable<Sessions[]> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'RequestVerificationToken': this.token
+      })
+    }
+    let url = this.baseUrl + 'api/Psc_Event_Table?EventID=' + eventID;
+    return this.httpClient.get(url, httpOptions)
+      .pipe(map((res: any) => {
+        return res.Items.$values
+      }));
+  }
+
+  private getFakedTables(eventID): Observable<Sessions[]> {
+    let data = [
+      {
+        "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Table",
+        "PrimaryParentEntityTypeName": "Standalone",
+        "Identity": {
+          "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+          "EntityTypeName": "Psc_Event_Table",
+          "IdentityElements": {
+            "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+            "$values": [
+              "1"
+            ]
+          }
+        },
+        "PrimaryParentIdentity": {
+          "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+          "EntityTypeName": "Standalone",
+          "IdentityElements": {
+            "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+            "$values": [
+              "1"
+            ]
+          }
+        },
+        "Properties": {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+          "$values": [
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "Ordinal",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": 1
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "Colour",
+              "Value": "#FF00EE"
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "NumSeats",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": 10
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "TableName",
+              "Value": "Ferns"
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "SessionID",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": 9
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "EventID",
+              "Value": "LDC11"
+            }
+          ]
+        }
+      },
+      {
+        "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Table",
+        "PrimaryParentEntityTypeName": "Standalone",
+        "Identity": {
+          "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+          "EntityTypeName": "Psc_Event_Table",
+          "IdentityElements": {
+            "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+            "$values": [
+              "2"
+            ]
+          }
+        },
+        "PrimaryParentIdentity": {
+          "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+          "EntityTypeName": "Standalone",
+          "IdentityElements": {
+            "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+            "$values": [
+              "2"
+            ]
+          }
+        },
+        "Properties": {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+          "$values": [
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "Ordinal",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": 2
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "Colour",
+              "Value": "#000000"
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "NumSeats",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": 15
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "TableName",
+              "Value": "Roses"
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "SessionID",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": 9
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "EventID",
+              "Value": "LDC11"
+            }
+          ]
+        }
+      },
+      {
+        "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Table",
+        "PrimaryParentEntityTypeName": "Standalone",
+        "Identity": {
+          "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+          "EntityTypeName": "Psc_Event_Table",
+          "IdentityElements": {
+            "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+            "$values": [
+              "3"
+            ]
+          }
+        },
+        "PrimaryParentIdentity": {
+          "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+          "EntityTypeName": "Standalone",
+          "IdentityElements": {
+            "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+            "$values": [
+              "3"
+            ]
+          }
+        },
+        "Properties": {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+          "$values": [
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "Ordinal",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": 3
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "Colour",
+              "Value": "#000FFF"
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "NumSeats",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": 10
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "TableName",
+              "Value": "Olives"
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "SessionID",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": 10
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "EventID",
+              "Value": "LDC11"
+            }
+          ]
+        }
+      }
+    ]
+    return of(data).pipe(delay(500));
+  }
+  // get tables ends
+
+
+
+  // add table starts
+  public addTable(data): Observable<Sessions> {
+    if (this.live) return this.addLiveTable(data);
+    else return this.addFakedTable(data);
+  }
+
+  private addLiveTable(data): Observable<Sessions> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'RequestVerificationToken': this.token
+      })
+    }
+    let postTableData = {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Table",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Table",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": [""]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": [""]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": data.table
+      }
+    }
+    let url = this.baseUrl + 'api/Psc_Event_Table';
+    return this.httpClient.post(url, postTableData, httpOptions).pipe(map((res: Sessions) => { return res; }));
+  }
+
+  private addFakedTable(data): Observable<Sessions> {
+    let data1: Sessions = {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Table",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Table",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": [
+            "3"
+          ]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": [
+            "3"
+          ]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [
+          {
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "Ordinal",
+            "Value": {
+              "$type": "System.Int32",
+              "$value": 3
+            }
+          },
+          {
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "Colour",
+            "Value": "#000FFF"
+          },
+          {
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "NumSeats",
+            "Value": {
+              "$type": "System.Int32",
+              "$value": 10
+            }
+          },
+          {
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "TableName",
+            "Value": "Olives"
+          },
+          {
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "SessionID",
+            "Value": {
+              "$type": "System.Int32",
+              "$value": 2
+            }
+          },
+          {
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "EventID",
+            "Value": "LDC11"
+          }
+        ]
+      }
+    }
+    return of(data1).pipe(delay(500));
+  }
+  // add table ends
+
+
+
+  // update table starts
+  public updateTable(data): Observable<Sessions> {
+    if (this.live) return this.updateLiveTable(data);
+    else return this.updateFakedTable(data);
+  }
+
+  private updateLiveTable(data): Observable<Sessions> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'RequestVerificationToken': this.token
+      })
+    }
+    let postSessionData = {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Table",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Table",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": [data.tableID]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": [data.tableID]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": data.table
+      }
+    }
+    let url = this.baseUrl + 'api/Psc_Event_Table/' + data.tableID;
+    return this.httpClient.put(url, postSessionData, httpOptions).pipe(map((res: Sessions) => { return res; }));
+  }
+
+  private updateFakedTable(data): Observable<Sessions> {
+    let data1: Sessions = {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Table",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Table",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["3"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["3"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [
+          {
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "Ordinal",
+            "Value": {
+              "$type": "System.Int32",
+              "$value": 3
+            }
+          },
+          {
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "Colour",
+            "Value": "#000FFF"
+          },
+          {
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "NumSeats",
+            "Value": {
+              "$type": "System.Int32",
+              "$value": 10
+            }
+          },
+          {
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "TableName",
+            "Value": "Olives"
+          },
+          {
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "SessionID",
+            "Value": {
+              "$type": "System.Int32",
+              "$value": 2
+            }
+          },
+          {
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "EventID",
+            "Value": "LDC11"
+          }
+        ]
+      }
+    }
+    return of(data1).pipe(delay(500));
+  }
+  // update table ends
+
+
+
+  // delete table starts
+  public deleteTable(tableID): Observable<any> {
+    if (this.live) return this.deleteLiveTable(tableID);
+    else return this.deleteFakedTable(tableID);
+  }
+
+  private deleteLiveTable(tableID): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'RequestVerificationToken': this.token
+      })
+    }
+    let url = this.baseUrl + 'api/Psc_Event_Table/' + tableID;
+    return this.httpClient.delete(url, httpOptions).pipe(map((res: any) => { return res; }));
+  }
+
+  private deleteFakedTable(tableID): Observable<any> {
+    return of("").pipe(delay(500));
+  }
+  // delete table ends
 }

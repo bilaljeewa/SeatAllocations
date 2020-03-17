@@ -230,15 +230,11 @@
                                                                         (click)="innerExpansionPanel.toggle(); do($event);">
                                                                         <ng-container
                                                                             *ngIf="innerPanelIcon === j; else elseTemplate">
-                                                                            <fa-icon class="" [icon]="faChevronUp">
-                                                                            </fa-icon>
-
+                                                                            <fa-icon [icon]="faChevronUp"></fa-icon>
                                                                         </ng-container>
                                                                         <ng-template #elseTemplate>
-                                                                            <fa-icon class="" [icon]="faChevronDown">
-                                                                            </fa-icon>
+                                                                            <fa-icon [icon]="faChevronDown"></fa-icon>
                                                                         </ng-template>
-
                                                                     </button>
                                                                 </div>
                                                             </div>
