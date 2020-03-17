@@ -163,20 +163,98 @@ export class SeatAllocationComponent implements OnInit {
       disableClose: true
     });
     dialogRef.afterClosed().subscribe(response => {
-      if (response.type == 'addEdit') {
-        console.log(response.data);
+      if (response.type == 'add') {
         if (response.data && response.data.length > 0) {
-          console.log(response.data[0].Properties.$values.filter(ele => ele.Name == 'Ordinal')[0].Value.$value);
-          console.log(response.data[0].Properties.$values.filter(ele => ele.Name == 'Programs')[0].Value);
           this.seatallocationService.getRegistrants(response.data[0].Properties.$values.filter(ele => ele.Name == 'Programs')[0].Value).subscribe(
-            result => {
-              console.log(result);
+            (result: any) => {
+              let RegistrantsDetails = [];
+              result.map((ele, index) => {
+                let RegistrantID = ele.Properties.$values.filter(ele1 => ele1.Name == 'RegistrantID');
+                let FullName = ele.Properties.$values.filter(ele1 => ele1.Name == 'FullName');
+                RegistrantsDetails.push({
+                  "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+                  "EntityTypeName": "Psc_Event_Registrant",
+                  "PrimaryParentEntityTypeName": "Standalone",
+                  "Identity": {
+                    "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+                    "EntityTypeName": "Psc_Event_Registrant",
+                    "IdentityElements": {
+                      "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                      "$values": [""]
+                    }
+                  },
+                  "PrimaryParentIdentity": {
+                    "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+                    "EntityTypeName": "Standalone",
+                    "IdentityElements": {
+                      "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                      "$values": [""]
+                    }
+                  },
+                  "Properties": {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                    "$values": [{
+                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                      "Name": "SessionID",
+                      "Value": {
+                        "$type": "System.Int32",
+                        "$value": response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'Ordinal')[0].Value.$value
+                      }
+                    },
+                    {
+                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                      "Name": "EventID",
+                      "Value": response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'EventID')[0].Value
+                    },
+                    {
+                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                      "Name": "RegistrantID",
+                      "Value": RegistrantID[0].Value
+                    },
+                    {
+                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                      "Name": "RegistrantName",
+                      "Value": FullName[0].Value
+                    },
+                    {
+                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                      "Name": "SortOrder",
+                      "Value": {
+                        "$type": "System.Int32",
+                        "$value": ""
+                      }
+                    },
+                    {
+                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                      "Name": "TableID",
+                      "Value": {
+                        "$type": "System.Int32",
+                        "$value": ""
+                      }
+                    }
+                    ]
+                  }
+                })
+                // RegistrantsDetails.push({
+                //   EventID: response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'EventID')[0].Value,
+                //   SessionID: response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'Ordinal')[0].Value.$value,
+                //   TableID: "",
+                //   RegistrantID: parseInt(RegistrantID[0].Value),
+                //   RegistrantName: FullName[0].Value,
+                //   SortOrder: ""
+                // })
+                if (result.length == index + 1) {
+                  console.log(RegistrantsDetails)
+                }
+              })
             }, error => {
               this.toast.error("Something went wrong!! Please try again later!!", "Error");
             }
           )
         }
         // this.getPrograms();
+      } else if (response.type == 'Edit') {
+        this.getPrograms();
       } else if (response.type == 'delete') {
         this.getPrograms();
         // this.advancedSessions.splice(sessionIndex, 1);
@@ -375,7 +453,7 @@ export class SessionDialogComponent {
               result1 => {
                 this.toast.success(`${this.SessionName} is updated successfully`, "Updated Success");
                 this.dialogRef.close({
-                  type: 'addEdit',
+                  type: 'Edit',
                   data: result1
                 });
               }, error1 => {
@@ -397,7 +475,7 @@ export class SessionDialogComponent {
               result1 => {
                 this.toast.success(`${this.SessionName} is added successfully`, "Added Success");
                 this.dialogRef.close({
-                  type: 'addEdit',
+                  type: 'add',
                   data: result1
                 });
               }, error1 => {
