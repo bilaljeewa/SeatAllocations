@@ -36,3 +36,9 @@ export class Sessions {
     PrimaryParentIdentity: object;
     Properties: object;
 }
+
+export class IQARegistrant {
+    $type: string;
+    EntityTypeName: string;
+    Properties: object;
+}

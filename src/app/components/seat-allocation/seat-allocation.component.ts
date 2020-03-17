@@ -163,12 +163,24 @@ export class SeatAllocationComponent implements OnInit {
       disableClose: true
     });
     dialogRef.afterClosed().subscribe(response => {
-      if (response.type == 'addEdit' || response.type == 'delete') {
+      if (response.type == 'addEdit') {
+        console.log(response.data);
+        if (response.data && response.data.length > 0) {
+          console.log(response.data[0].Properties.$values.filter(ele => ele.Name == 'Ordinal')[0].Value.$value);
+          console.log(response.data[0].Properties.$values.filter(ele => ele.Name == 'Programs')[0].Value);
+          this.seatallocationService.getRegistrants(response.data[0].Properties.$values.filter(ele => ele.Name == 'Programs')[0].Value).subscribe(
+            result => {
+              console.log(result);
+            }, error => {
+              this.toast.error("Something went wrong!! Please try again later!!", "Error");
+            }
+          )
+        }
+        // this.getPrograms();
+      } else if (response.type == 'delete') {
         this.getPrograms();
+        // this.advancedSessions.splice(sessionIndex, 1);
       }
-      // else if (response.type == 'delete') {
-      //   this.advancedSessions.splice(sessionIndex, 1);
-      // }
     });
   }
 
@@ -348,16 +360,28 @@ export class SessionDialogComponent {
       "Name": "EventID",
       "Value": this.data.session ? this.data.session.EventID : this.data.eventID
     })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "SessionTimeStamp",
+      "Value": this.data.session ? this.data.session.SessionTimeStamp : Math.floor(Date.now() / 1000)
+    })
+    let currentTimeStamp = this.data.session ? this.data.session.SessionTimeStamp : Math.floor(Date.now() / 1000);
 
     if (this.data.session) {
       this.seatallocationService.updateSession({ sessionID: this.data.session.Ordinal, session: sessionData }).subscribe(
         result => {
           if (result) {
-            this.toast.success(`${this.SessionName} is updated successfully`, "Updated Success");
-            this.dialogRef.close({
-              type: 'addEdit',
-              result
-            });
+            this.seatallocationService.getSessionByTimeStamp(currentTimeStamp).subscribe(
+              result1 => {
+                this.toast.success(`${this.SessionName} is updated successfully`, "Updated Success");
+                this.dialogRef.close({
+                  type: 'addEdit',
+                  data: result1
+                });
+              }, error1 => {
+                this.toast.error("Something went wrong!! Please try again later!!", "Error");
+              }
+            )
           } else {
             this.toast.error("Something went wrong!! Please try again later!!", "Error");
           }
@@ -369,11 +393,17 @@ export class SessionDialogComponent {
       this.seatallocationService.addSession({ session: sessionData }).subscribe(
         result => {
           if (result) {
-            this.toast.success(`${this.SessionName} is added successfully`, "Added Success");
-            this.dialogRef.close({
-              type: 'addEdit',
-              result
-            });
+            this.seatallocationService.getSessionByTimeStamp(currentTimeStamp).subscribe(
+              result1 => {
+                this.toast.success(`${this.SessionName} is added successfully`, "Added Success");
+                this.dialogRef.close({
+                  type: 'addEdit',
+                  data: result1
+                });
+              }, error1 => {
+                this.toast.error("Something went wrong!! Please try again later!!", "Error");
+              }
+            )
           } else {
             this.toast.error("Something went wrong!! Please try again later!!", "Error");
           }
@@ -523,6 +553,11 @@ export class SessionTableDialogComponent {
       "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
       "Name": "EventID",
       "Value": this.data.session.EventID
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "SessionTimeStamp",
+      "Value": this.data.session.SessionTimeStamp
     })
 
     if (this.data.sessionTable) {
