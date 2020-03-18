@@ -61,7 +61,7 @@
                                         (click)="openSessionDialog(item, i); do($event);">Edit</button>
                                     <!--EXPANSION ICON-->
                                     <button mat-icon-button color="primary"
-                                        (click)="mainExpansionPanel.toggle(); do($event);">
+                                        (click)="mainExpansionPanel.toggle(); do($event); showAssignButtons(item);">
                                         <ng-container *ngIf="mainPanelIcon === i ; else elseTemplate">
                                             <fa-icon class="caret" [icon]="faCaretUp"></fa-icon>
                                         </ng-container>
@@ -90,19 +90,19 @@
                                             <mat-tab label="Unallocated">
                                                 <div class="py-2 py-md-3">
                                                     <div class="button-wrap text-right">
-                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">
+                                                        <button mat-raised-button color="primary" class="ml-2 mb-2" *ngIf="item.assignButtons.autoAssignAll">
                                                             Auto Assign All</button>
-                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">
-                                                            Auto Assign To Ferns</button>
-                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">
-                                                            Assign Selection To Ferns</button>
+                                                        <button mat-raised-button color="primary" class="ml-2 mb-2" *ngIf="item.assignButtons.autoAssignTable && respectiveTableName!==''">
+                                                            Auto Assign To {{respectiveTableName}}</button>
+                                                        <button mat-raised-button color="primary" class="ml-2 mb-2" *ngIf="item.assignButtons.autoSelectionTable">
+                                                            Assign Selection To {{respectiveTableName}}</button>
                                                     </div>
                                                     <div class="table-wrap">
                                                         <!-- <div class="table-responsive"> -->
                                                             <!-- <mat-table [dataSource]="dataSource" class="w-100"> -->
                                                                 <!-- Checkbox Column -->
                                                                 <!-- <ng-container matColumnDef="select">
-                                                                    <mat-header-cell *matHeaderCellDef>
+                                                                    <mat-header-cell *matHeaderCellDef> 
                                                                         <mat-checkbox
                                                                             (change)="$event ? masterToggle() : null"
                                                                             [checked]="selection.hasValue() && isAllSelected()"
@@ -153,15 +153,24 @@
                                                             <table class="mat-table table mb-0">
                                                                 <thead>
                                                                     <tr>
-                                                                      <th scope="col" class="image-th">#</th>
+                                                                      <th scope="col" class="image-th">
+                                                                        <mat-checkbox
+                                                                        (change)="$event ? masterToggle() : null"
+                                                                        [checked]="selection.hasValue() && isAllSelected()"
+                                                                        [indeterminate]="selection.hasValue() && !isAllSelected()"></mat-checkbox>
+                                                                      </th>
                                                                       <th scope="col" class="name-th">Name</th>
                                                                       <th scope="col" class="mail-th">Action</th>
                                                                     </tr>
                                                                   </thead>
                                                                   <tbody>
-                                                                      <tr *ngFor="let item of unallocatedTableRows; let i = index">
-                                                                          <td>{{ i + 1 }}</td>
-                                                                          <td>{{ item.FullName }}</td>
+                                                                      <tr *ngFor="let itemRow of unallocatedTableRows; let i = index">
+                                                                          <td>
+                                                                            <mat-checkbox
+                                                                            [(ngModel)]="itemRow.isSelected" (change)="onCheckChange($event, item.tables)"
+                                                                            ></mat-checkbox>
+                                                                          </td>
+                                                                          <td>{{ itemRow.FullName }}</td>
                                                                           <td>
                                                                             <button mat-icon-button color="primary"><fa-icon class="exclaim" [icon]="faInfo"></fa-icon></button>
                                                                             </td>
@@ -285,8 +294,8 @@
                                                 </div>
                                             </div>
                                             <mat-expansion-panel #innerExpansionPanel [hideToggle]="true"
-                                                (afterCollapse)="innerPanelClosed(j)"
-                                                (afterExpand)="innerPannelOpened(j)">
+                                                (afterCollapse)="innerPanelClosed(j, tableItem, item.assignButtons)"
+                                                (afterExpand)="innerPannelOpened(j, tableItem, item.assignButtons)">
                                                 <div class="table-wrap py-3 py-sm-3 d-block">
                                                     <!-- <div class="table-responsive">
                                                         <mat-table [dataSource]="dataSource" class="w-100"> -->

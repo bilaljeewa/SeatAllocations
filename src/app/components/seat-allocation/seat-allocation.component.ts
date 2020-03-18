@@ -49,29 +49,61 @@ export class SeatAllocationComponent implements OnInit {
   faCaretDown = faCaretDown;
   faChevronDown = faChevronDown;
 
+  setAssignButtons: any;
+
+  allTablesClosed: boolean = false;
+
+  respectiveTableName: string = '';
+
   unallocatedTableRows = [{
+    isSelected: false,
     FullName: 'Hydrogen'
-  },{
+  }, {
+    isSelected: false,
     FullName: 'Lithium'
-  },{
+  }, {
+    isSelected: false,
     FullName: 'Boron'
+  }, {
+    isSelected: false,
+    FullName: 'Beryllium'
+  },
+  {
+    isSelected: false,
+    FullName: 'Carbon'
+  },
+  {
+    isSelected: false,
+    FullName: 'Nitrogen'
+  },
+  {
+    isSelected: false,
+    FullName: 'Oxygen'
+  },
+  {
+    isSelected: false,
+    FullName: 'Fluorine'
+  },
+  {
+    isSelected: false,
+    FullName: 'Neon'
   }];
 
   allocatedTableRows = [{
     FullName: 'Lithium'
-  },{
+  }, {
     FullName: 'Boron'
-  },{
+  }, {
     FullName: 'Hydrogen'
   }];
 
   innerTableRows = [{
     Initials: 'O G',
     FullName: 'Oxygen'
-  },{
+  }, {
     Initials: 'N G',
     FullName: 'Nitrogen'
-  },{
+  }, {
     Initials: 'B M',
     FullName: 'Beryllium'
   }]
@@ -143,7 +175,12 @@ export class SeatAllocationComponent implements OnInit {
                 this.advancedSessions[index]["programNames"] = []
                 ele1.Value.split(",").map(ele2 => {
                   let Name = this.programs.filter(ele => ele.EventFunctionId == ele2.trim());
-                  this.advancedSessions[index]["programNames"].push(Name.length > 0 ? Name[0].Name : '')
+                  this.advancedSessions[index]["programNames"].push(Name.length > 0 ? Name[0].Name : '');
+                  this.advancedSessions[index]["assignButtons"] = {
+                    autoAssignAll: false,
+                    autoAssignTable: false,
+                    autoSelectionTable: false
+                  };
                 })
               } else {
                 this.advancedSessions[index][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
@@ -379,26 +416,77 @@ export class SeatAllocationComponent implements OnInit {
 
   afterPanelOpened(i) {
     this.mainPanelIcon = i;
+    if(this.unallocatedTableRows.length > 0 && this.setAssignButtons.tables.length > 0) {
+      let panelInner = this.innerPanelClosed(0, false, false);
+      if(!panelInner) {
+        this.setAssignButtons.assignButtons.autoAssignTable = true;
+        this.setAssignButtons.assignButtons.autoAssignAll = false;
+      } else {
+        this.setAssignButtons.assignButtons.autoAssignAll = true;
+        this.setAssignButtons.assignButtons.autoAssignTable = false;
+      }
+    }
   }
   // main expansion pannel open and closed controls handeling ends
 
   // inner expansion pannel open and closed constrols handeling starts
-  innerPannelOpened(j) {
+  innerPannelOpened(j, tableItems, assignButtonsObj) {
     this.innerPanelIcon = j;
+    // respectiveTableName
+    if(this.unallocatedTableRows.length > 0 && this.setAssignButtons.tables.length > 0) {
+      this.setAssignButtons.assignButtons.autoAssignTable = true;
+      this.setAssignButtons.assignButtons.autoAssignAll = false;
+      this.respectiveTableName = tableItems.TableName;
+    }
+    return true;
   }
 
-  innerPanelClosed(j) {
+  innerPanelClosed(j, tableItems: any, assignButtonsObj: any) {
     var preval = this.innerPanelIcon;
     if (preval < j) {
       this.innerPanelIcon = preval;
+      return true;
     } else {
       this.innerPanelIcon = -1;
+      this.setAssignButtons.assignButtons.autoAssignTable = false;
+      this.setAssignButtons.assignButtons.autoAssignAll = true;
+      return false;
     }
   }
   // inner expansion pannel open and closed constrols handling ends
 
   do(event) {
     event.preventDefault();
+  }
+
+  showAssignButtons(assignButtons) {
+    this.setAssignButtons = assignButtons
+  }
+
+  onCheckChange(event, tablesArr) {
+    if(event.checked) {
+      if(this.setAssignButtons.tables.length > 0) {
+        this.setAssignButtons.assignButtons.autoAssignTable = false;
+        this.setAssignButtons.assignButtons.autoSelectionTable = true;
+        this.setAssignButtons.assignButtons.autoAssignAll = false;
+        if(this.respectiveTableName === '') {
+          this.setAssignButtons.assignButtons.autoSelectionTable = false;
+          this.respectiveTableName = tablesArr[0].TableName
+          this.allTablesClosed = true;
+        }
+      }
+    } else {
+      if(this.setAssignButtons.tables.length > 0) {
+        this.setAssignButtons.assignButtons.autoAssignTable = true;
+        this.setAssignButtons.assignButtons.autoSelectionTable = false;
+        this.setAssignButtons.assignButtons.autoAssignAll = false;
+      }
+      if(this.allTablesClosed) {
+        this.setAssignButtons.assignButtons.autoAssignTable = false;
+        this.setAssignButtons.assignButtons.autoSelectionTable = false;
+        this.setAssignButtons.assignButtons.autoAssignAll = true;
+      }
+    }
   }
 
   // remove session program from the session programs chips
