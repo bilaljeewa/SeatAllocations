@@ -207,27 +207,27 @@ export class SeatAllocationComponent implements OnInit {
 
   // fetch the registrants as per the current EventID
   async getRegitrants() {
-    this.seatallocationService.getRegistrants(this.eventID).subscribe(
-      result => {
-        let abc = [];
-        if (result.length > 0) {
-          result.map((ele: any, index) => {
-            abc[index] = []
-            ele.Properties.$values.map(ele1 => {
-              abc[index][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
+    this.advancedSessions.map(ele => {
+      this.seatallocationService.getRegistrants(this.eventID, ele.Ordinal).subscribe(
+        result => {
+          let abc = [];
+          if (result.length > 0) {
+            result.map((ele1: any, index) => {
+              abc[index] = []
+              ele1.Properties.$values.map(ele1 => {
+                abc[index][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
+              })
             })
-          })
-          this.advancedSessions.map(ele => {
             ele['allRegistrants'] = abc.filter(ele1 => ele1.SessionID == ele.Ordinal);
-            ele['unallocatedRegistrants'] = abc.filter(ele1 => ele1.SessionID == ele.Ordinal && ele1.TableID == 0);
-            ele['allocatedRegistrants'] = abc.filter(ele1 => ele1.SessionID == ele.Ordinal && ele1.TableID != 0);
-          })
+            ele['unallocatedRegistrants'] = abc.filter(ele1 => ele1.TableID == 0);
+            ele['allocatedRegistrants'] = abc.filter(ele1 => ele1.TableID != 0);
+          }
+        }, error => {
+          this.toast.error("Something went wrong!! Please try again later!!", "Error");
         }
-        console.log(this.advancedSessions)
-      }, error => {
-        this.toast.error("Something went wrong!! Please try again later!!", "Error");
-      }
-    )
+      )
+    })
+    console.log(this.advancedSessions)
   }
 
   // open dialog box to add/edit session
@@ -545,7 +545,33 @@ export class SeatAllocationComponent implements OnInit {
         }
         // this.getPrograms();
       } else if (response.type == 'delete') {
-        this.getPrograms();
+        this.seatallocationService.getRegistrants(this.eventID, this.advancedSessions[sessionIndex].Ordinal).subscribe(
+          result => {
+            let updatedRegistrantsResult = [];
+            result.map((ele3: any, RegistrantsResultIndex) => {
+              updatedRegistrantsResult[RegistrantsResultIndex] = []
+              ele3.Properties.$values.map(ele4 => {
+                updatedRegistrantsResult[RegistrantsResultIndex][ele4.Name] = typeof (ele4.Value) == 'object' ? ele4.Value.$value : ele4.Value;
+              })
+            })
+            let increamentedValue = 0;
+            updatedRegistrantsResult.map(ele => {
+              this.seatallocationService.deleteRegistrant(ele.Ordinal).subscribe(
+                deleteRegistrantResult => {
+                  increamentedValue = increamentedValue + 1;
+                  if (increamentedValue == updatedRegistrantsResult.length) {
+                    this.getPrograms();
+                  }
+                }, deleteRegistrantError => {
+                  this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                }
+              )
+            })
+          }, error => {
+            this.toast.error("Something went wrong!! Please try again later!!", "Error");
+          }
+        )
+        // this.getPrograms();
         // this.advancedSessions.splice(sessionIndex, 1);
       }
     });
