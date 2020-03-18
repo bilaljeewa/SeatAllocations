@@ -48695,7 +48695,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -48759,7 +48759,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -48823,7 +48823,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -48887,7 +48887,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -48951,7 +48951,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -49015,7 +49015,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -49079,7 +49079,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -49143,7 +49143,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -49207,7 +49207,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -49271,7 +49271,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -49335,7 +49335,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -49399,7 +49399,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -49463,7 +49463,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -49527,7 +49527,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -49591,7 +49591,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -49655,7 +49655,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -49719,7 +49719,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -49783,7 +49783,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -49847,7 +49847,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -49911,7 +49911,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -49975,7 +49975,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -50039,7 +50039,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -50103,7 +50103,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -50167,7 +50167,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -50231,7 +50231,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -50295,7 +50295,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -50359,7 +50359,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -50423,7 +50423,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -50487,7 +50487,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -50551,7 +50551,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -50615,7 +50615,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -50679,7 +50679,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -50743,7 +50743,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -50807,7 +50807,7 @@ export class SeatallocationService {
           "Name": "SessionID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 27
+            "$value": 15
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -50841,4 +50841,28 @@ export class SeatallocationService {
     return of(data).pipe(delay(500));
   }
   // get registrants starts
+
+
+
+  // delete registrant starts
+  public deleteRegistrant(registrantID): Observable<any> {
+    if (this.live) return this.deleteLiveRegistrant(registrantID);
+    else return this.deleteFakedRegistrant(registrantID);
+  }
+
+  private deleteLiveRegistrant(registrantID): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'RequestVerificationToken': this.token
+      })
+    }
+    let url = this.baseUrl + 'api/Psc_Event_Registrant/' + registrantID;
+    return this.httpClient.delete(url, httpOptions).pipe(map((res: any) => { return res; }));
+  }
+
+  private deleteFakedRegistrant(registrantID): Observable<any> {
+    return of("").pipe(delay(500));
+  }
+  // delete registrant ends
 }
