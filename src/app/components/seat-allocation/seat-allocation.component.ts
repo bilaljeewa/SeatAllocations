@@ -51,27 +51,27 @@ export class SeatAllocationComponent implements OnInit {
 
   unallocatedTableRows = [{
     FullName: 'Hydrogen'
-  },{
+  }, {
     FullName: 'Lithium'
-  },{
+  }, {
     FullName: 'Boron'
   }];
 
   allocatedTableRows = [{
     FullName: 'Lithium'
-  },{
+  }, {
     FullName: 'Boron'
-  },{
+  }, {
     FullName: 'Hydrogen'
   }];
 
   innerTableRows = [{
     Initials: 'O G',
     FullName: 'Oxygen'
-  },{
+  }, {
     Initials: 'N G',
     FullName: 'Nitrogen'
-  },{
+  }, {
     Initials: 'B M',
     FullName: 'Beryllium'
   }]
@@ -359,12 +359,12 @@ export class SeatAllocationComponent implements OnInit {
   }
 
   // open dialog box to add/edit session table
-  addEditSessionTable(sessionIndex, sessionTableIndex = null) {
+  addEditSessionTable(sessionIndex, sessionTableIndex = -1) {
     let dialogRef = this.sessionDialog.open(SessionTableDialogComponent, {
       panelClass: "mat-dialog-lg",
       width: "500px",
       data: {
-        sessionTable: sessionTableIndex ? this.advancedSessions[sessionIndex].tables[sessionTableIndex] : null,
+        sessionTable: sessionTableIndex != -1 ? this.advancedSessions[sessionIndex].tables[sessionTableIndex] : null,
         session: this.advancedSessions[sessionIndex],
         eventID: this.eventID
       },
