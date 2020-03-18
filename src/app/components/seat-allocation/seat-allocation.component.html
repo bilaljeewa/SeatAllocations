@@ -98,10 +98,10 @@
                                                             Assign Selection To Ferns</button>
                                                     </div>
                                                     <div class="table-wrap">
-                                                        <div class="table-responsive">
-                                                            <mat-table [dataSource]="dataSource" class="w-100">
+                                                        <!-- <div class="table-responsive"> -->
+                                                            <!-- <mat-table [dataSource]="dataSource" class="w-100"> -->
                                                                 <!-- Checkbox Column -->
-                                                                <ng-container matColumnDef="select">
+                                                                <!-- <ng-container matColumnDef="select">
                                                                     <mat-header-cell *matHeaderCellDef>
                                                                         <mat-checkbox
                                                                             (change)="$event ? masterToggle() : null"
@@ -116,20 +116,20 @@
                                                                             [checked]="selection.isSelected(row)">
                                                                         </mat-checkbox>
                                                                     </mat-cell>
-                                                                </ng-container>
+                                                                </ng-container> -->
 
                                                                 <!-- Name Column -->
-                                                                <ng-container matColumnDef="name">
+                                                                <!-- <ng-container matColumnDef="name">
                                                                     <mat-header-cell *matHeaderCellDef> Name
                                                                     </mat-header-cell>
                                                                     <mat-cell *matCellDef="let element">
                                                                         {{element.name}}
                                                                     </mat-cell>
-                                                                </ng-container>
+                                                                </ng-container> -->
 
 
                                                                 <!-- Symbol Column -->
-                                                                <ng-container matColumnDef="symbol">
+                                                                <!-- <ng-container matColumnDef="symbol">
                                                                     <mat-header-cell *matHeaderCellDef>
                                                                     </mat-header-cell>
                                                                     <mat-cell *matCellDef="let element">
@@ -147,20 +147,62 @@
                                                                     *matRowDef="let row; columns: displayedColumns;"
                                                                     (click)="selection.toggle(row); do($event);">
                                                                 </mat-row>
-                                                            </mat-table>
+                                                            </mat-table> -->
+                                                        <!-- </div> -->
+                                                        <div class="table-responsive">
+                                                            <table class="mat-table table mb-0">
+                                                                <thead>
+                                                                    <tr>
+                                                                      <th scope="col" class="image-th">#</th>
+                                                                      <th scope="col" class="name-th">Name</th>
+                                                                      <th scope="col" class="mail-th">Action</th>
+                                                                    </tr>
+                                                                  </thead>
+                                                                  <tbody>
+                                                                      <tr *ngFor="let item of unallocatedTableRows; let i = index">
+                                                                          <td>{{ i + 1 }}</td>
+                                                                          <td>{{ item.FullName }}</td>
+                                                                          <td>
+                                                                            <button mat-icon-button color="primary"><fa-icon class="exclaim" [icon]="faInfo"></fa-icon></button>
+                                                                            </td>
+                                                                      </tr>
+                                                                  </tbody>
+                                                            </table>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </mat-tab>
                                             <mat-tab label="Allocated">
                                                 <div class="py-2 py-md-3">
-                                                    <div class="button-wrap text-right">
+                                                    <!-- <div class="button-wrap text-right">
                                                         <button mat-raised-button color="primary" class="ml-2 mb-2">
                                                             Auto Assign All</button>
                                                         <button mat-raised-button color="primary" class="ml-2 mb-2">
                                                             Auto Assign To Ferns</button>
                                                         <button mat-raised-button color="primary"
                                                             class="ml-2 mb-2">Assign Selection To Ferns</button>
+                                                    </div> -->
+                                                    <div class="table-wrap">
+                                                        <div class="table-responsive">
+                                                            <table class="mat-table table mb-0">
+                                                                <thead>
+                                                                    <tr>
+                                                                      <th scope="col" class="image-th">#</th>
+                                                                      <th scope="col" class="name-th">Name</th>
+                                                                      <th scope="col" class="mail-th">Action</th>
+                                                                    </tr>
+                                                                  </thead>
+                                                                  <tbody>
+                                                                      <tr *ngFor="let item of allocatedTableRows; let i = index">
+                                                                          <td>{{ i + 1 }}</td>
+                                                                          <td>{{ item.FullName }}</td>
+                                                                          <td>
+                                                                            <button mat-icon-button color="primary"><fa-icon class="exclaim" [icon]="faInfo"></fa-icon></button>
+                                                                            </td>
+                                                                      </tr>
+                                                                  </tbody>
+                                                            </table>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </mat-tab>
@@ -246,30 +288,30 @@
                                                 (afterCollapse)="innerPanelClosed(j)"
                                                 (afterExpand)="innerPannelOpened(j)">
                                                 <div class="table-wrap py-3 py-sm-3 d-block">
-                                                    <div class="table-responsive">
-                                                        <mat-table [dataSource]="dataSource" class="w-100">
+                                                    <!-- <div class="table-responsive">
+                                                        <mat-table [dataSource]="dataSource" class="w-100"> -->
                                                             <!--image column-->
-                                                            <ng-container matColumnDef="image">
+                                                            <!-- <ng-container matColumnDef="image">
                                                                 <mat-header-cell *matHeaderCellDef> </mat-header-cell>
                                                                 <mat-cell *matCellDef="let element">
                                                                     <span
                                                                         class="icon-wrap d-flex align-items-center justify-content-center">
-                                                                        T J
+                                                                        T J -->
                                                                         <!-- <img src="../../../assets/images/user.png" alt="" class="img-fluid"> -->
-                                                                    </span>
+                                                                    <!-- </span>
                                                                 </mat-cell>
-                                                            </ng-container>
+                                                            </ng-container> -->
 
                                                             <!-- Name Column -->
-                                                            <ng-container matColumnDef="name">
+                                                            <!-- <ng-container matColumnDef="name">
                                                                 <mat-header-cell *matHeaderCellDef> </mat-header-cell>
                                                                 <mat-cell *matCellDef="let element"> {{element.name}}
                                                                 </mat-cell>
-                                                            </ng-container>
+                                                            </ng-container> -->
 
 
                                                             <!-- Symbol Column -->
-                                                            <ng-container matColumnDef="symbol">
+                                                            <!-- <ng-container matColumnDef="symbol">
                                                                 <mat-header-cell mat-header-cell *matHeaderCellDef>
                                                                 </mat-header-cell>
                                                                 <mat-cell *matCellDef="let element">
@@ -299,7 +341,50 @@
                                                             </mat-header-row>
                                                             <mat-row *matRowDef="let row; columns: fernolumns;">
                                                             </mat-row>
-                                                        </mat-table>
+                                                        </mat-table> -->
+                                                    <!-- </div> -->
+                                                    <div class="table-responsive">
+                                                        <table class="mat-table table mb-0">
+                                                            <thead>
+                                                                <tr>
+                                                                  <th scope="col" class="image-th">Initials</th>
+                                                                  <th scope="col" class="name-th">Name</th>
+                                                                  <th scope="col" class="mail-th">Action</th>
+                                                                </tr>
+                                                              </thead>
+                                                              <tbody>
+                                                                  <tr *ngFor="let item of innerTableRows">
+                                                                    <td>
+                                                                        <span
+                                                                        class="icon-wrap d-flex align-items-center justify-content-center">
+                                                                        {{ item.Initials }}
+                                                                        <!-- <img src="../../../assets/images/user.png" alt="" class="img-fluid"> -->
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>{{ item.FullName }}</td>
+                                                                    <td>
+                                                                        <button mat-icon-button color="primary">
+                                                                            <fa-icon class="exclaim" [icon]="faInfo">
+                                                                            </fa-icon>
+                                                                        </button>
+                                                                        <button mat-icon-button color="warn">
+                                                                            <fa-icon class="exclaim" [icon]="faTrashAlt">
+                                                                            </fa-icon>
+                                                                        </button>
+                                                                        <button mat-icon-button color="primary"
+                                                                            [matMenuTriggerFor]="beforeMenu">
+                                                                            <fa-icon class="exclaim" [icon]="faEllipsisV">
+                                                                            </fa-icon>
+                                                                        </button>
+                                                                        <mat-menu class="m-mi" #beforeMenu="matMenu"
+                                                                            xPosition="before">
+                                                                            <button mat-menu-item>Item 11</button>
+                                                                            <button mat-menu-item>Item 2</button>
+                                                                        </mat-menu>
+                                                                    </td>
+                                                                  </tr>
+                                                              </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
                                             </mat-expansion-panel>
