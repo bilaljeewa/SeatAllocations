@@ -59,6 +59,10 @@
   .mat-expansion-panel {
     box-shadow: none;
     border-radius: 0;
+
+    .mat-expansion-panel-body {
+      padding: 0 13px 16px;
+    }
   }
 
   label {
@@ -131,7 +135,7 @@ button {
 }
 
 .session-wrap {
-  box-shadow: 0, 0, 10px, rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(123, 123, 123, 0.1);
   background: #fff;
 
   .session-list {
@@ -156,7 +160,7 @@ button {
         font-size: 20px;
       }
 
-      .caret {
+      .carett {
         font-size: 35px;
       }
     }
@@ -234,7 +238,7 @@ button {
 
     .session-open-wrap {
       .side-list-wrap {
-        box-shadow: 0, 0, 10px, rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
         .top-tabs {
           position: relative;
@@ -249,7 +253,7 @@ button {
       }
 
       .table-list-wrap {
-        box-shadow: 0, 0, 10px, rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
         .table-list-inner {
           .table-top {
@@ -285,7 +289,7 @@ button {
                   max-width: 100%;
                 }
 
-                .badge {
+                .badgee {
                   background: #dedede;
                   border: 1px solid;
                   padding: 0.35em 0.7em;
@@ -293,7 +297,7 @@ button {
                 }
 
                 &.unalloc {
-                  .badge {
+                  .badgee {
                     border-color: #2674e7;
                     color: #fff;
                     background-color: #cf2a27;
