@@ -1,26 +1,39 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from '../app/material/material.module';
-import { SeatAllocationComponent } from './components/seat-allocation/seat-allocation.component';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
+import { AppComponent } from './app.component';
+import { MaterialModule } from '../app/material/material.module';
+import { SeatAllocationComponent, SessionDialogComponent, SessionTableDialogComponent } from './components/seat-allocation/seat-allocation.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SeatAllocationComponent
+    SeatAllocationComponent,
+    SessionDialogComponent,
+    SessionTableDialogComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     MaterialModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ColorPickerModule,
+    ToastrModule.forRoot(),
+    NgMultiSelectDropDownModule.forRoot()
+  ],
+  entryComponents: [
+    SessionDialogComponent,
+    SessionTableDialogComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

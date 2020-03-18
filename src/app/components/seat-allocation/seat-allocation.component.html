@@ -1,828 +1,406 @@
 <div class="form-wrap">
     <h1 class="heading-main mb-2 mb-sm-3 mb-md-4 text-center">Session</h1>
     <div class="button-wrap text-right mb-2 mb-md-3">
-        <button mat-raised-button color="primary">Add Session</button>
+        <button mat-raised-button color="primary" (click)="openSessionDialog(); do($event);">
+            Add Session</button>
     </div>
-    <div class="session-wrap p-2 p-md-3 mb-3 mb-sm-4">
-        <div class="session-list">
-            <div class="media">
-                <div class="media-title pr-3 pt-sm-4">
-                    <h2 class="heading m-0 ">Session A</h2>
-                </div>
-                <div class="media-body">
-                    <div class="row form-row">
-                        <div class="col-sm-3">
-                            <mat-form-field class="sessionProgramsChips w-100">
-                                <mat-chip-list #chipList aria-label="Fruit selection">
-                                    <mat-chip *ngFor="let item of sessionPrograms" [selectable]="selectable"
-                                        [removable]="removable" (removed)="remove(item)">
-                                        {{item}}
-                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+    <mat-accordion>
+        <div class="session-wrap p-2 p-md-3 mb-3 mb-sm-4" *ngFor="let item of advancedSessions; let i=index">
+            <!--EXPANSION HEAD-->
+            <div class="session-list p-2">
+                <div class="row form-row">
+                    <div class="mb-2 mb-xl-0 media-title col-xl-2 col-lg-12">
+                        <h2 class="heading m-0 "> {{item.SessionName}} </h2>
+                    </div>
+                    <div class="session-body col-xl-10 col-lg-12">
+                        <div class="row form-row">
+                            <div class="col-lg-3 col-md-4">
+                                <mat-chip-list class="sessionProgramsChips w-100">
+                                    <mat-chip *ngFor="let program of item.programNames; let k = index;">
+                                        {{program}}
+                                        <!-- <mat-icon matChipRemove (click)="removeSessionProgram(k, i)">
+                                            cancel </mat-icon> -->
                                     </mat-chip>
                                 </mat-chip-list>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-sm-7 session-inner-list">
-                            <div class="row form-row align-items-center h-100">
-                                <div class="col-sm-3">
-                                    <div class="list-wrap text-center border">
-                                        <h3>3</h3>
-                                        <p>Tables</p>
+                            </div>
+                            <div class="col-lg-7 col-md-8 session-inner-list mb-2 mb-md-0 mb-sm-3">
+                                <div class="row form-row align-items-center h-100">
+                                    <div class="col-sm-3 col-6 mb-2 mb-sm-0">
+                                        <div class="list-wrap text-center border">
+                                            <h3>{{item.TotalTables}}</h3>
+                                            <p>Tables</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="list-wrap text-center border">
-                                        <h3>100</h3>
-                                        <p>Total Seats</p>
+                                    <div class="col-sm-3 col-6 mb-2 mb-sm-0">
+                                        <div class="list-wrap text-center border">
+                                            <h3>{{item.TotalSeats}}</h3>
+                                            <p>Total Seats</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="list-wrap text-center border">
-                                        <h3>80</h3>
-                                        <p>Allocated</p>
+                                    <div class="col-sm-3 col-6 mb-2 mb-sm-0">
+                                        <div class="list-wrap text-center border">
+                                            <h3>{{item.TotalAllocated}}</h3>
+                                            <p>Allocated</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="list-wrap text-center border">
-                                        <h3>20</h3>
-                                        <p>Unallocated</p>
+                                    <div class="col-sm-3 col-6 mb-2 mb-sm-0">
+                                        <div class="list-wrap text-center border">
+                                            <h3>{{item.TotalUnallocated}}</h3>
+                                            <p>Unallocated</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="d-flex align-items-center justify-content-center h-100 action">
-                                <button mat-icon-button color="warn" class="mx-1">
-                                    <fa-icon class="exclaim" [icon]="faExclamationTriangle"></fa-icon>
-                                </button>
-                                <button mat-raised-button color="primary" class="mx-1">Edit</button>
-                                <button mat-icon-button color="primary" class="mx-1">
-                                    <fa-icon class="carett" [icon]="faCaretUp"></fa-icon>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="session-open mt-3 ">
-            <div class="session-open-wrap">
-                <div class="row">
-                    <div class="col-sm-5">
-                        <div class="side-list-wrap p-2 p-md-3">
-                            <div class="top-tabs">
-                                <mat-tab-group dynamicHeight>
-                                    <mat-tab label="Unallocated">
-                                        <div class="p-2 p-md-3">
-                                            <div class="button-wrap text-right">
-                                                <button mat-raised-button color="primary" class="m-2">Auto Assign
-                                                    All</button>
-                                                <button mat-raised-button color="primary" class="m-2">Auto Assign To
-                                                    Ferns</button>
-                                                <button mat-raised-button color="primary" class="m-2">Assign Selection
-                                                    To
-                                                    Ferns</button>
-                                            </div>
-                                        </div>
-                                    </mat-tab>
-                                    <mat-tab label="Allocated">
-                                        <div class="p-2 p-md-3">
-                                            <div class="button-wrap text-right">
-                                                <button mat-raised-button color="primary" class="m-2">Auto Assign
-                                                    All</button>
-                                                <button mat-raised-button color="primary" class="m-2">Auto Assign To
-                                                    Ferns</button>
-                                                <button mat-raised-button color="primary" class="m-2">Assign Selection
-                                                    To
-                                                    Ferns</button>
-                                            </div>
-                                        </div>
-                                    </mat-tab>
-                                </mat-tab-group>
-                                <div class="refresh-btn">
-                                    <button mat-icon-button color="primary">
-                                        <fa-icon class="exclaim" [icon]="faSyncAlt"></fa-icon>
+                            <div class="col-lg-2 col-md-12 ">
+                                <div
+                                    class="d-flex align-items-center justify-content-lg-center justify-content-end h-100 action">
+                                    <button mat-icon-button color="warn">
+                                        <fa-icon class="exclaim" [icon]="faExclamationTriangle"></fa-icon>
+                                    </button>
+                                    <button mat-raised-button color="primary" class="mx-2"
+                                        (click)="openSessionDialog(item, i); do($event);">Edit</button>
+                                    <!--EXPANSION ICON-->
+                                    <button mat-icon-button color="primary"
+                                        (click)="mainExpansionPanel.toggle(); do($event);">
+                                        <ng-container *ngIf="mainPanelIcon === i ; else elseTemplate">
+                                            <fa-icon class="caret" [icon]="faCaretUp"></fa-icon>
+                                        </ng-container>
+                                        <ng-template #elseTemplate>
+                                            <fa-icon class="caret" [icon]="faCaretDown"></fa-icon>
+                                        </ng-template>
                                     </button>
                                 </div>
                             </div>
-                            <div class="table-wrap">
-                                <table mat-table [dataSource]="dataSource" class="w-100">
-                                    <!-- Checkbox Column -->
-                                    <ng-container matColumnDef="select">
-                                        <th mat-header-cell *matHeaderCellDef>
-                                            <mat-checkbox (change)="$event ? masterToggle() : null"
-                                                [checked]="selection.hasValue() && isAllSelected()"
-                                                [indeterminate]="selection.hasValue() && !isAllSelected()">
-                                            </mat-checkbox>
-                                        </th>
-                                        <td mat-cell *matCellDef="let row">
-                                            <mat-checkbox (click)="$event.stopPropagation()"
-                                                (change)="$event ? selection.toggle(row) : null"
-                                                [checked]="selection.isSelected(row)">
-                                            </mat-checkbox>
-                                        </td>
-                                    </ng-container>
+                            <!--EXPANSION HEAD END-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--EXPANSION HEAD END-->
+            <!--EXPANDED BODY-->
+            <mat-expansion-panel class="border border-top-0" #mainExpansionPanel [hideToggle]="true"
+                (afterCollapse)="afterPanelClosed(i)" (afterExpand)="afterPanelOpened(i)">
+                <div class="session-open mt-3 ">
+                    <div class="session-open-wrap">
+                        <div class="row">
+                            <div class="col-lg-5 mb-3 mb-lg-0">
+                                <div class="side-list-wrap p-2 p-sm-3">
+                                    <div class="top-tabs">
+                                        <mat-tab-group dynamicHeight>
+                                            <mat-tab label="Unallocated">
+                                                <div class="py-2 py-md-3">
+                                                    <div class="button-wrap text-right">
+                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">
+                                                            Auto Assign All</button>
+                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">
+                                                            Auto Assign To Ferns</button>
+                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">
+                                                            Assign Selection To Ferns</button>
+                                                    </div>
+                                                    <div class="table-wrap">
+                                                        <!-- <div class="table-responsive"> -->
+                                                            <!-- <mat-table [dataSource]="dataSource" class="w-100"> -->
+                                                                <!-- Checkbox Column -->
+                                                                <!-- <ng-container matColumnDef="select">
+                                                                    <mat-header-cell *matHeaderCellDef>
+                                                                        <mat-checkbox
+                                                                            (change)="$event ? masterToggle() : null"
+                                                                            [checked]="selection.hasValue() && isAllSelected()"
+                                                                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                                                                        </mat-checkbox>
+                                                                    </mat-header-cell>
+                                                                    <mat-cell *matCellDef="let row">
+                                                                        <mat-checkbox
+                                                                            (click)="$event.stopPropagation(); do($event);"
+                                                                            (change)="$event ? selection.toggle(row) : null"
+                                                                            [checked]="selection.isSelected(row)">
+                                                                        </mat-checkbox>
+                                                                    </mat-cell>
+                                                                </ng-container> -->
 
-                                    <!-- Name Column -->
-                                    <ng-container matColumnDef="name">
-                                        <th mat-header-cell *matHeaderCellDef> Name </th>
-                                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                    </ng-container>
+                                                                <!-- Name Column -->
+                                                                <!-- <ng-container matColumnDef="name">
+                                                                    <mat-header-cell *matHeaderCellDef> Name
+                                                                    </mat-header-cell>
+                                                                    <mat-cell *matCellDef="let element">
+                                                                        {{element.name}}
+                                                                    </mat-cell>
+                                                                </ng-container> -->
 
 
-                                    <!-- Symbol Column -->
-                                    <ng-container matColumnDef="symbol">
-                                        <th mat-header-cell *matHeaderCellDef> </th>
-                                        <td mat-cell *matCellDef="let element">
+                                                                <!-- Symbol Column -->
+                                                                <!-- <ng-container matColumnDef="symbol">
+                                                                    <mat-header-cell *matHeaderCellDef>
+                                                                    </mat-header-cell>
+                                                                    <mat-cell *matCellDef="let element">
+                                                                        <button mat-icon-button color="primary">
+                                                                            <fa-icon class="exclaim" [icon]="faInfo">
+                                                                            </fa-icon>
+                                                                        </button>
+
+                                                                    </mat-cell>
+                                                                </ng-container>
+
+                                                                <mat-header-row *matHeaderRowDef="displayedColumns">
+                                                                </mat-header-row>
+                                                                <mat-row
+                                                                    *matRowDef="let row; columns: displayedColumns;"
+                                                                    (click)="selection.toggle(row); do($event);">
+                                                                </mat-row>
+                                                            </mat-table> -->
+                                                        <!-- </div> -->
+                                                        <div class="table-responsive">
+                                                            <table class="mat-table table mb-0">
+                                                                <thead>
+                                                                    <tr>
+                                                                      <th scope="col" class="image-th">#</th>
+                                                                      <th scope="col" class="name-th">Name</th>
+                                                                      <th scope="col" class="mail-th">Action</th>
+                                                                    </tr>
+                                                                  </thead>
+                                                                  <tbody>
+                                                                      <tr *ngFor="let item of unallocatedTableRows; let i = index">
+                                                                          <td>{{ i + 1 }}</td>
+                                                                          <td>{{ item.FullName }}</td>
+                                                                          <td>
+                                                                            <button mat-icon-button color="primary"><fa-icon class="exclaim" [icon]="faInfo"></fa-icon></button>
+                                                                            </td>
+                                                                      </tr>
+                                                                  </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </mat-tab>
+                                            <mat-tab label="Allocated">
+                                                <div class="py-2 py-md-3">
+                                                    <!-- <div class="button-wrap text-right">
+                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">
+                                                            Auto Assign All</button>
+                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">
+                                                            Auto Assign To Ferns</button>
+                                                        <button mat-raised-button color="primary"
+                                                            class="ml-2 mb-2">Assign Selection To Ferns</button>
+                                                    </div> -->
+                                                    <div class="table-wrap">
+                                                        <div class="table-responsive">
+                                                            <table class="mat-table table mb-0">
+                                                                <thead>
+                                                                    <tr>
+                                                                      <th scope="col" class="image-th">#</th>
+                                                                      <th scope="col" class="name-th">Name</th>
+                                                                      <th scope="col" class="mail-th">Action</th>
+                                                                    </tr>
+                                                                  </thead>
+                                                                  <tbody>
+                                                                      <tr *ngFor="let item of allocatedTableRows; let i = index">
+                                                                          <td>{{ i + 1 }}</td>
+                                                                          <td>{{ item.FullName }}</td>
+                                                                          <td>
+                                                                            <button mat-icon-button color="primary"><fa-icon class="exclaim" [icon]="faInfo"></fa-icon></button>
+                                                                            </td>
+                                                                      </tr>
+                                                                  </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </mat-tab>
+                                        </mat-tab-group>
+                                        <div class="refresh-btn">
                                             <button mat-icon-button color="primary">
-                                                <fa-icon class="exclaim" [icon]="faInfo"></fa-icon>
+                                                <fa-icon class="exclaim" [icon]="faSyncAlt"></fa-icon>
                                             </button>
-
-                                        </td>
-                                    </ng-container>
-
-                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                                        (click)="selection.toggle(row)">
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-7">
-                        <div class="table-list-wrap p-2 p-md-3">
-                            <div class="top-buttons d-flex align-items-center justify-content-end mb-2 mb-md-3">
-                                <button mat-raised-button class="mx-2">
-                                    <span>Print</span>
-                                    <fa-icon class="mx-2 printpdf" [icon]="faFilePdf"></fa-icon>
-                                </button>
-                                <button mat-raised-button color="primary" class="mx-2">Add Table</button>
-                            </div>
-                            <div class="table-list-inner mb-2">
-                                <div class="table-top border p-1 p-sm-2">
-                                    <h4 class="table-head">Table "Ferns"</h4>
-                                    <div class="table-in">
-                                        <div class="row form-row align-items-center">
-                                            <div class="col-sm-2">
-                                                <div class="count-wrap">
-                                                    <span
-                                                        class="d-flex align-items-center justify-content-center">8</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7 allocated">
-                                                <p class="py-1 m-0 d-flex justify-content-between alloc">
-                                                    <span class="title">Allocated Seats</span>
-                                                    <span class="badge">5</span>
-                                                </p>
-                                                <p class="py-1 m-0 d-flex justify-content-between unalloc">
-                                                    <span class="title">Unallocated Seats</span>
-                                                    <span class="badge">3</span>
-                                                </p>
-                                            </div>
-                                            <div class="col-sm-2 color-pick text-right">
-                                                <p>
-
-                                                </p>
-                                                <button mat-raised-button color="primary">Edit</button>
-                                            </div>
-                                            <div class="col-sm-1 toggle-up">
-                                                <button mat-icon-button color="primary">
-                                                    <fa-icon class="" [icon]="faChevronUp"></fa-icon>
-                                                </button>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="table-wrap p-3 p-sm-3 d-block">
-                                    <table mat-table [dataSource]="dataSource" class="w-100">
-                                        <!--image column-->
-                                        <ng-container matColumnDef="image">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <span
-                                                    class="icon-wrap d-flex align-items-center justify-content-center">
-                                                    T J
-                                                    <!-- <img src="../../../assets/images/user.png" alt="" class="img-fluid"> -->
-                                                </span>
-                                            </td>
-                                        </ng-container>
-
-                                        <!-- Name Column -->
-                                        <ng-container matColumnDef="name">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                        </ng-container>
-
-
-                                        <!-- Symbol Column -->
-                                        <ng-container matColumnDef="symbol">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <button mat-icon-button color="primary">
-                                                    <fa-icon class="exclaim" [icon]="faInfo"></fa-icon>
-                                                </button>
-                                                <button mat-icon-button color="warn">
-                                                    <fa-icon class="exclaim" [icon]="faTrashAlt"></fa-icon>
-                                                </button>
-                                                <button mat-icon-button color="primary"
-                                                    [matMenuTriggerFor]="beforeMenu">
-                                                    <fa-icon class="exclaim" [icon]="faEllipsisV"></fa-icon>
-                                                </button>
-                                                <mat-menu #beforeMenu="matMenu" xPosition="before">
-                                                    <button mat-menu-item>Item 1</button>
-                                                    <button mat-menu-item>Item 2</button>
-                                                </mat-menu>
-                                            </td>
-                                        </ng-container>
-
-                                        <tr mat-header-row *matHeaderRowDef="fernolumns"></tr>
-                                        <tr mat-row *matRowDef="let row; columns: fernolumns;"></tr>
-                                    </table>
-                                </div>
                             </div>
-                            <div class="table-list-inner mb-2">
-                                <div class="table-top border p-1 p-sm-2">
-                                    <h4 class="table-head">Table "Ferns"</h4>
-                                    <div class="table-in">
-                                        <div class="row form-row align-items-center">
-                                            <div class="col-sm-2">
-                                                <div class="count-wrap">
-                                                    <span
-                                                        class="d-flex align-items-center justify-content-center">8</span>
+                            <div class="col-lg-7">
+                                <div class="table-list-wrap p-2 p-sm-3">
+                                    <div class="top-buttons d-flex align-items-center justify-content-end mb-2 mb-md-3">
+                                        <button mat-raised-button class="">
+                                            <span>Print</span>
+                                            <fa-icon class="mx-2 printpdf" [icon]="faFilePdf"></fa-icon>
+                                        </button>
+                                        <button mat-raised-button color="primary" class="ml-2"
+                                            (click)="addEditSessionTable(i); do($event);">Add Table</button>
+                                    </div>
+                                    <mat-accordion>
+                                        <div class="table-list-inner mb-2"
+                                            *ngFor="let tableItem of item.tables; let j=index">
+                                            <div class="table-top p-2"
+                                                [ngStyle]="{'border': '1px solid' + tableItem.Colour}">
+                                                <h4 class="table-head">Table "{{tableItem.TableName}}"</h4>
+                                                <div class="table-in">
+                                                    <div class="row form-row align-items-center">
+                                                        <div class="col-sm-2">
+                                                            <div class="count-wrap">
+                                                                <span
+                                                                    class="d-flex align-items-center justify-content-center"
+                                                                    [style.background]="tableItem.Colour"
+                                                                    style="color: white;">
+                                                                    {{ tableItem.NumSeats }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-7 allocated">
+                                                            <p class="py-1 m-0 d-flex justify-content-between alloc">
+                                                                <span class="title">Allocated Seats</span>
+                                                                <span class="badge" [style.color]="tableItem.Colour"
+                                                                    style="background: white;">5</span>
+                                                            </p>
+                                                            <p class="py-1 m-0 d-flex justify-content-between unalloc">
+                                                                <span class="title">Unallocated Seats</span>
+                                                                <span class="badge">3</span>
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-sm-3 color-pick text-right">
+                                                            <div class="d-flex align-items-center justify-content-end">
+                                                                <div class="color-btn">
+                                                                    <p>
+                                                                        <input matInput
+                                                                            [style.background]="tableItem.Colour"
+                                                                            [colorPicker]="tableItem.Colour"
+                                                                            cpPosition="bottom-left"
+                                                                            (colorPickerChange)="tableItem.Colour=$event">
+                                                                    </p>
+                                                                    <button mat-raised-button color="primary"
+                                                                        (click)="addEditSessionTable(i, j); do($event);">Edit</button>
+                                                                </div>
+                                                                <div class="toggle-up ml-2">
+                                                                    <button mat-icon-button color="primary"
+                                                                        (click)="innerExpansionPanel.toggle(); do($event);">
+                                                                        <ng-container
+                                                                            *ngIf="innerPanelIcon === j; else elseTemplate">
+                                                                            <fa-icon [icon]="faChevronUp"></fa-icon>
+                                                                        </ng-container>
+                                                                        <ng-template #elseTemplate>
+                                                                            <fa-icon [icon]="faChevronDown"></fa-icon>
+                                                                        </ng-template>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-7 allocated">
-                                                <p class="py-1 m-0 d-flex justify-content-between alloc">
-                                                    <span class="title">Allocated Seats</span>
-                                                    <span class="badge">5</span>
-                                                </p>
-                                                <p class="py-1 m-0 d-flex justify-content-between unalloc">
-                                                    <span class="title"></span>
-                                                    <span class="badge full">Full</span>
-                                                </p>
-                                            </div>
-                                            <div class="col-sm-2 color-pick text-right">
-                                                <p>
+                                            <mat-expansion-panel #innerExpansionPanel [hideToggle]="true"
+                                                (afterCollapse)="innerPanelClosed(j)"
+                                                (afterExpand)="innerPannelOpened(j)">
+                                                <div class="table-wrap py-3 py-sm-3 d-block">
+                                                    <!-- <div class="table-responsive">
+                                                        <mat-table [dataSource]="dataSource" class="w-100"> -->
+                                                            <!--image column-->
+                                                            <!-- <ng-container matColumnDef="image">
+                                                                <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+                                                                <mat-cell *matCellDef="let element">
+                                                                    <span
+                                                                        class="icon-wrap d-flex align-items-center justify-content-center">
+                                                                        T J -->
+                                                                        <!-- <img src="../../../assets/images/user.png" alt="" class="img-fluid"> -->
+                                                                    <!-- </span>
+                                                                </mat-cell>
+                                                            </ng-container> -->
 
-                                                </p>
-                                                <button mat-raised-button color="primary">Edit</button>
-                                            </div>
-                                            <div class="col-sm-1 toggle-up">
-                                                <button mat-icon-button color="primary">
-                                                    <fa-icon class="" [icon]="faChevronUp"></fa-icon>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="table-wrap p-3 p-sm-3 d-none">
-                                    <table mat-table [dataSource]="dataSource" class="w-100">
-                                        <!--image column-->
-                                        <ng-container matColumnDef="image">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <span
-                                                    class="icon-wrap d-flex align-items-center justify-content-center">
-                                                    T J
-                                                    <!-- <img src="../../../assets/images/user.png" alt="" class="img-fluid"> -->
-                                                </span>
-                                            </td>
-                                        </ng-container>
-
-                                        <!-- Name Column -->
-                                        <ng-container matColumnDef="name">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                        </ng-container>
+                                                            <!-- Name Column -->
+                                                            <!-- <ng-container matColumnDef="name">
+                                                                <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+                                                                <mat-cell *matCellDef="let element"> {{element.name}}
+                                                                </mat-cell>
+                                                            </ng-container> -->
 
 
-                                        <!-- Symbol Column -->
-                                        <ng-container matColumnDef="symbol">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <button mat-icon-button color="primary">
-                                                    <fa-icon class="exclaim" [icon]="faInfo"></fa-icon>
-                                                </button>
-                                                <button mat-icon-button color="warn">
-                                                    <fa-icon class="exclaim" [icon]="faTrashAlt"></fa-icon>
-                                                </button>
-                                                <button mat-icon-button color="primary"
-                                                    [matMenuTriggerFor]="beforeMenu">
-                                                    <fa-icon class="exclaim" [icon]="faEllipsisV"></fa-icon>
-                                                </button>
-                                                <mat-menu #beforeMenu="matMenu" xPosition="before">
-                                                    <button mat-menu-item>Item 1</button>
-                                                    <button mat-menu-item>Item 2</button>
-                                                </mat-menu>
-                                            </td>
-                                        </ng-container>
+                                                            <!-- Symbol Column -->
+                                                            <!-- <ng-container matColumnDef="symbol">
+                                                                <mat-header-cell mat-header-cell *matHeaderCellDef>
+                                                                </mat-header-cell>
+                                                                <mat-cell *matCellDef="let element">
+                                                                    <button mat-icon-button color="primary">
+                                                                        <fa-icon class="exclaim" [icon]="faInfo">
+                                                                        </fa-icon>
+                                                                    </button>
+                                                                    <button mat-icon-button color="warn">
+                                                                        <fa-icon class="exclaim" [icon]="faTrashAlt">
+                                                                        </fa-icon>
+                                                                    </button>
+                                                                    <button mat-icon-button color="primary"
+                                                                        [matMenuTriggerFor]="beforeMenu">
+                                                                        <fa-icon class="exclaim" [icon]="faEllipsisV">
+                                                                        </fa-icon>
+                                                                    </button>
+                                                                    <mat-menu class="m-mi" #beforeMenu="matMenu"
+                                                                        xPosition="before">
+                                                                        <button mat-menu-item>Item 11</button>
+                                                                        <button mat-menu-item>Item 2</button>
+                                                                    </mat-menu>
+                                                                </mat-cell>
+                                                            </ng-container>
 
-                                        <tr mat-header-row *matHeaderRowDef="fernolumns"></tr>
-                                        <tr mat-row *matRowDef="let row; columns: fernolumns;"></tr>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="table-list-inner mb-2">
-                                <div class="table-top border p-1 p-sm-2">
-                                    <h4 class="table-head">Table "Ferns"</h4>
-                                    <div class="table-in">
-                                        <div class="row form-row align-items-center">
-                                            <div class="col-sm-2">
-                                                <div class="count-wrap">
-                                                    <span
-                                                        class="d-flex align-items-center justify-content-center">8</span>
+                                                            <mat-header-row class="d-none"
+                                                                *matHeaderRowDef="fernolumns">
+                                                            </mat-header-row>
+                                                            <mat-row *matRowDef="let row; columns: fernolumns;">
+                                                            </mat-row>
+                                                        </mat-table> -->
+                                                    <!-- </div> -->
+                                                    <div class="table-responsive">
+                                                        <table class="mat-table table mb-0">
+                                                            <thead>
+                                                                <tr>
+                                                                  <th scope="col" class="image-th">Initials</th>
+                                                                  <th scope="col" class="name-th">Name</th>
+                                                                  <th scope="col" class="mail-th">Action</th>
+                                                                </tr>
+                                                              </thead>
+                                                              <tbody>
+                                                                  <tr *ngFor="let item of innerTableRows">
+                                                                    <td>
+                                                                        <span
+                                                                        class="icon-wrap d-flex align-items-center justify-content-center">
+                                                                        {{ item.Initials }}
+                                                                        <!-- <img src="../../../assets/images/user.png" alt="" class="img-fluid"> -->
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>{{ item.FullName }}</td>
+                                                                    <td>
+                                                                        <button mat-icon-button color="primary">
+                                                                            <fa-icon class="exclaim" [icon]="faInfo">
+                                                                            </fa-icon>
+                                                                        </button>
+                                                                        <button mat-icon-button color="warn">
+                                                                            <fa-icon class="exclaim" [icon]="faTrashAlt">
+                                                                            </fa-icon>
+                                                                        </button>
+                                                                        <button mat-icon-button color="primary"
+                                                                            [matMenuTriggerFor]="beforeMenu">
+                                                                            <fa-icon class="exclaim" [icon]="faEllipsisV">
+                                                                            </fa-icon>
+                                                                        </button>
+                                                                        <mat-menu class="m-mi" #beforeMenu="matMenu"
+                                                                            xPosition="before">
+                                                                            <button mat-menu-item>Item 11</button>
+                                                                            <button mat-menu-item>Item 2</button>
+                                                                        </mat-menu>
+                                                                    </td>
+                                                                  </tr>
+                                                              </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-7 allocated">
-                                                <p class="py-1 m-0 d-flex justify-content-between alloc">
-                                                    <span class="title">Allocated Seats</span>
-                                                    <span class="badge">5</span>
-                                                </p>
-                                                <p class="py-1 m-0 d-flex justify-content-between unalloc">
-                                                    <span class="title">Unallocated Seats</span>
-                                                    <span class="badge">3</span>
-                                                </p>
-                                            </div>
-                                            <div class="col-sm-2 color-pick text-right">
-                                                <p>
-
-                                                </p>
-                                                <button mat-raised-button color="primary">Edit</button>
-                                            </div>
-                                            <div class="col-sm-1 toggle-up">
-                                                <button mat-icon-button color="primary">
-                                                    <fa-icon class="" [icon]="faChevronUp"></fa-icon>
-                                                </button>
-                                            </div>
+                                            </mat-expansion-panel>
                                         </div>
+                                    </mat-accordion>
+                                    <div class="top-buttons d-flex align-items-center justify-content-end pt-2 pt-md-3">
+                                        <button mat-raised-button class="mx-2">Cancel</button>
+                                        <button mat-raised-button color="primary" class="mx-2">Save</button>
                                     </div>
                                 </div>
-                                <div class="table-wrap p-3 p-sm-3 d-none">
-                                    <table mat-table [dataSource]="dataSource" class="w-100">
-                                        <!--image column-->
-                                        <ng-container matColumnDef="image">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <span
-                                                    class="icon-wrap d-flex align-items-center justify-content-center">
-                                                    T J
-                                                    <!-- <img src="../../../assets/images/user.png" alt="" class="img-fluid"> -->
-                                                </span>
-                                            </td>
-                                        </ng-container>
-
-                                        <!-- Name Column -->
-                                        <ng-container matColumnDef="name">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                        </ng-container>
-
-
-                                        <!-- Symbol Column -->
-                                        <ng-container matColumnDef="symbol">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <button mat-icon-button color="primary">
-                                                    <fa-icon class="exclaim" [icon]="faInfo"></fa-icon>
-                                                </button>
-                                                <button mat-icon-button color="warn">
-                                                    <fa-icon class="exclaim" [icon]="faTrashAlt"></fa-icon>
-                                                </button>
-                                                <button mat-icon-button color="primary"
-                                                    [matMenuTriggerFor]="beforeMenu">
-                                                    <fa-icon class="exclaim" [icon]="faEllipsisV"></fa-icon>
-                                                </button>
-                                                <mat-menu #beforeMenu="matMenu" xPosition="before">
-                                                    <button mat-menu-item>Item 1</button>
-                                                    <button mat-menu-item>Item 2</button>
-                                                </mat-menu>
-                                            </td>
-                                        </ng-container>
-
-                                        <tr mat-header-row *matHeaderRowDef="fernolumns"></tr>
-                                        <tr mat-row *matRowDef="let row; columns: fernolumns;"></tr>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="top-buttons d-flex align-items-center justify-content-end pt-2 pt-md-3">
-                                <button mat-raised-button class="mx-2">Cancel</button>
-                                <button mat-raised-button color="primary" class="mx-2">Save</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </mat-expansion-panel>
+            <!--EXPANDED BODY END-->
         </div>
-    </div>
-    <div class="session-wrap p-2 p-md-3 mb-3 mb-sm-4">
-        <div class="session-list">
-            <div class="media">
-                <div class="media-title pr-3 pt-sm-4">
-                    <h2 class="heading m-0 ">Session B</h2>
-                </div>
-                <div class="media-body">
-                    <div class="row form-row">
-                        <div class="col-sm-3">
-                            <mat-form-field class="sessionProgramsChips w-100">
-                                <mat-chip-list #chipList aria-label="Fruit selection">
-                                    <mat-chip *ngFor="let item of sessionPrograms" [selectable]="selectable"
-                                        [removable]="removable" (removed)="remove(item)">
-                                        {{item}}
-                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                                    </mat-chip>
-                                </mat-chip-list>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-sm-7 session-inner-list">
-                            <div class="row form-row align-items-center h-100">
-                                <div class="col-sm-3">
-                                    <div class="list-wrap text-center border">
-                                        <h3>3</h3>
-                                        <p>Tables</p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="list-wrap text-center border">
-                                        <h3>100</h3>
-                                        <p>Total Seats</p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="list-wrap text-center border">
-                                        <h3>80</h3>
-                                        <p>Allocated</p>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <div class="list-wrap text-center border">
-                                        <h3>20</h3>
-                                        <p>Unallocated</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="d-flex align-items-center justify-content-center h-100 action">
-                                <button mat-icon-button color="primary" class="mx-2">
-                                    <fa-icon class="exclaim" [icon]="faCheckCircle"></fa-icon>
-                                </button>
-                                <button mat-raised-button color="primary" class="mx-2">Edit</button>
-                                <button mat-icon-button color="primary" class="mx-2">
-                                    <fa-icon class="caret" [icon]="faCaretUp"></fa-icon>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="session-open mt-3 d-none">
-            <div class="session-open-wrap">
-                <div class="row">
-                    <div class="col-sm-5">
-                        <div class="side-list-wrap p-2 p-md-3">
-                            <div class="top-tabs">
-                                <mat-tab-group dynamicHeight>
-                                    <mat-tab label="Unallocated">
-                                        <div class="p-2 p-md-3">
-                                            <div class="button-wrap text-right">
-                                                <button mat-raised-button color="primary" class="m-2">Auto Assign
-                                                    All</button>
-                                                <button mat-raised-button color="primary" class="m-2">Auto Assign To
-                                                    Ferns</button>
-                                                <button mat-raised-button color="primary" class="m-2">Assign Selection
-                                                    To
-                                                    Ferns</button>
-                                            </div>
-                                        </div>
-                                    </mat-tab>
-                                    <mat-tab label="Allocated">
-                                        <div class="p-2 p-md-3">
-                                            <div class="button-wrap text-right">
-                                                <button mat-raised-button color="primary" class="m-2">Auto Assign
-                                                    All</button>
-                                                <button mat-raised-button color="primary" class="m-2">Auto Assign To
-                                                    Ferns</button>
-                                                <button mat-raised-button color="primary" class="m-2">Assign Selection
-                                                    To
-                                                    Ferns</button>
-                                            </div>
-                                        </div>
-                                    </mat-tab>
-                                </mat-tab-group>
-                                <div class="refresh-btn">
-                                    <button mat-icon-button color="primary">
-                                        <fa-icon class="exclaim" [icon]="faSyncAlt"></fa-icon>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="table-wrap">
-                                <table mat-table [dataSource]="dataSource" class="w-100">
-                                    <!-- Checkbox Column -->
-                                    <ng-container matColumnDef="select">
-                                        <th mat-header-cell *matHeaderCellDef>
-                                            <mat-checkbox (change)="$event ? masterToggle() : null"
-                                                [checked]="selection.hasValue() && isAllSelected()"
-                                                [indeterminate]="selection.hasValue() && !isAllSelected()">
-                                            </mat-checkbox>
-                                        </th>
-                                        <td mat-cell *matCellDef="let row">
-                                            <mat-checkbox (click)="$event.stopPropagation()"
-                                                (change)="$event ? selection.toggle(row) : null"
-                                                [checked]="selection.isSelected(row)">
-                                            </mat-checkbox>
-                                        </td>
-                                    </ng-container>
-
-                                    <!-- Name Column -->
-                                    <ng-container matColumnDef="name">
-                                        <th mat-header-cell *matHeaderCellDef> Name </th>
-                                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                    </ng-container>
-
-
-                                    <!-- Symbol Column -->
-                                    <ng-container matColumnDef="symbol">
-                                        <th mat-header-cell *matHeaderCellDef> </th>
-                                        <td mat-cell *matCellDef="let element">
-                                            <button mat-icon-button color="primary">
-                                                <fa-icon class="exclaim" [icon]="faInfo"></fa-icon>
-                                            </button>
-
-                                        </td>
-                                    </ng-container>
-
-                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                                        (click)="selection.toggle(row)">
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-7">
-                        <div class="table-list-wrap p-2 p-md-3">
-                            <div class="top-buttons d-flex align-items-center justify-content-end mb-2 mb-md-3">
-                                <button mat-raised-button class="mx-2">
-                                    <span>Print</span>
-                                    <fa-icon class="mx-2 printpdf" [icon]="faFilePdf"></fa-icon>
-                                </button>
-                                <button mat-raised-button color="primary" class="mx-2">Add Table</button>
-                            </div>
-                            <div class="table-list-inner mb-2">
-                                <div class="table-top border p-1 p-sm-2">
-                                    <h4 class="table-head">Table "Ferns"</h4>
-                                    <div class="table-in">
-                                        <div class="row form-row align-items-center">
-                                            <div class="col-sm-2">
-                                                <div class="count-wrap">
-                                                    <span
-                                                        class="d-flex align-items-center justify-content-center">8</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7 allocated">
-                                                <p class="py-1 m-0 d-flex justify-content-between alloc">
-                                                    <span class="title">Allocated Seats</span>
-                                                    <span class="badge">5</span>
-                                                </p>
-                                                <p class="py-1 m-0 d-flex justify-content-between unalloc">
-                                                    <span class="title">Unallocated Seats</span>
-                                                    <span class="badge">3</span>
-                                                </p>
-                                            </div>
-                                            <div class="col-sm-2 color-pick text-right">
-                                                <p>
-
-                                                </p>
-                                                <button mat-raised-button color="primary">Edit</button>
-                                            </div>
-                                            <div class="col-sm-1 toggle-up">
-                                                <button mat-icon-button color="primary">
-                                                    <fa-icon class="" [icon]="faChevronUp"></fa-icon>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="table-wrap p-3 p-sm-3 d-block">
-                                    <table mat-table [dataSource]="dataSource" class="w-100">
-                                        <!--image column-->
-                                        <ng-container matColumnDef="image">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <span
-                                                    class="icon-wrap d-flex align-items-center justify-content-center">
-                                                    T J
-                                                    <!-- <img src="../../../assets/images/user.png" alt="" class="img-fluid"> -->
-                                                </span>
-                                            </td>
-                                        </ng-container>
-
-                                        <!-- Name Column -->
-                                        <ng-container matColumnDef="name">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                        </ng-container>
-
-
-                                        <!-- Symbol Column -->
-                                        <ng-container matColumnDef="symbol">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <button mat-icon-button color="primary">
-                                                    <fa-icon class="exclaim" [icon]="faInfo"></fa-icon>
-                                                </button>
-                                                <button mat-icon-button color="warn">
-                                                    <fa-icon class="exclaim" [icon]="faTrashAlt"></fa-icon>
-                                                </button>
-                                                <button mat-icon-button color="primary"
-                                                    [matMenuTriggerFor]="beforeMenu">
-                                                    <fa-icon class="exclaim" [icon]="faEllipsisV"></fa-icon>
-                                                </button>
-                                                <mat-menu #beforeMenu="matMenu" xPosition="before">
-                                                    <button mat-menu-item>Item 1</button>
-                                                    <button mat-menu-item>Item 2</button>
-                                                </mat-menu>
-                                            </td>
-                                        </ng-container>
-
-                                        <tr mat-header-row *matHeaderRowDef="fernolumns"></tr>
-                                        <tr mat-row *matRowDef="let row; columns: fernolumns;"></tr>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="table-list-inner mb-2">
-                                <div class="table-top border p-1 p-sm-2">
-                                    <h4 class="table-head">Table "Ferns"</h4>
-                                    <div class="table-in">
-                                        <div class="row form-row align-items-center">
-                                            <div class="col-sm-2">
-                                                <div class="count-wrap">
-                                                    <span
-                                                        class="d-flex align-items-center justify-content-center">8</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7 allocated">
-                                                <p class="py-1 m-0 d-flex justify-content-between alloc">
-                                                    <span class="title">Allocated Seats</span>
-                                                    <span class="badge">5</span>
-                                                </p>
-                                                <p class="py-1 m-0 d-flex justify-content-between unalloc">
-                                                    <span class="title"></span>
-                                                    <span class="badge full">Full</span>
-                                                </p>
-                                            </div>
-                                            <div class="col-sm-2 color-pick text-right">
-                                                <p>
-
-                                                </p>
-                                                <button mat-raised-button color="primary">Edit</button>
-                                            </div>
-                                            <div class="col-sm-1 toggle-up">
-                                                <button mat-icon-button color="primary">
-                                                    <fa-icon class="" [icon]="faChevronUp"></fa-icon>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="table-wrap p-3 p-sm-3 d-none">
-                                    <table mat-table [dataSource]="dataSource" class="w-100">
-                                        <!--image column-->
-                                        <ng-container matColumnDef="image">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <span
-                                                    class="icon-wrap d-flex align-items-center justify-content-center">
-                                                    T J
-                                                    <!-- <img src="../../../assets/images/user.png" alt="" class="img-fluid"> -->
-                                                </span>
-                                            </td>
-                                        </ng-container>
-
-                                        <!-- Name Column -->
-                                        <ng-container matColumnDef="name">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                        </ng-container>
-
-
-                                        <!-- Symbol Column -->
-                                        <ng-container matColumnDef="symbol">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <button mat-icon-button color="primary">
-                                                    <fa-icon class="exclaim" [icon]="faInfo"></fa-icon>
-                                                </button>
-                                                <button mat-icon-button color="warn">
-                                                    <fa-icon class="exclaim" [icon]="faTrashAlt"></fa-icon>
-                                                </button>
-                                                <button mat-icon-button color="primary"
-                                                    [matMenuTriggerFor]="beforeMenu">
-                                                    <fa-icon class="exclaim" [icon]="faEllipsisV"></fa-icon>
-                                                </button>
-                                                <mat-menu #beforeMenu="matMenu" xPosition="before">
-                                                    <button mat-menu-item>Item 1</button>
-                                                    <button mat-menu-item>Item 2</button>
-                                                </mat-menu>
-                                            </td>
-                                        </ng-container>
-
-                                        <tr mat-header-row *matHeaderRowDef="fernolumns"></tr>
-                                        <tr mat-row *matRowDef="let row; columns: fernolumns;"></tr>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="table-list-inner mb-2">
-                                <div class="table-top border p-1 p-sm-2">
-                                    <h4 class="table-head">Table "Ferns"</h4>
-                                    <div class="table-in">
-                                        <div class="row form-row align-items-center">
-                                            <div class="col-sm-2">
-                                                <div class="count-wrap">
-                                                    <span
-                                                        class="d-flex align-items-center justify-content-center">8</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-7 allocated">
-                                                <p class="py-1 m-0 d-flex justify-content-between alloc">
-                                                    <span class="title">Allocated Seats</span>
-                                                    <span class="badge">5</span>
-                                                </p>
-                                                <p class="py-1 m-0 d-flex justify-content-between unalloc">
-                                                    <span class="title">Unallocated Seats</span>
-                                                    <span class="badge">3</span>
-                                                </p>
-                                            </div>
-                                            <div class="col-sm-2 color-pick text-right">
-                                                <p>
-
-                                                </p>
-                                                <button mat-raised-button color="primary">Edit</button>
-                                            </div>
-                                            <div class="col-sm-1 toggle-up">
-                                                <button mat-icon-button color="primary">
-                                                    <fa-icon class="" [icon]="faChevronUp"></fa-icon>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="table-wrap p-3 p-sm-3 d-none">
-                                    <table mat-table [dataSource]="dataSource" class="w-100">
-                                        <!--image column-->
-                                        <ng-container matColumnDef="image">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <span
-                                                    class="icon-wrap d-flex align-items-center justify-content-center">
-                                                    T J
-                                                    <!-- <img src="../../../assets/images/user.png" alt="" class="img-fluid"> -->
-                                                </span>
-                                            </td>
-                                        </ng-container>
-
-                                        <!-- Name Column -->
-                                        <ng-container matColumnDef="name">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                        </ng-container>
-
-
-                                        <!-- Symbol Column -->
-                                        <ng-container matColumnDef="symbol">
-                                            <th mat-header-cell *matHeaderCellDef> </th>
-                                            <td mat-cell *matCellDef="let element">
-                                                <button mat-icon-button color="primary">
-                                                    <fa-icon class="exclaim" [icon]="faInfo"></fa-icon>
-                                                </button>
-                                                <button mat-icon-button color="warn">
-                                                    <fa-icon class="exclaim" [icon]="faTrashAlt"></fa-icon>
-                                                </button>
-                                                <button mat-icon-button color="primary"
-                                                    [matMenuTriggerFor]="beforeMenu">
-                                                    <fa-icon class="exclaim" [icon]="faEllipsisV"></fa-icon>
-                                                </button>
-                                                <mat-menu #beforeMenu="matMenu" xPosition="before">
-                                                    <button mat-menu-item>Item 1</button>
-                                                    <button mat-menu-item>Item 2</button>
-                                                </mat-menu>
-                                            </td>
-                                        </ng-container>
-
-                                        <tr mat-header-row *matHeaderRowDef="fernolumns"></tr>
-                                        <tr mat-row *matRowDef="let row; columns: fernolumns;"></tr>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="top-buttons d-flex align-items-center justify-content-end pt-2 pt-md-3">
-                                <button mat-raised-button class="mx-2">Cancel</button>
-                                <button mat-raised-button color="primary" class="mx-2">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    </mat-accordion>
 </div>
