@@ -49,6 +49,33 @@ export class SeatAllocationComponent implements OnInit {
   faCaretDown = faCaretDown;
   faChevronDown = faChevronDown;
 
+  unallocatedTableRows = [{
+    FullName: 'Hydrogen'
+  },{
+    FullName: 'Lithium'
+  },{
+    FullName: 'Boron'
+  }];
+
+  allocatedTableRows = [{
+    FullName: 'Lithium'
+  },{
+    FullName: 'Boron'
+  },{
+    FullName: 'Hydrogen'
+  }];
+
+  innerTableRows = [{
+    Initials: 'O G',
+    FullName: 'Oxygen'
+  },{
+    Initials: 'N G',
+    FullName: 'Nitrogen'
+  },{
+    Initials: 'B M',
+    FullName: 'Beryllium'
+  }]
+
   /**checked table **/
   displayedColumns: string[] = ['select', 'name', 'symbol'];
   dataSource = new MatTableDataSource<SessionUnallocated>(ELEMENT_DATA);
