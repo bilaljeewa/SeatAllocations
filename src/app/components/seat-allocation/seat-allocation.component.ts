@@ -89,11 +89,35 @@ export class SeatAllocationComponent implements OnInit {
   }
 
   // fetch the programs as per the current EventID
-  getPrograms() {
+  async getPrograms() {
     this.seatallocationService.getPrograms(this.eventID).subscribe(
       result => {
-        this.programs = result;
-        this.getSessions();
+        if (result.length > 0) {
+          let Functions = new Array();
+          let RegistrationOptions = new Array();
+          if (result[0].Functions.$values.length > 0) {
+            Functions = result[0].Functions.$values.map((x: any) =>
+              (<any>
+                {
+                  "EventFunctionId": x.EventFunctionId,
+                  "EventFunctionCode": x.EventFunctionCode,
+                  "Name": x.Name,
+                  "Description": x.Description
+                }))
+          }
+          if (result[0].RegistrationOptions.$values.length > 0) {
+            RegistrationOptions = result[0].RegistrationOptions.$values.map((x: any) =>
+              (<any>
+                {
+                  "EventFunctionId": x.EventFunctionId,
+                  "EventFunctionCode": x.EventFunctionCode,
+                  "Name": x.Name,
+                  "Description": x.Description
+                }))
+          }
+          this.programs = Functions.concat(RegistrationOptions);
+          this.getSessions();
+        }
       }, error => {
         this.toast.error("Something went wrong!! Please try again later!!", "Error");
       }
