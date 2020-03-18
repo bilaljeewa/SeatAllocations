@@ -1,4 +1,8 @@
 :host ::ng-deep {
+  .mat-expansion-indicator {
+    display: none !important;
+  }
+
   .multiselect-dropdown {
     padding-bottom: 1.25em;
   }
@@ -97,8 +101,8 @@
       overflow: visible;
 
       // .dropdown-list {
-  //   height: 30vh;
-  //   overflow: auto;// }
+      //   height: 30vh;
+      //   overflow: auto;// }
 
       .multi-select-drop {
         label {
