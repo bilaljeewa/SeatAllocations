@@ -35,6 +35,7 @@ button {
 
 .session-wrap {
     @include custom-shadow(0, 0, 10px, rgba(0, 0, 0, 0.1));
+    background: #fff;
 
     .session-list {
 
@@ -53,7 +54,7 @@ button {
                 font-size: 20px;
             }
 
-            .caret {
+            .carett {
                 font-size: 35px;
             }
         }
