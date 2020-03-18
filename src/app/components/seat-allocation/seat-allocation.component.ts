@@ -327,7 +327,7 @@ export class SeatAllocationComponent implements OnInit {
                           if (increamentedValue == RegistrantsDetails.length) {
                             this.seatallocationService.getRegistrants(response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'EventID')[0].Value, response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'Ordinal')[0].Value.$value).subscribe(
                               (RegistrantsResult: any) => {
-                                this.updateSession(response, RegistrantsResult.Items.$values.length);
+                                this.updateSession(response, RegistrantsResult.length);
                               }, RegistrantsError => {
                                 this.toast.error("Something went wrong!! Please try again later!!", "Error");
                               }
