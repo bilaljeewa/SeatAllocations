@@ -146,6 +146,30 @@ export class SeatAllocationComponent implements OnInit {
           this.advancedSessions.map(ele => {
             ele['tables'] = abc.filter(ele1 => ele1.SessionID == ele.Ordinal);
           })
+          this.getRegitrants();
+        }
+      }, error => {
+        this.toast.error("Something went wrong!! Please try again later!!", "Error");
+      }
+    )
+  }
+
+  // fetch the registrants as per the current EventID
+  async getRegitrants() {
+    this.seatallocationService.getRegistrants(this.eventID).subscribe(
+      result => {
+        let abc = [];
+        if (result.length > 0) {
+          result.map((ele: any, index) => {
+            abc[index] = []
+            ele.Properties.$values.map(ele1 => {
+              abc[index][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
+            })
+          })
+          this.advancedSessions.map(ele => {
+            ele['unallocatedRegistrants'] = abc.filter(ele1 => ele1.SessionID == ele.Ordinal && !ele1.TableID);
+            ele['allocatedRegistrants'] = abc.filter(ele1 => ele1.SessionID == ele.Ordinal && ele1.TableID);
+          })
           console.log(this.advancedSessions)
         }
       }, error => {
@@ -155,7 +179,7 @@ export class SeatAllocationComponent implements OnInit {
   }
 
   // open dialog box to add/edit session
-  openSessionDialog(session = null, sessionIndex = null) {
+  async openSessionDialog(session = null, sessionIndex = null) {
     let existingSession = session;
     const dialogRef = this.sessionDialog.open(SessionDialogComponent, {
       width: '600px',
@@ -165,9 +189,14 @@ export class SeatAllocationComponent implements OnInit {
     dialogRef.afterClosed().subscribe(response => {
       if (response.type == 'add') {
         if (response.data && response.data.length > 0) {
-          this.seatallocationService.getRegistrants(response.data[0].Properties.$values.filter(ele => ele.Name == 'Programs')[0].Value).subscribe(
+          this.seatallocationService.getIQARegistrants(response.data[0].Properties.$values.filter(ele => ele.Name == 'Programs')[0].Value).subscribe(
             (result: any) => {
               let RegistrantsDetails = [];
+              result = result.filter((thing, index, self) =>
+                index === self.findIndex((t) => (
+                  t.Properties.$values.filter(ele1 => ele1.Name == 'RegistrantID')[0].Value === thing.Properties.$values.filter(ele1 => ele1.Name == 'RegistrantID')[0].Value
+                ))
+              )
               result.map((ele, index) => {
                 let RegistrantID = ele.Properties.$values.filter(ele1 => ele1.Name == 'RegistrantID');
                 let FullName = ele.Properties.$values.filter(ele1 => ele1.Name == 'FullName');
@@ -244,7 +273,25 @@ export class SeatAllocationComponent implements OnInit {
                 //   SortOrder: ""
                 // })
                 if (result.length == index + 1) {
-                  console.log(RegistrantsDetails)
+                  let increamentedValue = 0;
+                  RegistrantsDetails.map((RegistrantElement, RegistrantIndex) => {
+                    this.seatallocationService.addRegistrant(RegistrantElement).subscribe(
+                      RegistrantResult => {
+                        increamentedValue = increamentedValue + 1;
+                        if (increamentedValue == RegistrantsDetails.length) {
+                          this.seatallocationService.getRegistrants(response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'EventID')[0].Value, response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'Ordinal')[0].Value.$value).subscribe(
+                            (RegistrantsResult: any) => {
+                              this.updateSession(response, RegistrantsResult.Items.$values.length);
+                            }, RegistrantsError => {
+                              this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                            }
+                          )
+                        }
+                      }, RegistrantError => {
+                        this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                      }
+                    )
+                  })
                 }
               })
             }, error => {
@@ -335,6 +382,64 @@ export class SeatAllocationComponent implements OnInit {
       .onAction().subscribe(() => {
         this.advancedSessions[sessionIndex].Programs.splice(programIndex, 1);
       });
+  }
+
+  // update new session
+  async updateSession(response, UnallocatedRegistrants) {
+    let sessionData = new Array();
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "Ordinal",
+      "Value": { "$type": "System.Int32", "$value": response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'Ordinal')[0].Value.$value }
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "TotalUnallocated",
+      "Value": { "$type": "System.Int32", "$value": UnallocatedRegistrants }
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "TotalAllocated",
+      "Value": { "$type": "System.Int32", "$value": response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'TotalAllocated')[0].Value.$value }
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "TotalSeats",
+      "Value": { "$type": "System.Int32", "$value": response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'TotalSeats')[0].Value.$value }
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "TotalTables",
+      "Value": { "$type": "System.Int32", "$value": response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'TotalTables')[0].Value.$value }
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "Programs",
+      "Value": response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'Programs')[0].Value
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "SessionName",
+      "Value": response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'SessionName')[0].Value
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "EventID",
+      "Value": response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'EventID')[0].Value
+    })
+    sessionData.push({
+      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+      "Name": "SessionTimeStamp",
+      "Value": response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'SessionTimeStamp')[0].Value
+    })
+
+    this.seatallocationService.updateSession({ sessionID: response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'Ordinal')[0].Value.$value, session: sessionData }).subscribe(
+      result => {
+        this.getPrograms();
+      }, error => {
+        this.toast.error("Something went wrong!! Please try again later!!", "Error");
+      }
+    )
   }
 }
 
@@ -610,7 +715,11 @@ export class SessionTableDialogComponent {
     sessionData.push({
       "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
       "Name": "TotalSeats",
-      "Value": { "$type": "System.Int32", "$value": this.data.session.TotalSeats }
+      "Value": {
+        "$type": "System.Int32", "$value": this.data.sessionTable ?
+          (parseInt(this.data.session.TotalSeats) - parseInt(this.data.sessionTable.NumSeats)) + parseInt(this.tableForm.value.NumSeats)
+          : parseInt(this.data.session.TotalSeats) + parseInt(this.tableForm.value.NumSeats)
+      }
     })
     sessionData.push({
       "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -637,7 +746,6 @@ export class SessionTableDialogComponent {
       "Name": "SessionTimeStamp",
       "Value": this.data.session.SessionTimeStamp
     })
-
     if (this.data.sessionTable) {
       this.seatallocationService.updateTable({ tableID: this.data.sessionTable.Ordinal, table: tableData }).subscribe(
         result => {
@@ -665,10 +773,53 @@ export class SessionTableDialogComponent {
       .onAction().subscribe(() => {
         this.seatallocationService.deleteTable(this.data.sessionTable.Ordinal).subscribe(
           result => {
-            this.toast.success(`${this.data.sessionTable.TableName} is deleted successfully`, "Deleted Success");
-            this.dialogRef.close({
-              type: 'delete'
-            });
+            let sessionData = new Array();
+            sessionData.push({
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "Ordinal",
+              "Value": { "$type": "System.Int32", "$value": this.data.session.Ordinal }
+            })
+            sessionData.push({
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "TotalUnallocated",
+              "Value": { "$type": "System.Int32", "$value": this.data.session.TotalUnallocated }
+            })
+            sessionData.push({
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "TotalAllocated",
+              "Value": { "$type": "System.Int32", "$value": this.data.session.TotalAllocated }
+            })
+            sessionData.push({
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "TotalSeats",
+              "Value": { "$type": "System.Int32", "$value": this.data.session.TotalSeats }
+            })
+            sessionData.push({
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "TotalTables",
+              "Value": { "$type": "System.Int32", "$value": parseInt(this.data.session.TotalTables) - 1 }
+            })
+            sessionData.push({
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "Programs",
+              "Value": this.data.session.Programs.join()
+            })
+            sessionData.push({
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "SessionName",
+              "Value": this.data.session.SessionName
+            })
+            sessionData.push({
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "EventID",
+              "Value": this.data.session.EventID
+            })
+            sessionData.push({
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "SessionTimeStamp",
+              "Value": this.data.session.SessionTimeStamp
+            })
+            this.updateSession(sessionData, true);
           }, error => {
             this.toast.error("Something went wrong!! Please try again later!!", "Error");
           }
@@ -677,16 +828,23 @@ export class SessionTableDialogComponent {
   }
 
   // update Session
-  updateSession(sessionData) {
+  updateSession(sessionData, isDeleted = null) {
     this.seatallocationService.updateSession({ sessionID: this.data.session.Ordinal, session: sessionData }).subscribe(
       result => {
         if (result) {
-          if (this.data.sessionTable) this.toast.success(`${this.tableForm.value.TableName} is updated successfully`, "Updated Success");
-          else this.toast.success(`${this.tableForm.value.TableName} is added successfully`, "Added Success");
-          this.dialogRef.close({
-            type: 'addEdit',
-            result
-          });
+          if (isDeleted) {
+            this.toast.success(`${this.data.sessionTable.TableName} is deleted successfully`, "Deleted Success");
+            this.dialogRef.close({
+              type: 'delete'
+            });
+          } else {
+            if (this.data.sessionTable) this.toast.success(`${this.tableForm.value.TableName} is updated successfully`, "Updated Success");
+            else this.toast.success(`${this.tableForm.value.TableName} is added successfully`, "Added Success");
+            this.dialogRef.close({
+              type: 'addEdit',
+              result
+            });
+          }
         } else {
           this.toast.error("Something went wrong!! Please try again later!!", "Error");
         }

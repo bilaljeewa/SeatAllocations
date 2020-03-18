@@ -1513,12 +1513,12 @@ export class SeatallocationService {
 
 
   // get registrants from IQA query starts
-  public getRegistrants(programs): Observable<IQARegistrant[]> {
-    if (this.live) return this.getLiveRegistrants(programs);
-    else return this.getFakedRegistrants(programs);
+  public getIQARegistrants(programs): Observable<IQARegistrant[]> {
+    if (this.live) return this.getIQALiveRegistrants(programs);
+    else return this.getIQAFakedRegistrants(programs);
   }
 
-  private getLiveRegistrants(programs): Observable<IQARegistrant[]> {
+  private getIQALiveRegistrants(programs): Observable<IQARegistrant[]> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -1533,7 +1533,7 @@ export class SeatallocationService {
       }));
   }
 
-  private getFakedRegistrants(programs): Observable<IQARegistrant[]> {
+  private getIQAFakedRegistrants(programs): Observable<IQARegistrant[]> {
     let data = [
       {
         "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
@@ -44539,4 +44539,60 @@ export class SeatallocationService {
     return of(data).pipe(delay(500));
   }
   // get registrants from IQA query ends
+
+
+
+  // add registrant starts
+  public addRegistrant(data): Observable<Sessions> {
+    if (this.live) return this.addLiveRegistrant(data);
+    else return this.addFakedRegistrant(data);
+  }
+
+  private addLiveRegistrant(data): Observable<Sessions> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'RequestVerificationToken': this.token
+      })
+    }
+    let url = this.baseUrl + 'api/Psc_Event_Registrant';
+    return this.httpClient.post(url, data, httpOptions).pipe(map((res: Sessions) => { return res; }));
+  }
+
+  private addFakedRegistrant(data): Observable<Sessions> {
+    return of(data).pipe(delay(500));
+  }
+  // add registrant starts
+
+
+
+  // get registrants starts
+  public getRegistrants(eventID, sessionID = null): Observable<Sessions[]> {
+    if (this.live) return this.getLiveRegistrants(eventID, sessionID);
+    else return this.getFakedRegistrants(eventID, sessionID);
+  }
+
+  private getLiveRegistrants(eventID, sessionID): Observable<Sessions[]> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'RequestVerificationToken': this.token
+      })
+    }
+    let url;
+    if (sessionID)
+      url = this.baseUrl + 'api/Psc_Event_Registrant?EventID=' + eventID + '&SessionID=' + sessionID;
+    else
+      url = this.baseUrl + 'api/Psc_Event_Registrant?EventID=' + eventID;
+    return this.httpClient.get(url, httpOptions)
+      .pipe(map((res: any) => {
+        return res.Items.$values
+      }));
+  }
+
+  private getFakedRegistrants(eventID, sessionID): Observable<Sessions[]> {
+    let data = []
+    return of(data).pipe(delay(500));
+  }
+  // get registrants starts
 }
