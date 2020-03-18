@@ -25,12 +25,12 @@ export class SeatallocationService {
   }
 
   // get programs for session starts
-  public getPrograms(eventID): Observable<Programs[]> {
+  public getPrograms(eventID): Observable<any[]> {
     if (this.live) return this.getLivePrograms(eventID);
     else return this.getFakedPrograms(eventID);
   }
 
-  private getLivePrograms(eventID): Observable<Programs[]> {
+  private getLivePrograms(eventID): Observable<any[]> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -40,180 +40,4250 @@ export class SeatallocationService {
     let url = this.baseUrl + 'api/Event?EventId=' + eventID;
     return this.httpClient.get(url, httpOptions)
       .pipe(map((res: any) => {
-        return res.Items.$values[0].Functions.$values.map((x: any) =>
-          (<Programs>
-            {
-              "EventFunctionId": x.EventFunctionId,
-              "EventFunctionCode": x.EventFunctionCode,
-              "Name": x.Name,
-              "Description": x.Description
-            }))
+        return res.Items.$values;
       }));
   }
 
-  private getFakedPrograms(eventID): Observable<Programs[]> {
-    let data = [{
-      "EventFunctionId": "ANNCONF/BREAK",
-      "EventFunctionCode": "BREAK",
-      "Name": "Chairman's Breakfast",
-      "Description": "Join us for a delicious breakfast and an opportunity for members to meet the Board of Directors face-to-face.Peter Bachman (chair), James Devon (vice-chair) and other leaders in the Board are eager to share the changes and developments that took place this year with you. This complimentary breakfast program provides members with the opportunity to learn about the Board’s vision for the coming year. Your Board of Directors is dedicated to the continued success of this industry, and are committed to being “the best leadership board.” This event is RSVP only due to limited seating. Please reserve your spot today!"
-    },
-    {
-      "EventFunctionId": "ANNCONF/CITY",
-      "EventFunctionCode": "CITY",
-      "Name": "City Tour",
-      "Description": "For families and friends, the City Tour will be a wonderful guided tour of the beautiful city of Cairns. Participants will take a walking tour of the central business district and shopping areas and stop for lunch. We will then visit St. Monica's Cathedral before taking a boat tour of the harbor. Cost of tour does not include price of lunch at the restaurant."
-    },
-    {
-      "EventFunctionId": "ANNCONF/COMBSTRESS",
-      "EventFunctionCode": "COMBSTRESS",
-      "Name": "Best Practices",
-      "Description": "Is there a standard of Best Practices for our industry? Join our keynote speaker in an exploration of the reference documents and other resources that could be used to propose a Best Practices Standard."
-    },
-    {
-      "EventFunctionId": "ANNCONF/ECONTRENDS",
-      "EventFunctionCode": "ECONTRENDS",
-      "Name": "Economic Issues and Trends Forum",
-      "Description": "Our Chief Economist brings you the very latest trends and forecasts which you can use to shape your business plan. The program will also include perspectives from other industry experts."
-    },
-    {
-      "EventFunctionId": "ANNCONF/EXHIB30",
-      "EventFunctionCode": "EXHIB30",
-      "Name": "Exhibit Hall Hours - Day 1",
-      "Description": "Check out the vendors and sponsors in the Exhibit Hall!"
-    },
-    {
-      "EventFunctionId": "ANNCONF/EXHIBIT1",
-      "EventFunctionCode": "EXHIBIT1",
-      "Name": "Exhibit Hall Hours - Day 3",
-      "Description": "Check out the vendors and sponsors in the Exhibit Hall!"
-    },
-    {
-      "EventFunctionId": "ANNCONF/EXHIBIT2",
-      "EventFunctionCode": "EXHIBIT2",
-      "Name": "Exhibit Hall Hours Day 2",
-      "Description": "Check out the vendors and sponsors in the Exhibit Hall!"
-    },
-    {
-      "EventFunctionId": "ANNCONF/EXHIBIT31",
-      "EventFunctionCode": "EXHIBIT31",
-      "Name": "Exhibit Hall Hours",
-      "Description": "Check out the vendors and sponsors in the Exhibit Hall!"
-    },
-    {
-      "EventFunctionId": "ANNCONF/GALA",
-      "EventFunctionCode": "GALA",
-      "Name": "Gala Celebration",
-      "Description": "This year's evening gala is a black-tie event in the grand ballroom. A sumptuous catered dinner featuring fresh seafood and an open bar will begin the evening, with blackjack, baccarat, and roulette provided by the casino. The John Chastain Jazz Band will provide entertainment for dancing and relaxing afterwards."
-    },
-    {
-      "EventFunctionId": "ANNCONF/GLOBAL",
-      "EventFunctionCode": "GLOBAL",
-      "Name": "Global Alliances Luncheon",
-      "Description": "A welcome session for international attendees and US attendees who are interested in improving your knowledge of international opportunities in your own market area! This session will be simultaneously translated into French, Mandarin Chinese, Portuguese and Spanish."
-    },
-    {
-      "EventFunctionId": "ANNCONF/GUESTGOLF",
-      "EventFunctionCode": "GUESTGOLF",
-      "Name": "Golf Tournament",
-      "Description": "Registration for the Golf Tournament, benefiting the Wildlife Conservation Society of Canada, is limited to four per conference attendee."
-    },
-    {
-      "EventFunctionId": "ANNCONF/HOSP",
-      "EventFunctionCode": "HOSP",
-      "Name": "Hospitality Suite",
-      "Description": "Join us in the Main Bar for a wonderful opportunity to meet and mingle with other conference attendees in Versaton's hospitality suite. Wine, beer, and specialty martinis will be on hand--limit two complimentary tickets per attendee."
-    },
-    {
-      "EventFunctionId": "ANNCONF/INDUSTRY",
-      "EventFunctionCode": "INDUSTRY",
-      "Name": "State of the Industry",
-      "Description": "This panel discussion will focus on the state of our industry and the challenges we face with the current economic conditions."
-    },
-    {
-      "EventFunctionId": "ANNCONF/LEADER",
-      "EventFunctionCode": "LEADER",
-      "Name": "Leadership Patterns",
-      "Description": "Based on three decades of leadership consultation to business organisations, clinical psychologist, our speaker will discuss her leadership research and experiences working with senior leaders."
-    },
-    {
-      "EventFunctionId": "ANNCONF/LEGIS",
-      "EventFunctionCode": "LEGIS",
-      "Name": "Upcoming Legislation Report",
-      "Description": "Join us for an overview of upcoming legislation that could impact our industry. Policy experts will share insights and perspectives to help us understand the importance of these issues."
-    },
-    {
-      "EventFunctionId": "ANNCONF/LEGISLATION",
-      "EventFunctionCode": "LEGISLATION",
-      "Name": "Upcoming Legislation Report",
-      "Description": "Join us for an overview of upcoming legislation that could impact our industry. Policy experts will share insights and perspectives to help us understand the importance of these issues."
-    },
-    {
-      "EventFunctionId": "ANNCONF/MYTHMNG",
-      "EventFunctionCode": "MYTHMNG",
-      "Name": "Myths and Reality of Management",
-      "Description": "Which of these myths of management are just that -- myths? Join a top executive in an exploration of stereotypes, mis-communication, and fabrications about what it's like to be a manager."
-    },
-    {
-      "EventFunctionId": "ANNCONF/PERF",
-      "EventFunctionCode": "PERF",
-      "Name": "Why Performance Metrics Matter",
-      "Description": "Strong performance metrics are vital to the operation of your business. This session will focus on developing useful and compelling performance metrics. Our panel of Executive Directors will offer useful tips from their experiences and will answer your questions."
-    },
-    {
-      "EventFunctionId": "ANNCONF/PERSONNEL",
-      "EventFunctionCode": "PERSONNEL",
-      "Name": "Effective Personnel Management",
-      "Description": "A discussion of the top ten tips in effective personnel management, and how to bring these best practices into your own workplace."
-    },
-    {
-      "EventFunctionId": "ANNCONF/PLEN1",
-      "EventFunctionCode": "PLEN1",
-      "Name": "Plenary Session 1",
-      "Description": "The first plenary session of the conference will feature Anne Broussard as our keynote speaker. Anne is the incoming president of the association and will speak about her plans for the upcoming year and her views on recent trends and issues within the industry. With over 30 years in the business, Anne is engaging, funny, and a wealth of knowledge that is not to be missed."
-    },
-    {
-      "EventFunctionId": "ANNCONF/PLEN2",
-      "EventFunctionCode": "PLEN2",
-      "Name": "Plenary Session 2",
-      "Description": "During our second plenary session we will have a panel of industry leaders and a roundtable discussion, with 30 minutes for audience questions at the end."
-    },
-    {
-      "EventFunctionId": "ANNCONF/PLENARYSESSION",
-      "EventFunctionCode": "PLENARYSESSION",
-      "Name": "State of the Industry",
-      "Description": "This panel discussion will focus on the state of our industry and the challenges we face with the current economic conditions."
-    },
-    {
-      "EventFunctionId": "ANNCONF/STRESS",
-      "EventFunctionCode": "STRESS",
-      "Name": "Combating Stress On the Job",
-      "Description": "This session will discuss theories on causes of stress in the workplace and how to better balance professional and personal time. We will discuss several fast, simple relaxation techniques that you can practice in the office and also cover some ergonomic tips to reduce physical stress on your body."
-    },
-    {
-      "EventFunctionId": "ANNCONF/TECH",
-      "EventFunctionCode": "TECH",
-      "Name": "Technology Exhibit",
-      "Description": "This state of the art technology exhibit will give attendees a chance to get a sneak preview at the latest advances in hardware and software for our industry, as well as speak with partners about ways to maximize branding potential. The technology exhibit will be held in a separate hall from the conference presentations, allowing attendees to come in and look around at their convenience. Over 50 exhibitors will be on hand!"
-    },
-    {
-      "EventFunctionId": "ANNCONF/THUR-L",
-      "EventFunctionCode": "THUR-L",
-      "Name": "Tips for Industry Success",
-      "Description": "Join us for a working lunch where we will discuss tips for improving success in the industry, along with an in-depth review of new certification requirements. Lunch will be catered by the Tamarind restaurant in the hotel."
-    },
-    {
-      "EventFunctionId": "ANNCONF/TIPS",
-      "EventFunctionCode": "TIPS",
-      "Name": "Effective Personnel Management",
-      "Description": "A discussion of the top ten tips in effective personnel management, and how to bring these best practices into your own workplace. Bring all your unanswered questions--there will be ample time for open Q and A during this session."
-    },
-    {
-      "EventFunctionId": "ANNCONF/TIPS2",
-      "EventFunctionCode": "TIPS2",
-      "Name": "Tips for Industry Success Part 2",
-      "Description": "Join us for the second session of this popular topic. This is one of our most-attended sessions every year, and is a wonderful opportunity for informal networking and finding a mentor in the industry."
-    }]
+  private getFakedPrograms(eventID): Observable<any[]> {
+    let data = [
+      {
+        "Functions": {
+          "$type": "Asi.Soa.Events.DataContracts.EventFunctionDataCollection, Asi.Contracts",
+          "$values": [
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/BREAK",
+              "EventFunctionCode": "BREAK",
+              "Name": "Chairman's Breakfast",
+              "Description": "Join us for a delicious breakfast and an opportunity for members to meet the Board of Directors face-to-face.Peter Bachman (chair), James Devon (vice-chair) and other leaders in the Board are eager to share the changes and developments that took place this year with you. This complimentary breakfast program provides members with the opportunity to learn about the Board’s vision for the coming year. Your Board of Directors is dedicated to the continued success of this industry, and are committed to being “the best leadership board.” This event is RSVP only due to limited seating. Please reserve your spot today!",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 10,
+              "StartDateTime": "2020-05-26T09:00:00",
+              "EndDateTime": "2020-05-26T10:30:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 1500,
+              "MaximumQuantityPerRegistrant": 8,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Join us for a delicious breakfast and an opportunity for members to meet the Board of Directors face-to-face.Peter Bachman (chair), James Devon (vice-chair) and other leaders in the Board are eager to share the changes and developments that took place this year with you. This complimentary breakfast program provides members with the opportunity to learn about the Board’s vision for the coming year. Your Board of Directors is dedicated to the continued success of this industry, and are committed to being “the best leadership board.” This event is RSVP only due to limited seating. Please reserve your spot today!",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/BREAK",
+                "ItemId": "ANNCONF/BREAK",
+                "Name": "Chairman's Breakfast"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-26",
+                        "Name": "Tuesday, 26 May 2020",
+                        "Sort": "2020-05-26"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Keynote",
+                        "Name": "Keynote",
+                        "Sort": "Keynote"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Social",
+                        "Name": "Social",
+                        "Sort": "Social"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "c85890b7-0d77-4d3c-85d2-6a3959438145",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/CITY",
+              "EventFunctionCode": "CITY",
+              "Name": "City Tour",
+              "Description": "For families and friends, the City Tour will be a wonderful guided tour of the beautiful city of Cairns. Participants will take a walking tour of the central business district and shopping areas and stop for lunch. We will then visit St. Monica's Cathedral before taking a boat tour of the harbor. Cost of tour does not include price of lunch at the restaurant.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-26T11:00:00",
+              "EndDateTime": "2020-05-26T15:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "For families and friends, the City Tour will be a wonderful guided tour of the beautiful city of Cairns. Participants will take a walking tour of the central business district and shopping areas and stop for lunch. We will then visit St. Monica's Cathedral before taking a boat tour of the harbor. Cost of tour does not include price of lunch at the restaurant.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/CITY",
+                "ItemId": "ANNCONF/CITY",
+                "Name": "City Tour"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-26",
+                        "Name": "Tuesday, 26 May 2020",
+                        "Sort": "2020-05-26"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Guest",
+                        "Name": "Guest",
+                        "Sort": "Guest"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Social",
+                        "Name": "Social",
+                        "Sort": "Social"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "IsTicketed": true,
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  },
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "LegacyConflictCode",
+                    "Value": "AM"
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/COMBSTRESS",
+              "EventFunctionCode": "COMBSTRESS",
+              "Name": "Best Practices",
+              "Description": "Is there a standard of Best Practices for our industry? Join our keynote speaker in an exploration of the reference documents and other resources that could be used to propose a Best Practices Standard.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-27T14:00:00",
+              "EndDateTime": "2020-05-27T16:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 4,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Is there a standard of Best Practices for our industry? Join our keynote speaker in an exploration of the reference documents and other resources that could be used to propose a Best Practices Standard.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/COMBSTRESS",
+                "ItemId": "ANNCONF/COMBSTRESS",
+                "Name": "Best Practices"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-27",
+                        "Name": "Wednesday, 27 May 2020",
+                        "Sort": "2020-05-27"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Session",
+                        "Name": "Session",
+                        "Sort": "Session"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Industry",
+                        "Name": "Industry",
+                        "Sort": "Industry"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "EnableTimeConflicts": true,
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/ECONTRENDS",
+              "EventFunctionCode": "ECONTRENDS",
+              "Name": "Economic Issues and Trends Forum",
+              "Description": "Our Chief Economist brings you the very latest trends and forecasts which you can use to shape your business plan. The program will also include perspectives from other industry experts.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-26T10:30:00",
+              "EndDateTime": "2020-05-26T12:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 300,
+              "MaximumQuantityPerRegistrant": 4,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Our Chief Economist brings you the very latest trends and forecasts which you can use to shape your business plan. The program will also include perspectives from other industry experts.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/ECONTRENDS",
+                "ItemId": "ANNCONF/ECONTRENDS",
+                "Name": "Economic Issues and Trends Forum"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-26",
+                        "Name": "Tuesday, 26 May 2020",
+                        "Sort": "2020-05-26"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Session",
+                        "Name": "Session",
+                        "Sort": "Session"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Management",
+                        "Name": "Management",
+                        "Sort": "Management"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "EnableTimeConflicts": true,
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/EXHIB30",
+              "EventFunctionCode": "EXHIB30",
+              "Name": "Exhibit Hall Hours - Day 1",
+              "Description": "Check out the vendors and sponsors in the Exhibit Hall!",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-26T09:00:00",
+              "EndDateTime": "2020-05-26T18:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Check out the vendors and sponsors in the Exhibit Hall!",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/EXHIB30",
+                "ItemId": "ANNCONF/EXHIB30",
+                "Name": "Exhibit Hall Hours - Day 1"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-26",
+                        "Name": "Tuesday, 26 May 2020",
+                        "Sort": "2020-05-26"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Exhibit",
+                        "Name": "Exhibit",
+                        "Sort": "Exhibit"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Industry",
+                        "Name": "Industry",
+                        "Sort": "Industry"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/EXHIBIT1",
+              "EventFunctionCode": "EXHIBIT1",
+              "Name": "Exhibit Hall Hours - Day 3",
+              "Description": "Check out the vendors and sponsors in the Exhibit Hall!",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-28T09:00:00",
+              "EndDateTime": "2020-05-28T14:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Check out the vendors and sponsors in the Exhibit Hall!",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/EXHIBIT1",
+                "ItemId": "ANNCONF/EXHIBIT1",
+                "Name": "Exhibit Hall Hours - Day 3"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-28",
+                        "Name": "Thursday, 28 May 2020",
+                        "Sort": "2020-05-28"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Exhibit",
+                        "Name": "Exhibit",
+                        "Sort": "Exhibit"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Industry",
+                        "Name": "Industry",
+                        "Sort": "Industry"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/EXHIBIT2",
+              "EventFunctionCode": "EXHIBIT2",
+              "Name": "Exhibit Hall Hours Day 2",
+              "Description": "Check out the vendors and sponsors in the Exhibit Hall!",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-27T09:00:00",
+              "EndDateTime": "2020-05-27T18:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Check out the vendors and sponsors in the Exhibit Hall!",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/EXHIBIT2",
+                "ItemId": "ANNCONF/EXHIBIT2",
+                "Name": "Exhibit Hall Hours Day 2"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-27",
+                        "Name": "Wednesday, 27 May 2020",
+                        "Sort": "2020-05-27"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/EXHIBIT31",
+              "EventFunctionCode": "EXHIBIT31",
+              "Name": "Exhibit Hall Hours",
+              "Description": "Check out the vendors and sponsors in the Exhibit Hall!",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-28T00:00:00",
+              "EndDateTime": "2020-05-28T00:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Check out the vendors and sponsors in the Exhibit Hall!",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/EXHIBIT31",
+                "ItemId": "ANNCONF/EXHIBIT31",
+                "Name": "Exhibit Hall Hours"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-28",
+                        "Name": "Thursday, 28 May 2020",
+                        "Sort": "2020-05-28"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Exhibit",
+                        "Name": "Exhibit",
+                        "Sort": "Exhibit"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Industry",
+                        "Name": "Industry",
+                        "Sort": "Industry"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/GALA",
+              "EventFunctionCode": "GALA",
+              "Name": "Gala Celebration",
+              "Description": "This year's evening gala is a black-tie event in the grand ballroom. A sumptuous catered dinner featuring fresh seafood and an open bar will begin the evening, with blackjack, baccarat, and roulette provided by the casino. The John Chastain Jazz Band will provide entertainment for dancing and relaxing afterwards.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 30,
+              "StartDateTime": "2020-05-27T19:30:00",
+              "EndDateTime": "2020-05-27T23:30:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "This year's evening gala is a black-tie event in the grand ballroom. A sumptuous catered dinner featuring fresh seafood and an open bar will begin the evening, with blackjack, baccarat, and roulette provided by the casino. The John Chastain Jazz Band will provide entertainment for dancing and relaxing afterwards.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/GALA",
+                "ItemId": "ANNCONF/GALA",
+                "Name": "Gala Celebration"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-27",
+                        "Name": "Wednesday, 27 May 2020",
+                        "Sort": "2020-05-27"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Social",
+                        "Name": "Social",
+                        "Sort": "Social"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "IsTicketed": true,
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/GLOBAL",
+              "EventFunctionCode": "GLOBAL",
+              "Name": "Global Alliances Luncheon",
+              "Description": "A welcome session for international attendees and US attendees who are interested in improving your knowledge of international opportunities in your own market area! This session will be simultaneously translated into French, Mandarin Chinese, Portuguese and Spanish.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-27T11:30:00",
+              "EndDateTime": "2020-05-27T13:30:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 200,
+              "MaximumQuantityPerRegistrant": 3,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "A welcome session for international attendees and US attendees who are interested in improving your knowledge of international opportunities in your own market area! This session will be simultaneously translated into French, Mandarin Chinese, Portuguese and Spanish.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/GLOBAL",
+                "ItemId": "ANNCONF/GLOBAL",
+                "Name": "Global Alliances Luncheon"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-27",
+                        "Name": "Wednesday, 27 May 2020",
+                        "Sort": "2020-05-27"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Networking",
+                        "Name": "Networking",
+                        "Sort": "Networking"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Management",
+                        "Name": "Management",
+                        "Sort": "Management"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/GUESTGOLF",
+              "EventFunctionCode": "GUESTGOLF",
+              "Name": "Golf Tournament",
+              "Description": "Registration for the Golf Tournament, benefiting the Wildlife Conservation Society of Canada, is limited to four per conference attendee.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-28T14:00:00",
+              "EndDateTime": "2020-05-28T17:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 100,
+              "MaximumQuantityPerRegistrant": 4,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Registration for the Golf Tournament, benefiting the Wildlife Conservation Society of Canada, is limited to four per conference attendee.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/GUESTGOLF",
+                "ItemId": "ANNCONF/GUESTGOLF",
+                "Name": "Golf Tournament"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-28",
+                        "Name": "Thursday, 28 May 2020",
+                        "Sort": "2020-05-28"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Social",
+                        "Name": "Social",
+                        "Sort": "Social"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/HOSP",
+              "EventFunctionCode": "HOSP",
+              "Name": "Hospitality Suite",
+              "Description": "Join us in the Main Bar for a wonderful opportunity to meet and mingle with other conference attendees in Versaton's hospitality suite. Wine, beer, and specialty martinis will be on hand--limit two complimentary tickets per attendee.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-26T18:00:00",
+              "EndDateTime": "2020-05-26T20:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Join us in the Main Bar for a wonderful opportunity to meet and mingle with other conference attendees in Versaton's hospitality suite. Wine, beer, and specialty martinis will be on hand--limit two complimentary tickets per attendee.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/HOSP",
+                "ItemId": "ANNCONF/HOSP",
+                "Name": "Hospitality Suite"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-26",
+                        "Name": "Tuesday, 26 May 2020",
+                        "Sort": "2020-05-26"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Networking",
+                        "Name": "Networking",
+                        "Sort": "Networking"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Social",
+                        "Name": "Social",
+                        "Sort": "Social"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/INDUSTRY",
+              "EventFunctionCode": "INDUSTRY",
+              "Name": "State of the Industry",
+              "Description": "This panel discussion will focus on the state of our industry and the challenges we face with the current economic conditions.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-28T08:00:00",
+              "EndDateTime": "2020-05-28T09:30:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 5,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "This panel discussion will focus on the state of our industry and the challenges we face with the current economic conditions.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/INDUSTRY",
+                "ItemId": "ANNCONF/INDUSTRY",
+                "Name": "State of the Industry"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-28",
+                        "Name": "Thursday, 28 May 2020",
+                        "Sort": "2020-05-28"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/LEADER",
+              "EventFunctionCode": "LEADER",
+              "Name": "Leadership Patterns",
+              "Description": "Based on three decades of leadership consultation to business organisations, clinical psychologist, our speaker will discuss her leadership research and experiences working with senior leaders.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-28T10:00:00",
+              "EndDateTime": "2020-05-28T11:30:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Based on three decades of leadership consultation to business organisations, clinical psychologist, our speaker will discuss her leadership research and experiences working with senior leaders.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/LEADER",
+                "ItemId": "ANNCONF/LEADER",
+                "Name": "Leadership Patterns"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-28",
+                        "Name": "Thursday, 28 May 2020",
+                        "Sort": "2020-05-28"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Session",
+                        "Name": "Session",
+                        "Sort": "Session"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Management",
+                        "Name": "Management",
+                        "Sort": "Management"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "EnableTimeConflicts": true,
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/LEGIS",
+              "EventFunctionCode": "LEGIS",
+              "Name": "Upcoming Legislation Report",
+              "Description": "Join us for an overview of upcoming legislation that could impact our industry. Policy experts will share insights and perspectives to help us understand the importance of these issues.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-27T09:00:00",
+              "EndDateTime": "2020-05-27T10:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Join us for an overview of upcoming legislation that could impact our industry. Policy experts will share insights and perspectives to help us understand the importance of these issues.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/LEGIS",
+                "ItemId": "ANNCONF/LEGIS",
+                "Name": "Upcoming Legislation Report"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-27",
+                        "Name": "Wednesday, 27 May 2020",
+                        "Sort": "2020-05-27"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Session",
+                        "Name": "Session",
+                        "Sort": "Session"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Industry",
+                        "Name": "Industry",
+                        "Sort": "Industry"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "EnableTimeConflicts": true,
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/LEGISLATION",
+              "EventFunctionCode": "LEGISLATION",
+              "Name": "Upcoming Legislation Report",
+              "Description": "Join us for an overview of upcoming legislation that could impact our industry. Policy experts will share insights and perspectives to help us understand the importance of these issues.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-27T16:00:00",
+              "EndDateTime": "2020-05-27T17:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Join us for an overview of upcoming legislation that could impact our industry. Policy experts will share insights and perspectives to help us understand the importance of these issues.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/LEGISLATION",
+                "ItemId": "ANNCONF/LEGISLATION",
+                "Name": "Upcoming Legislation Report"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-27",
+                        "Name": "Wednesday, 27 May 2020",
+                        "Sort": "2020-05-27"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  }
+                ]
+              },
+              "EnableTimeConflicts": true,
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/MYTHMNG",
+              "EventFunctionCode": "MYTHMNG",
+              "Name": "Myths and Reality of Management",
+              "Description": "Which of these myths of management are just that -- myths? Join a top executive in an exploration of stereotypes, mis-communication, and fabrications about what it's like to be a manager.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-26T13:30:00",
+              "EndDateTime": "2020-05-26T15:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Which of these myths of management are just that -- myths? Join a top executive in an exploration of stereotypes, mis-communication, and fabrications about what it's like to be a manager.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/MYTHMNG",
+                "ItemId": "ANNCONF/MYTHMNG",
+                "Name": "Myths and Reality of Management"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-26",
+                        "Name": "Tuesday, 26 May 2020",
+                        "Sort": "2020-05-26"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Session",
+                        "Name": "Session",
+                        "Sort": "Session"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Management",
+                        "Name": "Management",
+                        "Sort": "Management"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "EnableTimeConflicts": true,
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/PERF",
+              "EventFunctionCode": "PERF",
+              "Name": "Why Performance Metrics Matter",
+              "Description": "Strong performance metrics are vital to the operation of your business. This session will focus on developing useful and compelling performance metrics. Our panel of Executive Directors will offer useful tips from their experiences and will answer your questions.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-27T08:00:00",
+              "EndDateTime": "2020-05-27T10:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 40,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Strong performance metrics are vital to the operation of your business. This session will focus on developing useful and compelling performance metrics. Our panel of Executive Directors will offer useful tips from their experiences and will answer your questions.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/PERF",
+                "ItemId": "ANNCONF/PERF",
+                "Name": "Why Performance Metrics Matter"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-27",
+                        "Name": "Wednesday, 27 May 2020",
+                        "Sort": "2020-05-27"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  }
+                ]
+              },
+              "EnableTimeConflicts": true,
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": false
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/PERSONNEL",
+              "EventFunctionCode": "PERSONNEL",
+              "Name": "Effective Personnel Management",
+              "Description": "A discussion of the top ten tips in effective personnel management, and how to bring these best practices into your own workplace.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-26T09:30:00",
+              "EndDateTime": "2020-05-26T11:30:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "A discussion of the top ten tips in effective personnel management, and how to bring these best practices into your own workplace.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/PERSONNEL",
+                "ItemId": "ANNCONF/PERSONNEL",
+                "Name": "Effective Personnel Management"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-26",
+                        "Name": "Tuesday, 26 May 2020",
+                        "Sort": "2020-05-26"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  }
+                ]
+              },
+              "EnableTimeConflicts": true,
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/PLEN1",
+              "EventFunctionCode": "PLEN1",
+              "Name": "Plenary Session 1",
+              "Description": "The first plenary session of the conference will feature Anne Broussard as our keynote speaker. Anne is the incoming president of the association and will speak about her plans for the upcoming year and her views on recent trends and issues within the industry. With over 30 years in the business, Anne is engaging, funny, and a wealth of knowledge that is not to be missed.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-26T16:00:00",
+              "EndDateTime": "2020-05-26T17:30:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "The first plenary session of the conference will feature Anne Broussard as our keynote speaker. Anne is the incoming president of the association and will speak about her plans for the upcoming year and her views on recent trends and issues within the industry. With over 30 years in the business, Anne is engaging, funny, and a wealth of knowledge that is not to be missed.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/PLEN1",
+                "ItemId": "ANNCONF/PLEN1",
+                "Name": "Plenary Session 1"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-26",
+                        "Name": "Tuesday, 26 May 2020",
+                        "Sort": "2020-05-26"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Keynote",
+                        "Name": "Keynote",
+                        "Sort": "Keynote"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Industry",
+                        "Name": "Industry",
+                        "Sort": "Industry"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": "",
+                    "CreditUnits": 1.50
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/PLEN2",
+              "EventFunctionCode": "PLEN2",
+              "Name": "Plenary Session 2",
+              "Description": "During our second plenary session we will have a panel of industry leaders and a roundtable discussion, with 30 minutes for audience questions at the end.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-27T10:30:00",
+              "EndDateTime": "2020-05-27T12:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "During our second plenary session we will have a panel of industry leaders and a roundtable discussion, with 30 minutes for audience questions at the end.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/PLEN2",
+                "ItemId": "ANNCONF/PLEN2",
+                "Name": "Plenary Session 2"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-27",
+                        "Name": "Wednesday, 27 May 2020",
+                        "Sort": "2020-05-27"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Keynote",
+                        "Name": "Keynote",
+                        "Sort": "Keynote"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Industry",
+                        "Name": "Industry",
+                        "Sort": "Industry"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "EnableTimeConflicts": true,
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": "",
+                    "CreditUnits": 1.50
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/PLENARYSESSION",
+              "EventFunctionCode": "PLENARYSESSION",
+              "Name": "State of the Industry",
+              "Description": "This panel discussion will focus on the state of our industry and the challenges we face with the current economic conditions.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-27T13:30:00",
+              "EndDateTime": "2020-05-27T15:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 300,
+              "MaximumQuantityPerRegistrant": 5,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "This panel discussion will focus on the state of our industry and the challenges we face with the current economic conditions.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/PLENARYSESSION",
+                "ItemId": "ANNCONF/PLENARYSESSION",
+                "Name": "State of the Industry"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-27",
+                        "Name": "Wednesday, 27 May 2020",
+                        "Sort": "2020-05-27"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Keynote",
+                        "Name": "Keynote",
+                        "Sort": "Keynote"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Industry",
+                        "Name": "Industry",
+                        "Sort": "Industry"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/STRESS",
+              "EventFunctionCode": "STRESS",
+              "Name": "Combating Stress On the Job",
+              "Description": "This session will discuss theories on causes of stress in the workplace and how to better balance professional and personal time. We will discuss several fast, simple relaxation techniques that you can practice in the office and also cover some ergonomic tips to reduce physical stress on your body.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 60,
+              "StartDateTime": "2020-05-26T14:00:00",
+              "EndDateTime": "2020-05-26T16:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 1425,
+              "MaximumQuantityPerRegistrant": 4,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "This session will discuss theories on causes of stress in the workplace and how to better balance professional and personal time. We will discuss several fast, simple relaxation techniques that you can practice in the office and also cover some ergonomic tips to reduce physical stress on your body.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/STRESS",
+                "ItemId": "ANNCONF/STRESS",
+                "Name": "Combating Stress On the Job"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-26",
+                        "Name": "Tuesday, 26 May 2020",
+                        "Sort": "2020-05-26"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Session",
+                        "Name": "Session",
+                        "Sort": "Session"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Management",
+                        "Name": "Management",
+                        "Sort": "Management"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "EnableTimeConflicts": true,
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": "",
+                    "CreditUnits": 2.00
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  },
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "LegacyConflictCode",
+                    "Value": "AM"
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/TECH",
+              "EventFunctionCode": "TECH",
+              "Name": "Technology Exhibit",
+              "Description": "This state of the art technology exhibit will give attendees a chance to get a sneak preview at the latest advances in hardware and software for our industry, as well as speak with partners about ways to maximize branding potential. The technology exhibit will be held in a separate hall from the conference presentations, allowing attendees to come in and look around at their convenience. Over 50 exhibitors will be on hand!",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 70,
+              "StartDateTime": "2020-05-26T10:30:00",
+              "EndDateTime": "2020-05-26T13:30:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "This state of the art technology exhibit will give attendees a chance to get a sneak preview at the latest advances in hardware and software for our industry, as well as speak with partners about ways to maximize branding potential. The technology exhibit will be held in a separate hall from the conference presentations, allowing attendees to come in and look around at their convenience. Over 50 exhibitors will be on hand!",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/TECH",
+                "ItemId": "ANNCONF/TECH",
+                "Name": "Technology Exhibit"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-26",
+                        "Name": "Tuesday, 26 May 2020",
+                        "Sort": "2020-05-26"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Exhibit",
+                        "Name": "Exhibit",
+                        "Sort": "Exhibit"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Industry",
+                        "Name": "Industry",
+                        "Sort": "Industry"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "ebf9f04d-b0ef-4639-8ad3-a5726c1b1f43",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  },
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "LegacyConflictCode",
+                    "Value": "PM"
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/THUR-L",
+              "EventFunctionCode": "THUR-L",
+              "Name": "Tips for Industry Success",
+              "Description": "Join us for a working lunch where we will discuss tips for improving success in the industry, along with an in-depth review of new certification requirements. Lunch will be catered by the Tamarind restaurant in the hotel.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 80,
+              "StartDateTime": "2020-05-26T12:00:00",
+              "EndDateTime": "2020-05-26T13:30:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Join us for a working lunch where we will discuss tips for improving success in the industry, along with an in-depth review of new certification requirements. Lunch will be catered by the Tamarind restaurant in the hotel.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/THUR-L",
+                "ItemId": "ANNCONF/THUR-L",
+                "Name": "Tips for Industry Success"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-26",
+                        "Name": "Tuesday, 26 May 2020",
+                        "Sort": "2020-05-26"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Session",
+                        "Name": "Session",
+                        "Sort": "Session"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Industry",
+                        "Name": "Industry",
+                        "Sort": "Industry"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "EnableTimeConflicts": true,
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": "",
+                    "CreditUnits": 1.50
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  },
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "LegacyConflictCode",
+                    "Value": "PM"
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/TIPS",
+              "EventFunctionCode": "TIPS",
+              "Name": "Effective Personnel Management",
+              "Description": "A discussion of the top ten tips in effective personnel management, and how to bring these best practices into your own workplace. Bring all your unanswered questions--there will be ample time for open Q and A during this session.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-28T09:30:00",
+              "EndDateTime": "2020-05-28T11:30:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "A discussion of the top ten tips in effective personnel management, and how to bring these best practices into your own workplace. Bring all your unanswered questions--there will be ample time for open Q and A during this session.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/TIPS",
+                "ItemId": "ANNCONF/TIPS",
+                "Name": "Effective Personnel Management"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-28",
+                        "Name": "Thursday, 28 May 2020",
+                        "Sort": "2020-05-28"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Session",
+                        "Name": "Session",
+                        "Sort": "Session"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Management",
+                        "Name": "Management",
+                        "Sort": "Management"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "EnableTimeConflicts": true,
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": "MGMT",
+                    "CreditUnits": 2.00
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": []
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.EventFunctionData, Asi.Contracts",
+              "EventFunctionId": "ANNCONF/TIPS2",
+              "EventFunctionCode": "TIPS2",
+              "Name": "Tips for Industry Success Part 2",
+              "Description": "Join us for the second session of this popular topic. This is one of our most-attended sessions every year, and is a wonderful opportunity for informal networking and finding a mentor in the industry.",
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 0,
+              "StartDateTime": "2020-05-27T10:00:00",
+              "EndDateTime": "2020-05-27T11:30:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Join us for the second session of this popular topic. This is one of our most-attended sessions every year, and is a wonderful opportunity for informal networking and finding a mentor in the industry.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/TIPS2",
+                "ItemId": "ANNCONF/TIPS2",
+                "Name": "Tips for Industry Success Part 2"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-27",
+                        "Name": "Wednesday, 27 May 2020",
+                        "Sort": "2020-05-27"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Session",
+                        "Name": "Session",
+                        "Sort": "Session"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Industry",
+                        "Name": "Industry",
+                        "Sort": "Industry"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "EnableTimeConflicts": true,
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": "",
+                    "CreditUnits": 1.50
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "LinkedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventLinkedFunctionDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/THUR-L",
+                    "Display": 2,
+                    "IsAutoEnroll": true
+                  }
+                ]
+              },
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "RegistrationOptions": {
+          "$type": "Asi.Soa.Events.DataContracts.OptionEventFunctionDataCollection, Asi.Contracts",
+          "$values": [
+            {
+              "$type": "Asi.Soa.Events.DataContracts.OptionEventFunctionData, Asi.Contracts",
+              "RelatedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TIPS2"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GALA"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TECH",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GLOBAL"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT1"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GUESTGOLF"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/CITY",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/THUR-L",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/BREAK",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT31"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLENARYSESSION"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/ECONTRENDS",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PERSONNEL",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/STRESS",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEADER"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLEN2"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIB30",
+                    "Display": 1
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/HOSP",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEGIS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/MYTHMNG",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TIPS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT2"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLEN1",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEGISLATION"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/INDUSTRY"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/COMBSTRESS"
+                  }
+                ]
+              },
+              "AvailableTo": 1,
+              "EventFunctionId": "ANNCONF/1DAY",
+              "EventFunctionCode": "1DAY",
+              "Name": "Day 1 only",
+              "Description": "Registration for single-day attendance",
+              "IsEventRegistrationOption": true,
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 2,
+              "StartDateTime": "2020-05-26T08:00:00",
+              "EndDateTime": "2020-05-26T19:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Registration for single-day attendance",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/1DAY",
+                "ItemId": "ANNCONF/1DAY",
+                "Name": "Day 1 only"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-26",
+                        "Name": "Tuesday, 26 May 2020",
+                        "Sort": "2020-05-26"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": "",
+                    "CreditUnits": 8.00
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.OptionEventFunctionData, Asi.Contracts",
+              "RelatedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/CITY",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT2",
+                    "Display": 1
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/INDUSTRY"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PERSONNEL",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT1",
+                    "Display": 1
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLENARYSESSION",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIB30",
+                    "Display": 1
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GLOBAL",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/THUR-L",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TIPS2",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEGISLATION",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/MYTHMNG",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/BREAK",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEGIS",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TECH",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEADER",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/COMBSTRESS",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLEN2",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/HOSP",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GUESTGOLF",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLEN1",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/ECONTRENDS",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT31"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TIPS",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/STRESS",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GALA",
+                    "Display": 2
+                  }
+                ]
+              },
+              "AvailableTo": 1,
+              "EventFunctionId": "ANNCONF/ANNGONFREG",
+              "EventFunctionCode": "ANNGONFREG",
+              "Name": "Full Conference",
+              "Description": "Registration for all three days of the annual conference plus networking events.",
+              "IsEventRegistrationOption": true,
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 1,
+              "StartDateTime": "2020-05-26T08:00:00",
+              "EndDateTime": "2020-05-28T17:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 3000,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Registration for all three days of the annual conference plus networking events.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/ANNGONFREG",
+                "ItemId": "ANNCONF/ANNGONFREG",
+                "Name": "Full Conference"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-26",
+                        "Name": "Tuesday, 26 May 2020",
+                        "Sort": "2020-05-26"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "bd9e4613-5eb6-478b-88db-49cb150c9d10",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": "",
+                    "CreditUnits": 24.00
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.OptionEventFunctionData, Asi.Contracts",
+              "RelatedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEADER"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/CITY",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/INDUSTRY"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT2",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GALA",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLEN1"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TIPS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/COMBSTRESS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/ECONTRENDS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GLOBAL"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/MYTHMNG"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/STRESS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/HOSP",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PERSONNEL"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TIPS2"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/THUR-L"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GUESTGOLF",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLENARYSESSION"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIB30",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT1",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLEN2"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TECH",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT31"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEGISLATION"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEGIS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/BREAK",
+                    "Display": 2
+                  }
+                ]
+              },
+              "AvailableTo": 2,
+              "EventFunctionId": "ANNCONF/ANNGUEST",
+              "EventFunctionCode": "ANNGUEST",
+              "Name": "Guest Registration",
+              "Description": "Guests are invited to all social items. Please register your guests and select the items to be attended by each guest.",
+              "IsEventRegistrationOption": true,
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 5,
+              "StartDateTime": "2020-05-26T08:00:00",
+              "EndDateTime": "2020-05-28T20:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Guests are invited to all social items. Please register your guests and select the items to be attended by each guest.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/ANNGUEST",
+                "ItemId": "ANNCONF/ANNGUEST",
+                "Name": "Guest Registration"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-26",
+                        "Name": "Tuesday, 26 May 2020",
+                        "Sort": "2020-05-26"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.OptionEventFunctionData, Asi.Contracts",
+              "RelatedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT2",
+                    "Display": 1
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GUESTGOLF"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEGISLATION",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/HOSP"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TIPS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/CITY"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/INDUSTRY"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GLOBAL",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/ECONTRENDS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEADER"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT1"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEGIS",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/STRESS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/BREAK"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIB30"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/THUR-L"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/COMBSTRESS",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TIPS2",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PERSONNEL"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLEN2",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLEN1"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GALA",
+                    "Display": 1
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/MYTHMNG"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TECH"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLENARYSESSION",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT31"
+                  }
+                ]
+              },
+              "AvailableTo": 1,
+              "EventFunctionId": "ANNCONF/DAY2",
+              "EventFunctionCode": "DAY2",
+              "Name": "Day 2 Only",
+              "Description": "Registration for single-day attendance",
+              "IsEventRegistrationOption": true,
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 3,
+              "StartDateTime": "2020-05-27T08:00:00",
+              "EndDateTime": "2020-05-27T20:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Registration for single-day attendance",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/DAY2",
+                "ItemId": "ANNCONF/DAY2",
+                "Name": "Day 2 Only"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-27",
+                        "Name": "Wednesday, 27 May 2020",
+                        "Sort": "2020-05-27"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.OptionEventFunctionData, Asi.Contracts",
+              "RelatedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIB30"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GUESTGOLF",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT31"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GLOBAL"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TECH"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/INDUSTRY"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT2"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEADER",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/STRESS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/CITY"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PERSONNEL"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEGIS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/ECONTRENDS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLEN1"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/THUR-L"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT1",
+                    "Display": 1
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TIPS2"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/MYTHMNG"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/COMBSTRESS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEGISLATION"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GALA"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/HOSP"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLEN2"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLENARYSESSION"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/BREAK"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TIPS",
+                    "Display": 2
+                  }
+                ]
+              },
+              "AvailableTo": 1,
+              "EventFunctionId": "ANNCONF/DAY3",
+              "EventFunctionCode": "DAY3",
+              "Name": "Day 3 Only",
+              "Description": "Registration for single-day attendance",
+              "IsEventRegistrationOption": true,
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 4,
+              "StartDateTime": "2020-05-28T08:00:00",
+              "EndDateTime": "2020-05-28T17:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "Registration for single-day attendance",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/DAY3",
+                "ItemId": "ANNCONF/DAY3",
+                "Name": "Day 3 Only"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-28",
+                        "Name": "Thursday, 28 May 2020",
+                        "Sort": "2020-05-28"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": []
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "$type": "Asi.Soa.Events.DataContracts.OptionEventFunctionData, Asi.Contracts",
+              "RelatedFunctions": {
+                "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/CITY"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GUESTGOLF",
+                    "Display": 2
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLENARYSESSION"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GALA"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PERSONNEL"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/MYTHMNG"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/INDUSTRY"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/HOSP"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TIPS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIB30"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT2"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/ECONTRENDS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/THUR-L"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/COMBSTRESS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT1"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/BREAK"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEGIS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLEN1"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/STRESS"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEGISLATION"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/EXHIBIT31"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TIPS2"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/PLEN2"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/GLOBAL"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/LEADER"
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.EventRelatedFunctionData, Asi.Contracts",
+                    "EventFunctionId": "ANNCONF/TECH"
+                  }
+                ]
+              },
+              "AvailableTo": 3,
+              "EventFunctionId": "ANNCONF/GOLF",
+              "EventFunctionCode": "GOLF",
+              "Name": "Golf Tournament",
+              "Description": "You and your guest are invited to join all conference attendees in this year's Golf Tournament held at the beautiful Half Moon Bay Golf and Country Club. A tight par 70 all-weather-course overlooking the Coral Sea, Half Moon Bay Golf Club features sweeping views looking west to the rainforest clad mountain ranges behind Cairns. Cocktails and light hors d'oeuvres will be served before the tournament begins. Entry fees this year will benefit the Wildlife Conservation Society of Queensland.",
+              "IsEventRegistrationOption": true,
+              "RegistrationType": 3,
+              "Category": {
+                "$type": "Asi.Soa.Events.DataContracts.EventFunctionCategoryData, Asi.Contracts",
+                "EventFunctionCategoryId": "REG",
+                "Name": "REG"
+              },
+              "Status": "",
+              "SortOrder": 6,
+              "StartDateTime": "2020-05-28T14:00:00",
+              "EndDateTime": "2020-05-28T19:00:00",
+              "Location": {
+                "$type": "Asi.Soa.Membership.DataContracts.LocationPartyAddressData, Asi.Contracts",
+                "Name": ""
+              },
+              "Capacity": 0,
+              "MaximumQuantityPerRegistrant": 1,
+              "Item": {
+                "$type": "Asi.Soa.Commerce.DataContracts.ItemSummaryData, Asi.Contracts",
+                "Description": "You and your guest are invited to join all conference attendees in this year's Golf Tournament held at the beautiful Half Moon Bay Golf and Country Club. A tight par 70 all-weather-course overlooking the Coral Sea, Half Moon Bay Golf Club features sweeping views looking west to the rainforest clad mountain ranges behind Cairns. Cocktails and light hors d'oeuvres will be served before the tournament begins. Entry fees this year will benefit the Wildlife Conservation Society of Queensland.",
+                "ItemClass": {
+                  "$type": "Asi.Soa.Commerce.DataContracts.ItemClassSummaryData, Asi.Contracts",
+                  "ItemClassId": "MEETING",
+                  "Name": "MEETING"
+                },
+                "ItemCode": "ANNCONF/GOLF",
+                "ItemId": "ANNCONF/GOLF",
+                "Name": "Golf Tournament"
+              },
+              "ProgramGroups": {
+                "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollectionCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Day/2020-05-28",
+                        "Name": "Thursday, 28 May 2020",
+                        "Sort": "2020-05-28"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Category/Guest",
+                        "Name": "Guest",
+                        "Sort": "Guest"
+                      }
+                    ]
+                  },
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ProgramGroupDataCollection, Asi.Contracts",
+                    "$values": [
+                      {
+                        "$type": "Asi.Soa.Events.DataContracts.ProgramGroupData, Asi.Contracts",
+                        "ProgramGroupId": "Track/Social",
+                        "Name": "Social",
+                        "Sort": "Social"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "ConflictCodes": {
+                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                "$values": []
+              },
+              "EventFormSectionId": "5a46fa80-9460-4c19-86e0-53db79cf8283",
+              "FinancialEntityId": "",
+              "ContinuingEducationCreditInformation": {
+                "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Events.DataContracts.ContinuingEducationCreditInformationData, Asi.Contracts",
+                    "CreditType": ""
+                  }
+                ]
+              },
+              "MinimumAttendance": 0,
+              "ExpectedAttendance": 0,
+              "GuaranteedAttendance": 0,
+              "ActualAttendance": 0,
+              "Settings": 0,
+              "AdditionalAttributes": {
+                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                "$values": [
+                  {
+                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                    "Name": "WebEnabled",
+                    "Value": {
+                      "$type": "System.Boolean",
+                      "$value": true
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
     return of(data).pipe(delay(500));
   }
   // get programs for session ends
@@ -44581,9 +48651,9 @@ export class SeatallocationService {
     }
     let url;
     if (sessionID)
-      url = this.baseUrl + 'api/Psc_Event_Registrant?EventID=' + eventID + '&SessionID=' + sessionID;
+      url = this.baseUrl + 'api/Psc_Event_Registrant?EventID=' + eventID + '&SessionID=' + sessionID + '&Limit=500';
     else
-      url = this.baseUrl + 'api/Psc_Event_Registrant?EventID=' + eventID;
+      url = this.baseUrl + 'api/Psc_Event_Registrant?EventID=' + eventID + '&Limit=500';
     return this.httpClient.get(url, httpOptions)
       .pipe(map((res: any) => {
         return res.Items.$values
@@ -44591,8 +48661,2208 @@ export class SeatallocationService {
   }
 
   private getFakedRegistrants(eventID, sessionID): Observable<Sessions[]> {
-    let data = []
+    let data = [{
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["37"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["37"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 37
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "18023"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Charles Thibodeaux"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["38"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["38"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 38
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19157"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Mr Doug P Morrell"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["39"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["39"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 39
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19206"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Ms Mahlia P McBride"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["40"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["40"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 40
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "141"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Oskar Svensson"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["41"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["41"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 41
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19343"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Mrs Marion A Johnston"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["42"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["42"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 42
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19076"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Mr Michael Hubery"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["43"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["43"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 43
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19498"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Ms Jade Danielle Barston"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["44"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["44"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 44
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "21101"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Gail Parker"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["45"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["45"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 45
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19180"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Mr Thomas K Smith"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["46"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["46"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 46
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19080"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Ms Jasmine Allard"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["47"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["47"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 47
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19069"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Ms Claire F Hosken"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["48"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["48"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 48
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19065"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Mrs Maddison L Buckley"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["49"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["49"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 49
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19358"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Ms Michelle Lanier Wilson"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["50"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["50"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 50
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19649"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Ms Samantha L Robinson"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["51"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["51"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 51
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19283"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Mr David O Richardson"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["52"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["52"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 52
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19496"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Mr Logan R Schofield"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["53"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["53"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 53
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19047"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Mr Glenn Leary"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["54"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["54"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 54
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19374"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Mr Robert L Baker"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["55"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["55"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 55
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "21255"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Ms Lois Anderson"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["56"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["56"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 56
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "143"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Juan Sabados"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["57"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["57"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 57
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "152"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Ms Marcie L Farmhaven, CPA"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["58"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["58"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 58
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "20950"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Ms Carly  Kowalski"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["59"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["59"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 59
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "132"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Mr James H Harrison, Jr"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["60"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["60"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 60
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "112"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Mr James B Soup, Jr"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["61"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["61"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 61
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "160"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "LtCol Betty K Smith"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["62"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["62"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 62
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19718"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Miss Stephanie J Haggerty"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["63"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["63"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 63
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "19675"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Mr Zach Yorke"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["64"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["64"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 64
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "18034"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Melissa Burson"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["65"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["65"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 65
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "262"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Bernard Bourdain"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["66"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["66"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 66
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "18115"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Kevin Buford"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["67"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["67"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 67
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "23166"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Amruta Bricks"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["68"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["68"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 68
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "18056"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Ms Susan Bee"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["69"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["69"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 69
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "18061"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Mrs Karen Simpson"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }, {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["70"]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": ["70"]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 70
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 15
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": "LDC11"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": "149"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": "Dean Schueter"
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }, {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": 0
+          }
+        }]
+      }
+    }]
     return of(data).pipe(delay(500));
   }
   // get registrants starts
+
+
+
+  // delete registrant starts
+  public deleteRegistrant(registrantID): Observable<any> {
+    if (this.live) return this.deleteLiveRegistrant(registrantID);
+    else return this.deleteFakedRegistrant(registrantID);
+  }
+
+  private deleteLiveRegistrant(registrantID): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'RequestVerificationToken': this.token
+      })
+    }
+    let url = this.baseUrl + 'api/Psc_Event_Registrant/' + registrantID;
+    return this.httpClient.delete(url, httpOptions).pipe(map((res: any) => { return res; }));
+  }
+
+  private deleteFakedRegistrant(registrantID): Observable<any> {
+    return of("").pipe(delay(500));
+  }
+  // delete registrant ends
 }

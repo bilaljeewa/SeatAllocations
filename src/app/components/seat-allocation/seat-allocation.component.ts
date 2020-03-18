@@ -148,11 +148,35 @@ export class SeatAllocationComponent implements OnInit {
   }
 
   // fetch the programs as per the current EventID
-  getPrograms() {
+  async getPrograms() {
     this.seatallocationService.getPrograms(this.eventID).subscribe(
       result => {
-        this.programs = result;
-        this.getSessions();
+        if (result.length > 0) {
+          let Functions = new Array();
+          let RegistrationOptions = new Array();
+          if (result[0].Functions.$values.length > 0) {
+            Functions = result[0].Functions.$values.map((x: any) =>
+              (<any>
+                {
+                  "EventFunctionId": x.EventFunctionId,
+                  "EventFunctionCode": x.EventFunctionCode,
+                  "Name": x.Name,
+                  "Description": x.Description
+                }))
+          }
+          if (result[0].RegistrationOptions.$values.length > 0) {
+            RegistrationOptions = result[0].RegistrationOptions.$values.map((x: any) =>
+              (<any>
+                {
+                  "EventFunctionId": x.EventFunctionId,
+                  "EventFunctionCode": x.EventFunctionCode,
+                  "Name": x.Name,
+                  "Description": x.Description
+                }))
+          }
+          this.programs = Functions.concat(RegistrationOptions);
+          this.getSessions();
+        }
       }, error => {
         this.toast.error("Something went wrong!! Please try again later!!", "Error");
       }
@@ -220,26 +244,27 @@ export class SeatAllocationComponent implements OnInit {
 
   // fetch the registrants as per the current EventID
   async getRegitrants() {
-    this.seatallocationService.getRegistrants(this.eventID).subscribe(
-      result => {
-        let abc = [];
-        if (result.length > 0) {
-          result.map((ele: any, index) => {
-            abc[index] = []
-            ele.Properties.$values.map(ele1 => {
-              abc[index][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
+    this.advancedSessions.map(ele => {
+      this.seatallocationService.getRegistrants(this.eventID, ele.Ordinal).subscribe(
+        result => {
+          let abc = [];
+          if (result.length > 0) {
+            result.map((ele1: any, index) => {
+              abc[index] = []
+              ele1.Properties.$values.map(ele1 => {
+                abc[index][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
+              })
             })
-          })
-          this.advancedSessions.map(ele => {
-            ele['unallocatedRegistrants'] = abc.filter(ele1 => ele1.SessionID == ele.Ordinal && ele1.TableID == 0);
-            ele['allocatedRegistrants'] = abc.filter(ele1 => ele1.SessionID == ele.Ordinal && ele1.TableID != 0);
-          })
+            ele['allRegistrants'] = abc.filter(ele1 => ele1.SessionID == ele.Ordinal);
+            ele['unallocatedRegistrants'] = abc.filter(ele1 => ele1.TableID == 0);
+            ele['allocatedRegistrants'] = abc.filter(ele1 => ele1.TableID != 0);
+          }
+        }, error => {
+          this.toast.error("Something went wrong!! Please try again later!!", "Error");
         }
-        console.log(this.advancedSessions)
-      }, error => {
-        this.toast.error("Something went wrong!! Please try again later!!", "Error");
-      }
-    )
+      )
+    })
+    console.log(this.advancedSessions)
   }
 
   // open dialog box to add/edit session
@@ -340,7 +365,7 @@ export class SeatAllocationComponent implements OnInit {
                           if (increamentedValue == RegistrantsDetails.length) {
                             this.seatallocationService.getRegistrants(response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'EventID')[0].Value, response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'Ordinal')[0].Value.$value).subscribe(
                               (RegistrantsResult: any) => {
-                                this.updateSession(response, RegistrantsResult.Items.$values.length);
+                                this.updateSession(response, RegistrantsResult.length);
                               }, RegistrantsError => {
                                 this.toast.error("Something went wrong!! Please try again later!!", "Error");
                               }
@@ -363,21 +388,239 @@ export class SeatAllocationComponent implements OnInit {
         }
         // this.getPrograms();
       } else if (response.type == 'Edit') {
-        this.getPrograms();
+        if (response.data && response.data.length > 0) {
+          let programNamesWithQuotes = '"' + response.data[0].Properties.$values.filter(ele => ele.Name == 'Programs')[0].Value.split(",").join('","') + '"';
+          console.log(programNamesWithQuotes);
+          this.seatallocationService.getIQARegistrants(programNamesWithQuotes).subscribe(
+            (result: any) => {
+              if (result.length > 0) {
+                result = result.filter((thing, index, self) =>
+                  index === self.findIndex((t) => (
+                    t.Properties.$values.filter(ele1 => ele1.Name == 'RegistrantID')[0].Value === thing.Properties.$values.filter(ele1 => ele1.Name == 'RegistrantID')[0].Value
+                  ))
+                )
+                let filteredResult = [];
+                result.map((ele: any, index) => {
+                  filteredResult[index] = []
+                  ele.Properties.$values.map(ele1 => {
+                    filteredResult[index][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
+                  })
+                })
+                console.log(filteredResult)
+                console.log(this.advancedSessions[sessionIndex])
+                let uniqueNewRegistrants = filteredResult.filter(x => !this.advancedSessions[sessionIndex].allRegistrants.some(registrant => registrant.RegistrantID === x.RegistrantID));
+                let uniqueOldRegistrants = this.advancedSessions[sessionIndex].allRegistrants.filter(x => !filteredResult.some(registrant => registrant.RegistrantID === x.RegistrantID));
+                console.log(uniqueNewRegistrants);
+                console.log(uniqueOldRegistrants);
+                let uniqueOldRegistrantsCount = 0;
+                uniqueOldRegistrants.map(ele => {
+                  this.seatallocationService.deleteRegistrant(ele.Ordinal).subscribe(
+                    deleteRegistrantResult => {
+                      uniqueOldRegistrantsCount = uniqueOldRegistrantsCount + 1;
+                      if (uniqueOldRegistrants.length == uniqueOldRegistrantsCount) {
+                        uniqueOldRegistrantsCount = 0;
+                        uniqueNewRegistrants.map(ele1 => {
+                          let RegistrantsDetails = {
+                            "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+                            "EntityTypeName": "Psc_Event_Registrant",
+                            "PrimaryParentEntityTypeName": "Standalone",
+                            "Identity": {
+                              "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+                              "EntityTypeName": "Psc_Event_Registrant",
+                              "IdentityElements": {
+                                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                                "$values": [""]
+                              }
+                            },
+                            "PrimaryParentIdentity": {
+                              "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+                              "EntityTypeName": "Standalone",
+                              "IdentityElements": {
+                                "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                                "$values": [""]
+                              }
+                            },
+                            "Properties": {
+                              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                              "$values": [{
+                                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                                "Name": "SessionID",
+                                "Value": {
+                                  "$type": "System.Int32",
+                                  "$value": response.data[0].Properties.$values.filter(ele2 => ele2.Name == 'Ordinal')[0].Value.$value
+                                }
+                              },
+                              {
+                                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                                "Name": "EventID",
+                                "Value": response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'EventID')[0].Value
+                              },
+                              {
+                                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                                "Name": "RegistrantID",
+                                "Value": ele1.RegistrantID
+                              },
+                              {
+                                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                                "Name": "RegistrantName",
+                                "Value": ele1.FullName
+                              },
+                              {
+                                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                                "Name": "SortOrder",
+                                "Value": {
+                                  "$type": "System.Int32",
+                                  "$value": 0
+                                }
+                              },
+                              {
+                                "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                                "Name": "TableID",
+                                "Value": {
+                                  "$type": "System.Int32",
+                                  "$value": 0
+                                }
+                              }
+                              ]
+                            }
+                          }
+                          this.seatallocationService.addRegistrant(RegistrantsDetails).subscribe(
+                            addRegistrantResult => {
+                              uniqueOldRegistrantsCount = uniqueOldRegistrantsCount + 1;
+                              if (uniqueNewRegistrants.length == uniqueOldRegistrantsCount) {
+                                this.seatallocationService.getRegistrants(response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'EventID')[0].Value, response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'Ordinal')[0].Value.$value).subscribe(
+                                  (RegistrantsResult: any) => {
+                                    let updatedRegistrantsResult = [];
+                                    RegistrantsResult.map((ele3: any, RegistrantsResultIndex) => {
+                                      updatedRegistrantsResult[RegistrantsResultIndex] = []
+                                      ele3.Properties.$values.map(ele4 => {
+                                        updatedRegistrantsResult[RegistrantsResultIndex][ele4.Name] = typeof (ele4.Value) == 'object' ? ele4.Value.$value : ele4.Value;
+                                      })
+                                    })
+
+                                    let unallocatedRegistrants = updatedRegistrantsResult.filter(ele1 => ele1.SessionID == ele.Ordinal && ele1.TableID == 0);
+                                    let allocatedRegistrants = updatedRegistrantsResult.filter(ele1 => ele1.SessionID == ele.Ordinal && ele1.TableID != 0);
+
+                                    let sessionData = new Array();
+                                    sessionData.push({
+                                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                                      "Name": "Ordinal",
+                                      "Value": { "$type": "System.Int32", "$value": response.data[0].Properties.$values.filter(ele5 => ele5.Name == 'Ordinal')[0].Value.$value }
+                                    })
+                                    sessionData.push({
+                                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                                      "Name": "TotalUnallocated",
+                                      "Value": { "$type": "System.Int32", "$value": unallocatedRegistrants.length }
+                                    })
+                                    sessionData.push({
+                                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                                      "Name": "TotalAllocated",
+                                      "Value": { "$type": "System.Int32", "$value": allocatedRegistrants.length }
+                                    })
+                                    sessionData.push({
+                                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                                      "Name": "TotalSeats",
+                                      "Value": { "$type": "System.Int32", "$value": response.data[0].Properties.$values.filter(ele5 => ele5.Name == 'TotalSeats')[0].Value.$value }
+                                    })
+                                    sessionData.push({
+                                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                                      "Name": "TotalTables",
+                                      "Value": { "$type": "System.Int32", "$value": response.data[0].Properties.$values.filter(ele5 => ele5.Name == 'TotalTables')[0].Value.$value }
+                                    })
+                                    sessionData.push({
+                                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                                      "Name": "Programs",
+                                      "Value": response.data[0].Properties.$values.filter(ele5 => ele5.Name == 'Programs')[0].Value
+                                    })
+                                    sessionData.push({
+                                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                                      "Name": "SessionName",
+                                      "Value": response.data[0].Properties.$values.filter(ele5 => ele5.Name == 'SessionName')[0].Value
+                                    })
+                                    sessionData.push({
+                                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                                      "Name": "EventID",
+                                      "Value": response.data[0].Properties.$values.filter(ele5 => ele5.Name == 'EventID')[0].Value
+                                    })
+                                    sessionData.push({
+                                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                                      "Name": "SessionTimeStamp",
+                                      "Value": response.data[0].Properties.$values.filter(ele5 => ele5.Name == 'SessionTimeStamp')[0].Value
+                                    })
+
+                                    this.seatallocationService.updateSession({ sessionID: response.data[0].Properties.$values.filter(ele5 => ele5.Name == 'Ordinal')[0].Value.$value, session: sessionData }).subscribe(
+                                      result => {
+                                        this.getPrograms();
+                                      }, error => {
+                                        this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                                      }
+                                    )
+
+                                  }, RegistrantsError => {
+                                    this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                                  }
+                                )
+                              }
+                            }, error => {
+                              this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                            }
+                          )
+                        })
+                      }
+                    }, error => {
+                      this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                    }
+                  )
+                })
+              } else {
+                // TODO delete all the registrants from the table
+              }
+            }, error => {
+              this.toast.error("Something went wrong!! Please try again later!!", "Error");
+            }
+          )
+        }
+        // this.getPrograms();
       } else if (response.type == 'delete') {
-        this.getPrograms();
+        this.seatallocationService.getRegistrants(this.eventID, this.advancedSessions[sessionIndex].Ordinal).subscribe(
+          result => {
+            let updatedRegistrantsResult = [];
+            result.map((ele3: any, RegistrantsResultIndex) => {
+              updatedRegistrantsResult[RegistrantsResultIndex] = []
+              ele3.Properties.$values.map(ele4 => {
+                updatedRegistrantsResult[RegistrantsResultIndex][ele4.Name] = typeof (ele4.Value) == 'object' ? ele4.Value.$value : ele4.Value;
+              })
+            })
+            let increamentedValue = 0;
+            updatedRegistrantsResult.map(ele => {
+              this.seatallocationService.deleteRegistrant(ele.Ordinal).subscribe(
+                deleteRegistrantResult => {
+                  increamentedValue = increamentedValue + 1;
+                  if (increamentedValue == updatedRegistrantsResult.length) {
+                    this.getPrograms();
+                  }
+                }, deleteRegistrantError => {
+                  this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                }
+              )
+            })
+          }, error => {
+            this.toast.error("Something went wrong!! Please try again later!!", "Error");
+          }
+        )
+        // this.getPrograms();
         // this.advancedSessions.splice(sessionIndex, 1);
       }
     });
   }
 
   // open dialog box to add/edit session table
-  addEditSessionTable(sessionIndex, sessionTableIndex = null) {
+  addEditSessionTable(sessionIndex, sessionTableIndex = -1) {
     let dialogRef = this.sessionDialog.open(SessionTableDialogComponent, {
       panelClass: "mat-dialog-lg",
       width: "500px",
       data: {
-        sessionTable: sessionTableIndex ? this.advancedSessions[sessionIndex].tables[sessionTableIndex] : null,
+        sessionTable: sessionTableIndex != -1 ? this.advancedSessions[sessionIndex].tables[sessionTableIndex] : null,
         session: this.advancedSessions[sessionIndex],
         eventID: this.eventID
       },
@@ -416,9 +659,9 @@ export class SeatAllocationComponent implements OnInit {
 
   afterPanelOpened(i) {
     this.mainPanelIcon = i;
-    if(this.unallocatedTableRows.length > 0 && this.setAssignButtons.tables.length > 0) {
+    if (this.unallocatedTableRows.length > 0 && this.setAssignButtons.tables.length > 0) {
       let panelInner = this.innerPanelClosed(0, false, false);
-      if(!panelInner) {
+      if (!panelInner) {
         this.setAssignButtons.assignButtons.autoAssignTable = true;
         this.setAssignButtons.assignButtons.autoAssignAll = false;
       } else {
@@ -433,7 +676,7 @@ export class SeatAllocationComponent implements OnInit {
   innerPannelOpened(j, tableItems, assignButtonsObj) {
     this.innerPanelIcon = j;
     // respectiveTableName
-    if(this.unallocatedTableRows.length > 0 && this.setAssignButtons.tables.length > 0) {
+    if (this.unallocatedTableRows.length > 0 && this.setAssignButtons.tables.length > 0) {
       this.setAssignButtons.assignButtons.autoAssignTable = true;
       this.setAssignButtons.assignButtons.autoAssignAll = false;
       this.respectiveTableName = tableItems.TableName;
@@ -464,24 +707,24 @@ export class SeatAllocationComponent implements OnInit {
   }
 
   onCheckChange(event, tablesArr) {
-    if(event.checked) {
-      if(this.setAssignButtons.tables.length > 0) {
+    if (event.checked) {
+      if (this.setAssignButtons.tables.length > 0) {
         this.setAssignButtons.assignButtons.autoAssignTable = false;
         this.setAssignButtons.assignButtons.autoSelectionTable = true;
         this.setAssignButtons.assignButtons.autoAssignAll = false;
-        if(this.respectiveTableName === '') {
+        if (this.respectiveTableName === '') {
           this.setAssignButtons.assignButtons.autoSelectionTable = false;
           this.respectiveTableName = tablesArr[0].TableName
           this.allTablesClosed = true;
         }
       }
     } else {
-      if(this.setAssignButtons.tables.length > 0) {
+      if (this.setAssignButtons.tables.length > 0) {
         this.setAssignButtons.assignButtons.autoAssignTable = true;
         this.setAssignButtons.assignButtons.autoSelectionTable = false;
         this.setAssignButtons.assignButtons.autoAssignAll = false;
       }
-      if(this.allTablesClosed) {
+      if (this.allTablesClosed) {
         this.setAssignButtons.assignButtons.autoAssignTable = false;
         this.setAssignButtons.assignButtons.autoSelectionTable = false;
         this.setAssignButtons.assignButtons.autoAssignAll = true;
@@ -751,7 +994,7 @@ export class SessionTableDialogComponent {
     this.tableForm = this.formBuilder.group({
       TableName: [this.data.sessionTable ? this.data.sessionTable.TableName : "", Validators.required],
       NumSeats: [this.data.sessionTable ? this.data.sessionTable.NumSeats : 0, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.min(1)]],
-      Colour: [this.data.sessionTable ? this.data.sessionTable.Colour : "#ffffff"]
+      Colour: [this.data.sessionTable ? this.data.sessionTable.Colour : "#948f8f"]
     });
   }
 
@@ -905,7 +1148,9 @@ export class SessionTableDialogComponent {
             sessionData.push({
               "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
               "Name": "TotalSeats",
-              "Value": { "$type": "System.Int32", "$value": this.data.session.TotalSeats }
+              "Value": {
+                "$type": "System.Int32", "$value": parseInt(this.data.session.TotalSeats) - parseInt(this.data.sessionTable.NumSeats)
+              }
             })
             sessionData.push({
               "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
