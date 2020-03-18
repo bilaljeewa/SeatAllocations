@@ -1,13 +1,13 @@
-<div class="form-wrap p-sm-2 px-2 py-3 p-md-4">
+<div class="form-wrap">
     <h1 class="heading-main mb-2 mb-sm-3 mb-md-4 text-center">Session</h1>
     <div class="button-wrap text-right mb-2 mb-md-3">
         <button mat-raised-button color="primary" (click)="openSessionDialog(); do($event);">
             Add Session</button>
     </div>
     <mat-accordion>
-        <div class="session-wrap p-2 p-md-3 mb-3 mb-sm-4" *ngFor="let item of advancedSessions; let i=index">
+        <div class="session-wrap mb-3 mb-sm-4" *ngFor="let item of advancedSessions; let i=index">
             <!--EXPANSION HEAD-->
-            <div class="session-list p-2">
+            <div class="session-list p-3">
                 <div class="row form-row">
                     <div class="mb-2 mb-xl-0 media-title col-xl-2 col-lg-12">
                         <h2 class="heading m-0 "> {{item.SessionName}} </h2>
@@ -63,10 +63,10 @@
                                     <button mat-icon-button color="primary"
                                         (click)="mainExpansionPanel.toggle(); do($event);">
                                         <ng-container *ngIf="mainPanelIcon === i ; else elseTemplate">
-                                            <fa-icon class="caret" [icon]="faCaretUp"></fa-icon>
+                                            <fa-icon class="carett" [icon]="facaretUp"></fa-icon>
                                         </ng-container>
                                         <ng-template #elseTemplate>
-                                            <fa-icon class="caret" [icon]="faCaretDown"></fa-icon>
+                                            <fa-icon class="carett" [icon]="faCaretDown"></fa-icon>
                                         </ng-template>
                                     </button>
                                 </div>
@@ -246,12 +246,12 @@
                                                         <div class="col-sm-7 allocated">
                                                             <p class="py-1 m-0 d-flex justify-content-between alloc">
                                                                 <span class="title">Allocated Seats</span>
-                                                                <span class="badge" [style.color]="tableItem.Colour"
+                                                                <span class="badgee" [style.color]="tableItem.Colour"
                                                                     style="background: white;">5</span>
                                                             </p>
                                                             <p class="py-1 m-0 d-flex justify-content-between unalloc">
                                                                 <span class="title">Unallocated Seats</span>
-                                                                <span class="badge">3</span>
+                                                                <span class="badgee">3</span>
                                                             </p>
                                                         </div>
                                                         <div class="col-sm-3 color-pick text-right">

@@ -13,7 +13,7 @@
     margin: 0 !important;
   }
 
-  .multiselect-item-checkbox input[type="checkbox"]+div:before {
+  .multiselect-item-checkbox input[type="checkbox"] + div:before {
     color: #2674e7 !important;
     border: 2px solid #2674e7 !important;
   }
@@ -24,7 +24,7 @@
     letter-spacing: 1.5px;
   }
 
-  .multiselect-item-checkbox input[type="checkbox"]:checked+div:before {
+  .multiselect-item-checkbox input[type="checkbox"]:checked + div:before {
     background: #2674e7 !important;
   }
 
@@ -59,6 +59,10 @@
   .mat-expansion-panel {
     box-shadow: none;
     border-radius: 0;
+
+    .mat-expansion-panel-body {
+      padding: 0 13px 16px;
+    }
   }
 
   label {
@@ -126,20 +130,16 @@ button.toggle-panel {
   pointer-events: auto;
 }
 
-@mixin custom-shadow($x, $y, $blur, $color) {
-  box-shadow: $x $y $blur $color;
-}
-
 button {
   outline: none;
 }
 
 .session-wrap {
-  /*@include custom-shadow(0, 0, 10px, rgba(0, 0, 0, 0.1));*/
+  box-shadow: 0 0 10px rgba(123, 123, 123, 0.1);
+  background: #fff;
 
   .session-list {
     box-shadow: none !important;
-    border: 1px solid #dee2e6;
     border-bottom: none;
 
     .mat-expansion-panel-header {
@@ -160,7 +160,7 @@ button {
         font-size: 20px;
       }
 
-      .caret {
+      .carett {
         font-size: 35px;
       }
     }
@@ -238,7 +238,7 @@ button {
 
     .session-open-wrap {
       .side-list-wrap {
-        @include custom-shadow(0, 0, 10px, rgba(0, 0, 0, 0.1));
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
         .top-tabs {
           position: relative;
@@ -253,7 +253,7 @@ button {
       }
 
       .table-list-wrap {
-        @include custom-shadow(0, 0, 10px, rgba(0, 0, 0, 0.1));
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
         .table-list-inner {
           .table-top {
@@ -289,7 +289,7 @@ button {
                   max-width: 100%;
                 }
 
-                .badge {
+                .badgee {
                   background: #dedede;
                   border: 1px solid;
                   padding: 0.35em 0.7em;
@@ -297,7 +297,7 @@ button {
                 }
 
                 &.unalloc {
-                  .badge {
+                  .badgee {
                     border-color: #2674e7;
                     color: #fff;
                     background-color: #cf2a27;
