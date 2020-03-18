@@ -173,8 +173,8 @@ export class SeatAllocationComponent implements OnInit {
           this.advancedSessions.map(ele => {
             ele['tables'] = abc.filter(ele1 => ele1.SessionID == ele.Ordinal);
           })
-          this.getRegitrants();
         }
+        this.getRegitrants();
       }, error => {
         this.toast.error("Something went wrong!! Please try again later!!", "Error");
       }
@@ -194,11 +194,11 @@ export class SeatAllocationComponent implements OnInit {
             })
           })
           this.advancedSessions.map(ele => {
-            ele['unallocatedRegistrants'] = abc.filter(ele1 => ele1.SessionID == ele.Ordinal && !ele1.TableID);
-            ele['allocatedRegistrants'] = abc.filter(ele1 => ele1.SessionID == ele.Ordinal && ele1.TableID);
+            ele['unallocatedRegistrants'] = abc.filter(ele1 => ele1.SessionID == ele.Ordinal && ele1.TableID == 0);
+            ele['allocatedRegistrants'] = abc.filter(ele1 => ele1.SessionID == ele.Ordinal && ele1.TableID != 0);
           })
-          console.log(this.advancedSessions)
         }
+        console.log(this.advancedSessions)
       }, error => {
         this.toast.error("Something went wrong!! Please try again later!!", "Error");
       }
@@ -206,7 +206,7 @@ export class SeatAllocationComponent implements OnInit {
   }
 
   // open dialog box to add/edit session
-  async openSessionDialog(session = null, sessionIndex = null) {
+  openSessionDialog(session = null, sessionIndex = null) {
     let existingSession = session;
     const dialogRef = this.sessionDialog.open(SessionDialogComponent, {
       width: '600px',
@@ -216,111 +216,109 @@ export class SeatAllocationComponent implements OnInit {
     dialogRef.afterClosed().subscribe(response => {
       if (response.type == 'add') {
         if (response.data && response.data.length > 0) {
-          this.seatallocationService.getIQARegistrants(response.data[0].Properties.$values.filter(ele => ele.Name == 'Programs')[0].Value).subscribe(
+          let programNamesWithQuotes = '"' + response.data[0].Properties.$values.filter(ele => ele.Name == 'Programs')[0].Value.split(",").join('","') + '"';
+          console.log(programNamesWithQuotes);
+          this.seatallocationService.getIQARegistrants(programNamesWithQuotes).subscribe(
             (result: any) => {
-              let RegistrantsDetails = [];
-              result = result.filter((thing, index, self) =>
-                index === self.findIndex((t) => (
-                  t.Properties.$values.filter(ele1 => ele1.Name == 'RegistrantID')[0].Value === thing.Properties.$values.filter(ele1 => ele1.Name == 'RegistrantID')[0].Value
-                ))
-              )
-              result.map((ele, index) => {
-                let RegistrantID = ele.Properties.$values.filter(ele1 => ele1.Name == 'RegistrantID');
-                let FullName = ele.Properties.$values.filter(ele1 => ele1.Name == 'FullName');
-                RegistrantsDetails.push({
-                  "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
-                  "EntityTypeName": "Psc_Event_Registrant",
-                  "PrimaryParentEntityTypeName": "Standalone",
-                  "Identity": {
-                    "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+              if (result.length > 0) {
+                let RegistrantsDetails = [];
+                result = result.filter((thing, index, self) =>
+                  index === self.findIndex((t) => (
+                    t.Properties.$values.filter(ele1 => ele1.Name == 'RegistrantID')[0].Value === thing.Properties.$values.filter(ele1 => ele1.Name == 'RegistrantID')[0].Value
+                  ))
+                )
+                result.map((ele, index) => {
+                  let RegistrantID = ele.Properties.$values.filter(ele1 => ele1.Name == 'RegistrantID');
+                  let FullName = ele.Properties.$values.filter(ele1 => ele1.Name == 'FullName');
+                  RegistrantsDetails.push({
+                    "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
                     "EntityTypeName": "Psc_Event_Registrant",
-                    "IdentityElements": {
-                      "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
-                      "$values": [""]
-                    }
-                  },
-                  "PrimaryParentIdentity": {
-                    "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
-                    "EntityTypeName": "Standalone",
-                    "IdentityElements": {
-                      "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
-                      "$values": [""]
-                    }
-                  },
-                  "Properties": {
-                    "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
-                    "$values": [{
-                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
-                      "Name": "SessionID",
-                      "Value": {
-                        "$type": "System.Int32",
-                        "$value": response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'Ordinal')[0].Value.$value
+                    "PrimaryParentEntityTypeName": "Standalone",
+                    "Identity": {
+                      "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+                      "EntityTypeName": "Psc_Event_Registrant",
+                      "IdentityElements": {
+                        "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                        "$values": [""]
                       }
                     },
-                    {
-                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
-                      "Name": "EventID",
-                      "Value": response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'EventID')[0].Value
-                    },
-                    {
-                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
-                      "Name": "RegistrantID",
-                      "Value": RegistrantID[0].Value
-                    },
-                    {
-                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
-                      "Name": "RegistrantName",
-                      "Value": FullName[0].Value
-                    },
-                    {
-                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
-                      "Name": "SortOrder",
-                      "Value": {
-                        "$type": "System.Int32",
-                        "$value": ""
+                    "PrimaryParentIdentity": {
+                      "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+                      "EntityTypeName": "Standalone",
+                      "IdentityElements": {
+                        "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+                        "$values": [""]
                       }
                     },
-                    {
-                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
-                      "Name": "TableID",
-                      "Value": {
-                        "$type": "System.Int32",
-                        "$value": ""
+                    "Properties": {
+                      "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+                      "$values": [{
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "SessionID",
+                        "Value": {
+                          "$type": "System.Int32",
+                          "$value": response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'Ordinal')[0].Value.$value
+                        }
+                      },
+                      {
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "EventID",
+                        "Value": response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'EventID')[0].Value
+                      },
+                      {
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "RegistrantID",
+                        "Value": RegistrantID[0].Value
+                      },
+                      {
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "RegistrantName",
+                        "Value": FullName[0].Value
+                      },
+                      {
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "SortOrder",
+                        "Value": {
+                          "$type": "System.Int32",
+                          "$value": 0
+                        }
+                      },
+                      {
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "TableID",
+                        "Value": {
+                          "$type": "System.Int32",
+                          "$value": 0
+                        }
                       }
+                      ]
                     }
-                    ]
+                  })
+                  if (result.length == index + 1) {
+                    let increamentedValue = 0;
+                    RegistrantsDetails.map((RegistrantElement, RegistrantIndex) => {
+                      this.seatallocationService.addRegistrant(RegistrantElement).subscribe(
+                        RegistrantResult => {
+                          increamentedValue = increamentedValue + 1;
+                          if (increamentedValue == RegistrantsDetails.length) {
+                            this.seatallocationService.getRegistrants(response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'EventID')[0].Value, response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'Ordinal')[0].Value.$value).subscribe(
+                              (RegistrantsResult: any) => {
+                                this.updateSession(response, RegistrantsResult.Items.$values.length);
+                              }, RegistrantsError => {
+                                this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                              }
+                            )
+                          }
+                        }, RegistrantError => {
+                          this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                        }
+                      )
+                    })
                   }
                 })
-                // RegistrantsDetails.push({
-                //   EventID: response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'EventID')[0].Value,
-                //   SessionID: response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'Ordinal')[0].Value.$value,
-                //   TableID: "",
-                //   RegistrantID: parseInt(RegistrantID[0].Value),
-                //   RegistrantName: FullName[0].Value,
-                //   SortOrder: ""
-                // })
-                if (result.length == index + 1) {
-                  let increamentedValue = 0;
-                  RegistrantsDetails.map((RegistrantElement, RegistrantIndex) => {
-                    this.seatallocationService.addRegistrant(RegistrantElement).subscribe(
-                      RegistrantResult => {
-                        increamentedValue = increamentedValue + 1;
-                        if (increamentedValue == RegistrantsDetails.length) {
-                          this.seatallocationService.getRegistrants(response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'EventID')[0].Value, response.data[0].Properties.$values.filter(ele1 => ele1.Name == 'Ordinal')[0].Value.$value).subscribe(
-                            (RegistrantsResult: any) => {
-                              this.updateSession(response, RegistrantsResult.Items.$values.length);
-                            }, RegistrantsError => {
-                              this.toast.error("Something went wrong!! Please try again later!!", "Error");
-                            }
-                          )
-                        }
-                      }, RegistrantError => {
-                        this.toast.error("Something went wrong!! Please try again later!!", "Error");
-                      }
-                    )
-                  })
-                }
-              })
+              } else {
+                this.getPrograms();
+              }
             }, error => {
               this.toast.error("Something went wrong!! Please try again later!!", "Error");
             }
@@ -342,7 +340,7 @@ export class SeatAllocationComponent implements OnInit {
       panelClass: "mat-dialog-lg",
       width: "500px",
       data: {
-        sessionTable: this.advancedSessions[sessionIndex].tables[sessionTableIndex],
+        sessionTable: sessionTableIndex ? this.advancedSessions[sessionIndex].tables[sessionTableIndex] : null,
         session: this.advancedSessions[sessionIndex],
         eventID: this.eventID
       },
