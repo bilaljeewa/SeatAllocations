@@ -350,7 +350,26 @@ export class SeatAllocationComponent implements OnInit {
         }
         // this.getPrograms();
       } else if (response.type == 'Edit') {
-        this.getPrograms();
+        if (response.data && response.data.length > 0) {
+          let programNamesWithQuotes = '"' + response.data[0].Properties.$values.filter(ele => ele.Name == 'Programs')[0].Value.split(",").join('","') + '"';
+          console.log(programNamesWithQuotes);
+          this.seatallocationService.getIQARegistrants(programNamesWithQuotes).subscribe(
+            (result: any) => {
+              if (result.length > 0) {
+                result = result.filter((thing, index, self) =>
+                  index === self.findIndex((t) => (
+                    t.Properties.$values.filter(ele1 => ele1.Name == 'RegistrantID')[0].Value === thing.Properties.$values.filter(ele1 => ele1.Name == 'RegistrantID')[0].Value
+                  ))
+                )
+              } else {
+                // TODO delete all the registrants from the table
+              }
+            }, error => {
+              this.toast.error("Something went wrong!! Please try again later!!", "Error");
+            }
+          )
+        }
+        // this.getPrograms();
       } else if (response.type == 'delete') {
         this.getPrograms();
         // this.advancedSessions.splice(sessionIndex, 1);
@@ -687,7 +706,7 @@ export class SessionTableDialogComponent {
     this.tableForm = this.formBuilder.group({
       TableName: [this.data.sessionTable ? this.data.sessionTable.TableName : "", Validators.required],
       NumSeats: [this.data.sessionTable ? this.data.sessionTable.NumSeats : 0, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.min(1)]],
-      Colour: [this.data.sessionTable ? this.data.sessionTable.Colour : "#ffffff"]
+      Colour: [this.data.sessionTable ? this.data.sessionTable.Colour : "#948f8f"]
     });
   }
 
