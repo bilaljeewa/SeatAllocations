@@ -227,9 +227,17 @@
                                                                 </p>
                                                                 <p
                                                                     class="py-1 m-0 d-flex justify-content-between unalloc">
-                                                                    <span class="title">Unallocated Seats</span>
-                                                                    <span
-                                                                        class="badgee">{{tableItem.remainingUnallocatedRegistrantsSeats}}</span>
+                                                                    <span class="title"
+                                                                        *ngIf="tableItem.remainingUnallocatedRegistrantsSeats > 0">Unallocated
+                                                                        Seats</span>
+                                                                    <span class="badgee"
+                                                                        *ngIf="tableItem.remainingUnallocatedRegistrantsSeats > 0">{{tableItem.remainingUnallocatedRegistrantsSeats}}</span>
+
+                                                                    <span class="title"
+                                                                        *ngIf="tableItem.remainingUnallocatedRegistrantsSeats == 0"></span>
+                                                                    <span class="badgee"
+                                                                        *ngIf="tableItem.remainingUnallocatedRegistrantsSeats == 0"
+                                                                        style="background: green; color: white;">Full</span>
                                                                 </p>
                                                             </div>
                                                             <div class="col-sm-3 color-pick text-right">
