@@ -1,6 +1,6 @@
-<div class="session-create-custom">
+<div class="session-create-custom pseudoSeatAllocation">
   <h2 mat-dialog-title class="text-center">{{data.session ? 'Edit' : 'Add'}} Session</h2>
-  <mat-dialog-content>
+  <mat-dialog-content class="sessionModal">
     <mat-form-field class="fld d-block">
       <mat-label>Session Name</mat-label>
       <input matInput [(ngModel)]="SessionName" [ngModelOptions]="{standalone: true}">
@@ -36,6 +36,8 @@
       </div>
     </div> -->
 
+  </mat-dialog-content>
+  <mat-dialog-actions align="end" class="m-0 p-0">
     <div class="button-wrap pt-3 pt-lg-4 pb-1 text-right">
       <button *ngIf="data.session" mat-raised-button color="warn" (click)="onDelete()">Delete</button>
       <button mat-raised-button class="mx-2" (click)="onClose()">Cancel</button>
@@ -44,5 +46,5 @@
         <ng-template #elseTemplate> Save </ng-template>
       </button>
     </div>
-  </mat-dialog-content>
+  </mat-dialog-actions>
 </div>
