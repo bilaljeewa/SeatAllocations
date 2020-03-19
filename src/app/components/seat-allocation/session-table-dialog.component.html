@@ -1,4 +1,5 @@
 <div class="pseudoSeatAllocation">
+    <ngx-loading [show]="isLoading"></ngx-loading>
     <h2 mat-dialog-title class="text-center">Table <span
             *ngIf="data.sessionTable?.TableName">"{{data.sessionTable.TableName}}"</span>
     </h2>

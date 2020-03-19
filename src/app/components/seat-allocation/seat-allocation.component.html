@@ -156,6 +156,7 @@
                                                                     <thead>
                                                                         <tr>
                                                                             <th scope="col" class="name-th">Name</th>
+                                                                            <th scope="col" class="name-th">Table</th>
                                                                             <th scope="col" class="mail-th"></th>
                                                                         </tr>
                                                                     </thead>
@@ -163,6 +164,7 @@
                                                                         <tr
                                                                             *ngFor="let itemRow of item.allocatedRegistrants;">
                                                                             <td>{{ itemRow.RegistrantName }}</td>
+                                                                            <td>{{ itemRow.tableName }}</td>
                                                                             <td>
                                                                                 <button mat-icon-button color="primary"
                                                                                     [matTooltip]="itemRow.RegistrantName"

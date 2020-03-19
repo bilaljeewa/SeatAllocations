@@ -1,4 +1,5 @@
 <div class="session-create-custom pseudoSeatAllocation">
+  <ngx-loading [show]="isLoading"></ngx-loading>
   <h2 mat-dialog-title class="text-center">{{data.session ? 'Edit' : 'Add'}} Session</h2>
   <mat-dialog-content class="sessionModal">
     <mat-form-field class="fld d-block">
