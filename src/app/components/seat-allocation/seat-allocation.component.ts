@@ -184,6 +184,7 @@ export class SeatAllocationComponent implements OnInit {
           if (this.advancedSessions.length == index + 1) {
             // this.isLoading = false;
             this.advancedSessions.map((ele4, index4) => {
+              console.log(ele4['allocatedRegistrants']);
               if (ele4['allocatedRegistrants'].length > 0) {
                 ele4['allocatedRegistrants'].map(ele1 => {
                   ele1['tableName'] = "";
