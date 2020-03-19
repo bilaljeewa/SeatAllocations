@@ -201,7 +201,10 @@ export class SeatAllocationComponent implements OnInit {
               if (ele4['allocatedRegistrants'].length > 0) {
                 ele4['allocatedRegistrants'].map(ele1 => {
                   ele1['tableName'] = "";
-                  ele1['tableName'] = ele4.tables.filter(ele2 => ele2.Ordinal == ele1.TableID)[0].TableName;
+                  let filteredTables = ele4.tables.filter(ele2 => ele2.Ordinal == ele1.TableID);
+                  if (filteredTables.length > 0) {
+                    ele1['tableName'] = filteredTables[0].TableName;
+                  }
                 })
               }
               if (this.advancedSessions.length == index4 + 1) {
