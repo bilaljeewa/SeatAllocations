@@ -1,29 +1,11 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { faExclamationTriangle, faCaretUp, faCaretDown, faSyncAlt, faInfo, faFilePdf, faChevronUp, faChevronDown, faTrashAlt, faEllipsisV, faCheckCircle, faCaretRight } from '@fortawesome/free-solid-svg-icons';
-import { MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SeatallocationService } from 'src/app/services/seatallocation.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ToastrService } from 'ngx-toastr';
-
-export interface SessionUnallocated {
-  name: string;
-}
-
-const ELEMENT_DATA: SessionUnallocated[] = [
-  { name: 'Hydrogen' },
-  { name: 'Helium' },
-  { name: 'Lithium' },
-  { name: 'Beryllium' },
-  { name: 'Boron' },
-  { name: 'Carbon' },
-  { name: 'Nitrogen' },
-  { name: 'Oxygen' },
-  { name: 'Fluorine' },
-  { name: 'Neon' },
-];
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-seat-allocation',
@@ -180,14 +162,17 @@ export class SeatAllocationComponent implements OnInit {
         result => {
           let registrantsResult = [];
           if (result.length > 0) {
-            result.map((ele1: any, index) => {
-              registrantsResult[index] = []
+            result.map((ele1: any, index1) => {
+              registrantsResult[index1] = []
               ele1.Properties.$values.map(ele1 => {
-                registrantsResult[index][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
+                registrantsResult[index1][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
               })
             })
+            ele['allRegistrants'] = [];
             ele['allRegistrants'] = registrantsResult;
+            ele['unallocatedRegistrants'] = [];
             ele['unallocatedRegistrants'] = registrantsResult.filter(ele1 => ele1.TableID == 0);
+            ele['allocatedRegistrants'] = [];
             ele['allocatedRegistrants'] = registrantsResult.filter(ele1 => ele1.TableID != 0);
             if (ele.tables.length > 0) {
               ele.tables.map(ele1 => {
@@ -1598,6 +1583,77 @@ export class SeatAllocationComponent implements OnInit {
     } else {
       this.isLoading = false;
     }
+  }
+
+  // rearrange the table's registrants
+  drop(event: CdkDragDrop<string[]>, sessionIndex, tableIndex) {
+    this.isLoading = true;
+    moveItemInArray(this.advancedSessions[sessionIndex].tables[tableIndex].tablesAllocatedRegistrants, event.previousIndex, event.currentIndex);
+    let RegistrantsData = [];
+    this.advancedSessions[sessionIndex].tables[tableIndex].tablesAllocatedRegistrants.map((ele, index) => {
+      RegistrantsData.push({
+        registrantID: ele.Ordinal,
+        registrant: [{
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "Ordinal",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": ele.Ordinal
+          }
+        },
+        {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SessionID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": ele.SessionID
+          }
+        },
+        {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "EventID",
+          "Value": ele.EventID
+        },
+        {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantID",
+          "Value": ele.RegistrantID
+        },
+        {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "RegistrantName",
+          "Value": ele.RegistrantName
+        },
+        {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "SortOrder",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": index + 1
+          }
+        },
+        {
+          "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+          "Name": "TableID",
+          "Value": {
+            "$type": "System.Int32",
+            "$value": ele.TableID
+          }
+        }]
+      });
+      if (this.advancedSessions[sessionIndex].tables[tableIndex].tablesAllocatedRegistrants.length == index + 1) {
+        let increamentedValue = 0;
+        RegistrantsData.map(ele1 => {
+          this.seatallocationService.updateRegistrant(ele1).subscribe(
+            result => {
+              increamentedValue = increamentedValue + 1;
+              if (increamentedValue == RegistrantsData.length) {
+                this.isLoading = false;
+              }
+            })
+        })
+      }
+    })
   }
 }
 

@@ -287,9 +287,10 @@
                                                                         <th scope="col" class="mail-th">Action</th>
                                                                     </tr>
                                                                 </thead>
-                                                                <tbody>
-                                                                    <tr
-                                                                        *ngFor="let innerTableInner of tableItem.tablesAllocatedRegistrants">
+                                                                <tbody cdkDropList
+                                                                    (cdkDropListDropped)="drop($event, i, j)">
+                                                                    <tr *ngFor="let innerTableInner of tableItem.tablesAllocatedRegistrants"
+                                                                        cdkDrag>
                                                                         <td>
                                                                             <span
                                                                                 class="icon-wrap d-flex align-items-center justify-content-center">
@@ -311,17 +312,11 @@
                                                                                     [icon]="faTrashAlt">
                                                                                 </fa-icon>
                                                                             </button>
-                                                                            <button mat-icon-button color="primary"
-                                                                                [matMenuTriggerFor]="beforeMenu">
+                                                                            <button mat-icon-button color="primary">
                                                                                 <fa-icon class="exclaim"
                                                                                     [icon]="faEllipsisV">
                                                                                 </fa-icon>
                                                                             </button>
-                                                                            <mat-menu class="m-mi" #beforeMenu="matMenu"
-                                                                                xPosition="before">
-                                                                                <button mat-menu-item>Item 11</button>
-                                                                                <button mat-menu-item>Item 2</button>
-                                                                            </mat-menu>
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
