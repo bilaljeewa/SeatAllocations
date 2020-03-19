@@ -157,7 +157,10 @@ button {
   .session-list {
     box-shadow: none !important;
     border-bottom: none;
-
+    .sessionProgramsChips {
+      display: inline-block;
+      margin: 0 0 10px 0;
+    }
     .mat-expansion-panel-header {
       height: auto !important;
     }
