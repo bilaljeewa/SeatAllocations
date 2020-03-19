@@ -871,10 +871,22 @@ export class SessionDialogComponent {
       .onAction().subscribe(() => {
         this.seatallocationService.deleteSession(this.data.session.Ordinal).subscribe(
           result => {
-            this.toast.success(`${this.data.session.SessionName} is deleted successfully`, "Deleted Success");
-            this.dialogRef.close({
-              type: 'delete'
-            });
+            let increamentedValue = 0;
+            this.data.session.tables.map(ele => {
+              this.seatallocationService.deleteTable(ele.Ordinal).subscribe(
+                result1 => {
+                  increamentedValue = increamentedValue + 1;
+                  if (increamentedValue == this.data.session.tables.length) {
+                    this.toast.success(`${this.data.session.SessionName} is deleted successfully`, "Deleted Success");
+                    this.dialogRef.close({
+                      type: 'delete'
+                    });
+                  }
+                }, error1 => {
+                  this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                }
+              )
+            })
           }, error => {
             this.toast.error("Something went wrong!! Please try again later!!", "Error");
           }
