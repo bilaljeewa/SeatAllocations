@@ -1,4 +1,5 @@
 <div class="form-wrap">
+    <ngx-loading [show]="isLoading"></ngx-loading>
     <h1 class="heading-main mb-2 mb-sm-3 mb-md-4 text-center">Session</h1>
     <div class="button-wrap text-right mb-2 mb-md-3">
         <button mat-raised-button color="primary" (click)="openSessionDialog(); do($event);">
@@ -90,92 +91,56 @@
                                             <mat-tab label="Unallocated">
                                                 <div class="py-2 py-md-3">
                                                     <div class="button-wrap text-right">
-                                                        <button mat-raised-button color="primary" class="ml-2 mb-2" *ngIf="item.assignButtons.autoAssignAll">
+                                                        <button mat-raised-button color="primary" class="ml-2 mb-2"
+                                                            *ngIf="item.unallocatedRegistrants && item.unallocatedRegistrants.length>0 && item.tables && item.tables.length>0 && !item.multiSelectChecked && !item.multiSelectIndeterminate && item.tableOpened == null"
+                                                            (click)="autoAssignAll(i)">
                                                             Auto Assign All</button>
-                                                        <button mat-raised-button color="primary" class="ml-2 mb-2" *ngIf="item.assignButtons.autoAssignTable && respectiveTableName!==''">
-                                                            Auto Assign To {{respectiveTableName}}</button>
-                                                        <button mat-raised-button color="primary" class="ml-2 mb-2" *ngIf="item.assignButtons.autoSelectionTable">
-                                                            Assign Selection To {{respectiveTableName}}</button>
+                                                        <button mat-raised-button color="primary" class="ml-2 mb-2"
+                                                            *ngIf="item.unallocatedRegistrants && item.unallocatedRegistrants.length>0 && item.tables && item.tables.length>0 && item.tableOpened != null && !item.multiSelectChecked && !item.multiSelectIndeterminate"
+                                                            (click)="autoAssignAllToTable(i)">
+                                                            Auto Assign To {{item.tableOpened.TableName}}</button>
+                                                        <button mat-raised-button color="primary" class="ml-2 mb-2"
+                                                            *ngIf="item.unallocatedRegistrants && item.unallocatedRegistrants.length>0 && item.tables && item.tables.length>0 && item.tableOpened != null && (item.multiSelectChecked || item.multiSelectIndeterminate)"
+                                                            (click)="manualAssignAllToTable(i)">
+                                                            Assign Selection To {{item.tableOpened.TableName}}</button>
                                                     </div>
                                                     <div class="table-wrap">
-                                                        <!-- <div class="table-responsive"> -->
-                                                            <!-- <mat-table [dataSource]="dataSource" class="w-100"> -->
-                                                                <!-- Checkbox Column -->
-                                                                <!-- <ng-container matColumnDef="select">
-                                                                    <mat-header-cell *matHeaderCellDef> 
-                                                                        <mat-checkbox
-                                                                            (change)="$event ? masterToggle() : null"
-                                                                            [checked]="selection.hasValue() && isAllSelected()"
-                                                                            [indeterminate]="selection.hasValue() && !isAllSelected()">
-                                                                        </mat-checkbox>
-                                                                    </mat-header-cell>
-                                                                    <mat-cell *matCellDef="let row">
-                                                                        <mat-checkbox
-                                                                            (click)="$event.stopPropagation(); do($event);"
-                                                                            (change)="$event ? selection.toggle(row) : null"
-                                                                            [checked]="selection.isSelected(row)">
-                                                                        </mat-checkbox>
-                                                                    </mat-cell>
-                                                                </ng-container> -->
-
-                                                                <!-- Name Column -->
-                                                                <!-- <ng-container matColumnDef="name">
-                                                                    <mat-header-cell *matHeaderCellDef> Name
-                                                                    </mat-header-cell>
-                                                                    <mat-cell *matCellDef="let element">
-                                                                        {{element.name}}
-                                                                    </mat-cell>
-                                                                </ng-container> -->
-
-
-                                                                <!-- Symbol Column -->
-                                                                <!-- <ng-container matColumnDef="symbol">
-                                                                    <mat-header-cell *matHeaderCellDef>
-                                                                    </mat-header-cell>
-                                                                    <mat-cell *matCellDef="let element">
-                                                                        <button mat-icon-button color="primary">
-                                                                            <fa-icon class="exclaim" [icon]="faInfo">
-                                                                            </fa-icon>
-                                                                        </button>
-
-                                                                    </mat-cell>
-                                                                </ng-container>
-
-                                                                <mat-header-row *matHeaderRowDef="displayedColumns">
-                                                                </mat-header-row>
-                                                                <mat-row
-                                                                    *matRowDef="let row; columns: displayedColumns;"
-                                                                    (click)="selection.toggle(row); do($event);">
-                                                                </mat-row>
-                                                            </mat-table> -->
-                                                        <!-- </div> -->
-                                                        <div class="table-responsive">
+                                                        <div class="table-responsive heightScroll">
                                                             <table class="mat-table table mb-0">
                                                                 <thead>
                                                                     <tr>
-                                                                      <th scope="col" class="image-th">
-                                                                        <mat-checkbox
-                                                                        (change)="$event ? masterToggle() : null"
-                                                                        [checked]="selection.hasValue() && isAllSelected()"
-                                                                        [indeterminate]="selection.hasValue() && !isAllSelected()"></mat-checkbox>
-                                                                      </th>
-                                                                      <th scope="col" class="name-th">Name</th>
-                                                                      <th scope="col" class="mail-th">Action</th>
-                                                                    </tr>
-                                                                  </thead>
-                                                                  <tbody>
-                                                                      <tr *ngFor="let itemRow of unallocatedTableRows; let i = index">
-                                                                          <td>
+                                                                        <th scope="col" class="image-th">
                                                                             <mat-checkbox
-                                                                            [(ngModel)]="itemRow.isSelected" (change)="onCheckChange($event, item.tables)"
-                                                                            ></mat-checkbox>
-                                                                          </td>
-                                                                          <td>{{ itemRow.FullName }}</td>
-                                                                          <td>
-                                                                            <button mat-icon-button color="primary"><fa-icon class="exclaim" [icon]="faInfo"></fa-icon></button>
-                                                                            </td>
-                                                                      </tr>
-                                                                  </tbody>
+                                                                                [(ngModel)]="item.multiSelectChecked"
+                                                                                [(indeterminate)]="item.multiSelectIndeterminate"
+                                                                                (change)="selectUnselectMultiSelect(item.multiSelectChecked ? true : false, i)">
+                                                                            </mat-checkbox>
+                                                                        </th>
+                                                                        <th scope="col" class="name-th">Name</th>
+                                                                        <th scope="col" class="mail-th"></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr
+                                                                        *ngFor="let itemRow of item.unallocatedRegistrants;">
+                                                                        <td>
+                                                                            <mat-checkbox
+                                                                                [(ngModel)]="itemRow.multiSelect"
+                                                                                (change)="multiSelectCheckBoxes(i); onCheckChange($event, item.tables)">
+                                                                            </mat-checkbox>
+                                                                        </td>
+                                                                        <td>{{ itemRow.RegistrantName }}
+                                                                        </td>
+                                                                        <td>
+                                                                            <button mat-icon-button color="primary"
+                                                                                [matTooltip]="itemRow.RegistrantName"
+                                                                                matTooltipPosition="left">
+                                                                                <fa-icon class="exclaim"
+                                                                                    [icon]="faInfo"></fa-icon>
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
                                                             </table>
                                                         </div>
                                                     </div>
@@ -183,33 +148,29 @@
                                             </mat-tab>
                                             <mat-tab label="Allocated">
                                                 <div class="py-2 py-md-3">
-                                                    <!-- <div class="button-wrap text-right">
-                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">
-                                                            Auto Assign All</button>
-                                                        <button mat-raised-button color="primary" class="ml-2 mb-2">
-                                                            Auto Assign To Ferns</button>
-                                                        <button mat-raised-button color="primary"
-                                                            class="ml-2 mb-2">Assign Selection To Ferns</button>
-                                                    </div> -->
                                                     <div class="table-wrap">
-                                                        <div class="table-responsive">
+                                                        <div class="table-responsive heightScroll">
                                                             <table class="mat-table table mb-0">
                                                                 <thead>
                                                                     <tr>
-                                                                      <th scope="col" class="image-th">#</th>
-                                                                      <th scope="col" class="name-th">Name</th>
-                                                                      <th scope="col" class="mail-th">Action</th>
+                                                                        <th scope="col" class="name-th">Name</th>
+                                                                        <th scope="col" class="mail-th"></th>
                                                                     </tr>
-                                                                  </thead>
-                                                                  <tbody>
-                                                                      <tr *ngFor="let item of allocatedTableRows; let i = index">
-                                                                          <td>{{ i + 1 }}</td>
-                                                                          <td>{{ item.FullName }}</td>
-                                                                          <td>
-                                                                            <button mat-icon-button color="primary"><fa-icon class="exclaim" [icon]="faInfo"></fa-icon></button>
-                                                                            </td>
-                                                                      </tr>
-                                                                  </tbody>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr
+                                                                        *ngFor="let itemRow of item.allocatedRegistrants;">
+                                                                        <td>{{ itemRow.RegistrantName }}</td>
+                                                                        <td>
+                                                                            <button mat-icon-button color="primary"
+                                                                                [matTooltip]="itemRow.RegistrantName"
+                                                                                matTooltipPosition="left">
+                                                                                <fa-icon class="exclaim"
+                                                                                    [icon]="faInfo"></fa-icon>
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
                                                             </table>
                                                         </div>
                                                     </div>
@@ -256,11 +217,14 @@
                                                             <p class="py-1 m-0 d-flex justify-content-between alloc">
                                                                 <span class="title">Allocated Seats</span>
                                                                 <span class="badgee" [style.color]="tableItem.Colour"
-                                                                    style="background: white;">5</span>
+                                                                    style="background: white;">
+                                                                    {{tableItem.tablesAllocatedRegistrants && tableItem.tablesAllocatedRegistrants.length}}</span>
                                                             </p>
                                                             <p class="py-1 m-0 d-flex justify-content-between unalloc">
                                                                 <span class="title">Unallocated Seats</span>
-                                                                <span class="badgee">3</span>
+                                                                <span class="badgee">
+                                                                    {{tableItem.remainingUnallocatedRegistrantsSeats}}
+                                                                </span>
                                                             </p>
                                                         </div>
                                                         <div class="col-sm-3 color-pick text-right">
@@ -294,33 +258,33 @@
                                                 </div>
                                             </div>
                                             <mat-expansion-panel #innerExpansionPanel [hideToggle]="true"
-                                                (afterCollapse)="innerPanelClosed(j, tableItem, item.assignButtons)"
-                                                (afterExpand)="innerPannelOpened(j, tableItem, item.assignButtons)">
+                                                (afterCollapse)="innerPanelClosed(i, j)"
+                                                (afterExpand)="innerPannelOpened(i, j)">
                                                 <div class="table-wrap py-3 py-sm-3 d-block">
                                                     <!-- <div class="table-responsive">
                                                         <mat-table [dataSource]="dataSource" class="w-100"> -->
-                                                            <!--image column-->
-                                                            <!-- <ng-container matColumnDef="image">
+                                                    <!--image column-->
+                                                    <!-- <ng-container matColumnDef="image">
                                                                 <mat-header-cell *matHeaderCellDef> </mat-header-cell>
                                                                 <mat-cell *matCellDef="let element">
                                                                     <span
                                                                         class="icon-wrap d-flex align-items-center justify-content-center">
                                                                         T J -->
-                                                                        <!-- <img src="../../../assets/images/user.png" alt="" class="img-fluid"> -->
-                                                                    <!-- </span>
+                                                    <!-- <img src="../../../assets/images/user.png" alt="" class="img-fluid"> -->
+                                                    <!-- </span>
                                                                 </mat-cell>
                                                             </ng-container> -->
 
-                                                            <!-- Name Column -->
-                                                            <!-- <ng-container matColumnDef="name">
+                                                    <!-- Name Column -->
+                                                    <!-- <ng-container matColumnDef="name">
                                                                 <mat-header-cell *matHeaderCellDef> </mat-header-cell>
                                                                 <mat-cell *matCellDef="let element"> {{element.name}}
                                                                 </mat-cell>
                                                             </ng-container> -->
 
 
-                                                            <!-- Symbol Column -->
-                                                            <!-- <ng-container matColumnDef="symbol">
+                                                    <!-- Symbol Column -->
+                                                    <!-- <ng-container matColumnDef="symbol">
                                                                 <mat-header-cell mat-header-cell *matHeaderCellDef>
                                                                 </mat-header-cell>
                                                                 <mat-cell *matCellDef="let element">
@@ -352,37 +316,40 @@
                                                             </mat-row>
                                                         </mat-table> -->
                                                     <!-- </div> -->
-                                                    <div class="table-responsive">
+                                                    <div class="table-responsive heightScrollInner">
                                                         <table class="mat-table table mb-0">
                                                             <thead>
                                                                 <tr>
-                                                                  <th scope="col" class="image-th">Initials</th>
-                                                                  <th scope="col" class="name-th">Name</th>
-                                                                  <th scope="col" class="mail-th">Action</th>
+                                                                    <th scope="col" class="image-th">Initials</th>
+                                                                    <th scope="col" class="name-th">Name</th>
+                                                                    <th scope="col" class="mail-th">Action</th>
                                                                 </tr>
-                                                              </thead>
-                                                              <tbody>
-                                                                  <tr *ngFor="let item of innerTableRows">
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr
+                                                                    *ngFor="let tableInnerItem of tableItem.tablesAllocatedRegistrants">
                                                                     <td>
                                                                         <span
-                                                                        class="icon-wrap d-flex align-items-center justify-content-center">
-                                                                        {{ item.Initials }}
-                                                                        <!-- <img src="../../../assets/images/user.png" alt="" class="img-fluid"> -->
+                                                                            class="icon-wrap d-flex align-items-center justify-content-center">
+                                                                            {{ tableInnerItem.RegistrantName | slice:0:2 }}
+                                                                            <!-- <img src="../../../assets/images/user.png" alt="" class="img-fluid"> -->
                                                                         </span>
                                                                     </td>
-                                                                    <td>{{ item.FullName }}</td>
+                                                                    <td>{{ tableInnerItem.RegistrantName }}</td>
                                                                     <td>
                                                                         <button mat-icon-button color="primary">
                                                                             <fa-icon class="exclaim" [icon]="faInfo">
                                                                             </fa-icon>
                                                                         </button>
                                                                         <button mat-icon-button color="warn">
-                                                                            <fa-icon class="exclaim" [icon]="faTrashAlt">
+                                                                            <fa-icon class="exclaim"
+                                                                                [icon]="faTrashAlt">
                                                                             </fa-icon>
                                                                         </button>
                                                                         <button mat-icon-button color="primary"
                                                                             [matMenuTriggerFor]="beforeMenu">
-                                                                            <fa-icon class="exclaim" [icon]="faEllipsisV">
+                                                                            <fa-icon class="exclaim"
+                                                                                [icon]="faEllipsisV">
                                                                             </fa-icon>
                                                                         </button>
                                                                         <mat-menu class="m-mi" #beforeMenu="matMenu"
@@ -391,18 +358,14 @@
                                                                             <button mat-menu-item>Item 2</button>
                                                                         </mat-menu>
                                                                     </td>
-                                                                  </tr>
-                                                              </tbody>
+                                                                </tr>
+                                                            </tbody>
                                                         </table>
                                                     </div>
                                                 </div>
                                             </mat-expansion-panel>
                                         </div>
                                     </mat-accordion>
-                                    <div class="top-buttons d-flex align-items-center justify-content-end pt-2 pt-md-3">
-                                        <button mat-raised-button class="mx-2">Cancel</button>
-                                        <button mat-raised-button color="primary" class="mx-2">Save</button>
-                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -50,10 +50,9 @@ export class SeatAllocationComponent implements OnInit {
   faChevronDown = faChevronDown;
 
   setAssignButtons: any;
-
   allTablesClosed: boolean = false;
-
   respectiveTableName: string = '';
+  isLoading: boolean = false;
 
   unallocatedTableRows = [{
     isSelected: false,
@@ -141,9 +140,9 @@ export class SeatAllocationComponent implements OnInit {
     private seatallocationService: SeatallocationService) { }
 
   ngOnInit() {
+    this.isLoading = true;
     let currentURL = window.location.href;
     this.eventID = currentURL.substring(currentURL.indexOf("EventKey=") + 9, currentURL.indexOf("&"));
-    // localStorage.setItem('eventID', currentURL.substring(currentURL.indexOf("EventKey=") + 9, currentURL.indexOf("&")));
     this.getPrograms();
   }
 
@@ -176,9 +175,12 @@ export class SeatAllocationComponent implements OnInit {
           }
           this.programs = Functions.concat(RegistrationOptions);
           this.getSessions();
+        } else {
+          this.isLoading = false;
         }
       }, error => {
         this.toast.error("Something went wrong!! Please try again later!!", "Error");
+        this.isLoading = false;
       }
     )
   }
@@ -212,9 +214,12 @@ export class SeatAllocationComponent implements OnInit {
             })
           })
           this.getTables();
+        } else {
+          this.isLoading = false;
         }
       }, error => {
         this.toast.error("Something went wrong!! Please try again later!!", "Error");
+        this.isLoading = false;
       }
     )
   }
@@ -238,26 +243,34 @@ export class SeatAllocationComponent implements OnInit {
         this.getRegitrants();
       }, error => {
         this.toast.error("Something went wrong!! Please try again later!!", "Error");
+        this.isLoading = false;
       }
     )
   }
 
   // fetch the registrants as per the current EventID
   async getRegitrants() {
-    this.advancedSessions.map(ele => {
+    this.advancedSessions.map((ele, index) => {
       this.seatallocationService.getRegistrants(this.eventID, ele.Ordinal).subscribe(
         result => {
-          let abc = [];
+          let registrantsResult = [];
           if (result.length > 0) {
             result.map((ele1: any, index) => {
-              abc[index] = []
+              registrantsResult[index] = []
               ele1.Properties.$values.map(ele1 => {
-                abc[index][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
+                registrantsResult[index][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
               })
             })
-            ele['allRegistrants'] = abc.filter(ele1 => ele1.SessionID == ele.Ordinal);
-            ele['unallocatedRegistrants'] = abc.filter(ele1 => ele1.TableID == 0);
-            ele['allocatedRegistrants'] = abc.filter(ele1 => ele1.TableID != 0);
+            ele['allRegistrants'] = registrantsResult;
+            ele['unallocatedRegistrants'] = registrantsResult.filter(ele1 => ele1.TableID == 0);
+            ele['allocatedRegistrants'] = registrantsResult.filter(ele1 => ele1.TableID != 0);
+            ele.tables.map(ele1 => {
+              ele1['tablesAllocatedRegistrants'] = registrantsResult.filter(ele2 => ele2.TableID == ele1.Ordinal);
+              ele1['remainingUnallocatedRegistrantsSeats'] = parseInt(ele1.NumSeats) - parseInt(ele1['tablesAllocatedRegistrants'].length)
+            })
+          }
+          if (this.advancedSessions.length == index + 1) {
+            this.isLoading = false;
           }
         }, error => {
           this.toast.error("Something went wrong!! Please try again later!!", "Error");
@@ -279,7 +292,6 @@ export class SeatAllocationComponent implements OnInit {
       if (response.type == 'add') {
         if (response.data && response.data.length > 0) {
           let programNamesWithQuotes = '"' + response.data[0].Properties.$values.filter(ele => ele.Name == 'Programs')[0].Value.split(",").join('","') + '"';
-          console.log(programNamesWithQuotes);
           this.seatallocationService.getIQARegistrants(programNamesWithQuotes).subscribe(
             (result: any) => {
               if (result.length > 0) {
@@ -390,7 +402,6 @@ export class SeatAllocationComponent implements OnInit {
       } else if (response.type == 'Edit') {
         if (response.data && response.data.length > 0) {
           let programNamesWithQuotes = '"' + response.data[0].Properties.$values.filter(ele => ele.Name == 'Programs')[0].Value.split(",").join('","') + '"';
-          console.log(programNamesWithQuotes);
           this.seatallocationService.getIQARegistrants(programNamesWithQuotes).subscribe(
             (result: any) => {
               if (result.length > 0) {
@@ -406,12 +417,8 @@ export class SeatAllocationComponent implements OnInit {
                     filteredResult[index][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
                   })
                 })
-                console.log(filteredResult)
-                console.log(this.advancedSessions[sessionIndex])
                 let uniqueNewRegistrants = filteredResult.filter(x => !this.advancedSessions[sessionIndex].allRegistrants.some(registrant => registrant.RegistrantID === x.RegistrantID));
                 let uniqueOldRegistrants = this.advancedSessions[sessionIndex].allRegistrants.filter(x => !filteredResult.some(registrant => registrant.RegistrantID === x.RegistrantID));
-                console.log(uniqueNewRegistrants);
-                console.log(uniqueOldRegistrants);
                 let uniqueOldRegistrantsCount = 0;
                 uniqueOldRegistrants.map(ele => {
                   this.seatallocationService.deleteRegistrant(ele.Ordinal).subscribe(
@@ -659,41 +666,22 @@ export class SeatAllocationComponent implements OnInit {
 
   afterPanelOpened(i) {
     this.mainPanelIcon = i;
-    if (this.unallocatedTableRows.length > 0 && this.setAssignButtons.tables.length > 0) {
-      let panelInner = this.innerPanelClosed(0, false, false);
-      if (!panelInner) {
-        this.setAssignButtons.assignButtons.autoAssignTable = true;
-        this.setAssignButtons.assignButtons.autoAssignAll = false;
-      } else {
-        this.setAssignButtons.assignButtons.autoAssignAll = true;
-        this.setAssignButtons.assignButtons.autoAssignTable = false;
-      }
-    }
   }
   // main expansion pannel open and closed controls handeling ends
 
   // inner expansion pannel open and closed constrols handeling starts
-  innerPannelOpened(j, tableItems, assignButtonsObj) {
+  innerPannelOpened(i, j) {
     this.innerPanelIcon = j;
-    // respectiveTableName
-    if (this.unallocatedTableRows.length > 0 && this.setAssignButtons.tables.length > 0) {
-      this.setAssignButtons.assignButtons.autoAssignTable = true;
-      this.setAssignButtons.assignButtons.autoAssignAll = false;
-      this.respectiveTableName = tableItems.TableName;
-    }
-    return true;
+    this.advancedSessions[i]['tableOpened'] = this.advancedSessions[i].tables[j];
   }
 
-  innerPanelClosed(j, tableItems: any, assignButtonsObj: any) {
+  innerPanelClosed(i, j) {
     var preval = this.innerPanelIcon;
     if (preval < j) {
       this.innerPanelIcon = preval;
-      return true;
     } else {
       this.innerPanelIcon = -1;
-      this.setAssignButtons.assignButtons.autoAssignTable = false;
-      this.setAssignButtons.assignButtons.autoAssignAll = true;
-      return false;
+      this.advancedSessions[i]['tableOpened'] = null;
     }
   }
   // inner expansion pannel open and closed constrols handling ends
@@ -796,6 +784,526 @@ export class SeatAllocationComponent implements OnInit {
         this.toast.error("Something went wrong!! Please try again later!!", "Error");
       }
     )
+  }
+
+  // checked unchecked checkboxes for multi select
+  selectUnselectMultiSelect(event, sessionIndex) {
+    if (event) {
+      let totalCheckCountSelection = 0;
+      if (this.advancedSessions[sessionIndex].unallocatedRegistrants.length == 0) {
+        this.advancedSessions[sessionIndex]['multiSelectChecked'] = false;
+        this.advancedSessions[sessionIndex]['multiSelectIndeterminate'] = false;
+      } else {
+        this.advancedSessions[sessionIndex].unallocatedRegistrants.map((ele, index) => {
+          ele.multiSelect = true;
+          totalCheckCountSelection += 1;
+          if (this.advancedSessions[sessionIndex].unallocatedRegistrants.length == index + 1 && totalCheckCountSelection == 0) {
+            this.advancedSessions[sessionIndex]['multiSelectChecked'] = false;
+            this.advancedSessions[sessionIndex]['multiSelectIndeterminate'] = false;
+          }
+        })
+      }
+    } else {
+      this.advancedSessions[sessionIndex].unallocatedRegistrants.map((ele, index) => {
+        ele.multiSelect = false;
+      })
+    }
+  }
+
+  // checked unchecked checkboxes for multi select on single checkbox
+  multiSelectCheckBoxes(sessionIndex) {
+    let checkCountSelection = 0;
+    let totalCheckCountSelection = 0;
+    this.advancedSessions[sessionIndex].unallocatedRegistrants.map((ele, index) => {
+      if (ele.multiSelect) {
+        checkCountSelection += 1;
+      }
+      totalCheckCountSelection += 1;
+
+      if (this.advancedSessions[sessionIndex].unallocatedRegistrants.length == index + 1) {
+        if (totalCheckCountSelection != 0) {
+          if (totalCheckCountSelection == checkCountSelection) {
+            this.advancedSessions[sessionIndex]['multiSelectChecked'] = true;
+            this.advancedSessions[sessionIndex]['multiSelectIndeterminate'] = false;
+          } else if (totalCheckCountSelection > checkCountSelection && checkCountSelection != 0) {
+            this.advancedSessions[sessionIndex]['multiSelectChecked'] = false;
+            this.advancedSessions[sessionIndex]['multiSelectIndeterminate'] = true;
+          } else if (totalCheckCountSelection > 0 && checkCountSelection == 0) {
+            this.advancedSessions[sessionIndex]['multiSelectChecked'] = false;
+            this.advancedSessions[sessionIndex]['multiSelectIndeterminate'] = false;
+          }
+        } else {
+          this.advancedSessions[sessionIndex]['multiSelectChecked'] = false;
+          this.advancedSessions[sessionIndex]['multiSelectIndeterminate'] = false;
+        }
+      }
+    })
+  }
+
+  // auto assign the registrants to all the tables
+  async autoAssignAll(sessionIndex) {
+    this.isLoading = true;
+    let totalUnallocated = 0;
+    let unallocatedTableDetails = [];
+
+    this.advancedSessions[sessionIndex].tables.map(ele => {
+      totalUnallocated = totalUnallocated + parseInt(ele.remainingUnallocatedRegistrantsSeats);
+      for (let i = 0; i < parseInt(ele.remainingUnallocatedRegistrantsSeats); i++) {
+        unallocatedTableDetails.push(ele);
+      }
+    })
+
+    if (totalUnallocated > 0) {
+      let unallocatedRegistrants = this.advancedSessions[sessionIndex].unallocatedRegistrants;
+      let RegistrantsData = [];
+
+      for (let i = 0; i < totalUnallocated; i++) {
+        if (unallocatedRegistrants.length > i) {
+          RegistrantsData.push({
+            registrantID: unallocatedRegistrants[i].Ordinal,
+            registrant: [{
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "Ordinal",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": unallocatedRegistrants[i].Ordinal
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "SessionID",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": unallocatedRegistrants[i].SessionID
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "EventID",
+              "Value": unallocatedRegistrants[i].EventID
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "RegistrantID",
+              "Value": unallocatedRegistrants[i].RegistrantID
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "RegistrantName",
+              "Value": unallocatedRegistrants[i].RegistrantName
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "SortOrder",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": 0
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "TableID",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": unallocatedTableDetails[i].Ordinal
+              }
+            }]
+          });
+        }
+        if (totalUnallocated == i + 1) {
+          let increamentedValue = 0;
+          RegistrantsData.map(ele => {
+            this.seatallocationService.updateRegistrant(ele).subscribe(
+              result => {
+                increamentedValue = increamentedValue + 1;
+                if (increamentedValue == RegistrantsData.length) {
+                  this.seatallocationService.getRegistrants(this.eventID, this.advancedSessions[sessionIndex].Ordinal).subscribe(
+                    result1 => {
+                      let registrantsResult = [];
+                      result1.map((ele1: any, index) => {
+                        registrantsResult[index] = []
+                        ele1.Properties.$values.map(ele1 => {
+                          registrantsResult[index][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
+                        })
+                      })
+
+                      let unallocatedRegistrantsLength = registrantsResult.filter(ele1 => ele1.TableID == 0);
+                      let allocatedRegistrantsLength = registrantsResult.filter(ele1 => ele1.TableID != 0);
+
+                      let sessionData = new Array();
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "Ordinal",
+                        "Value": { "$type": "System.Int32", "$value": this.advancedSessions[sessionIndex].Ordinal }
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "TotalUnallocated",
+                        "Value": { "$type": "System.Int32", "$value": unallocatedRegistrantsLength.length }
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "TotalAllocated",
+                        "Value": { "$type": "System.Int32", "$value": allocatedRegistrantsLength.length }
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "TotalSeats",
+                        "Value": { "$type": "System.Int32", "$value": this.advancedSessions[sessionIndex].TotalSeats }
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "TotalTables",
+                        "Value": { "$type": "System.Int32", "$value": this.advancedSessions[sessionIndex].TotalTables }
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "Programs",
+                        "Value": this.advancedSessions[sessionIndex].Programs.toString()
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "SessionName",
+                        "Value": this.advancedSessions[sessionIndex].SessionName
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "EventID",
+                        "Value": this.advancedSessions[sessionIndex].EventID
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "SessionTimeStamp",
+                        "Value": this.advancedSessions[sessionIndex].SessionTimeStamp
+                      })
+
+                      this.seatallocationService.updateSession({ sessionID: this.advancedSessions[sessionIndex].Ordinal, session: sessionData }).subscribe(
+                        result => {
+                          this.toast.success("Auto Assign All has been completed. Please wait while we are updating the records!!", "Success");
+                          this.getPrograms();
+                        }, error => {
+                          this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                        }
+                      )
+                    }, error1 => {
+                      this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                    }
+                  )
+                }
+              }, error => {
+                this.toast.error("Something went wrong!! Please try again later!!", "Error");
+              }
+            )
+          })
+        }
+      }
+    } else {
+      this.isLoading = false;
+    }
+  }
+
+  // auto assign the registrants to the selected table
+  async autoAssignAllToTable(sessionIndex) {
+    this.isLoading = true;
+    if (this.advancedSessions[sessionIndex].tables.filter(ele => ele.Ordinal == this.advancedSessions[sessionIndex].tableOpened.Ordinal)[0].remainingUnallocatedRegistrantsSeats > 0) {
+      let unallocatedRegistrants = this.advancedSessions[sessionIndex].unallocatedRegistrants;
+      let RegistrantsData = [];
+
+      for (let i = 0; i < this.advancedSessions[sessionIndex].tables.filter(ele => ele.Ordinal == this.advancedSessions[sessionIndex].tableOpened.Ordinal)[0].remainingUnallocatedRegistrantsSeats; i++) {
+        if (unallocatedRegistrants.length > i) {
+          RegistrantsData.push({
+            registrantID: unallocatedRegistrants[i].Ordinal,
+            registrant: [{
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "Ordinal",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": unallocatedRegistrants[i].Ordinal
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "SessionID",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": unallocatedRegistrants[i].SessionID
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "EventID",
+              "Value": unallocatedRegistrants[i].EventID
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "RegistrantID",
+              "Value": unallocatedRegistrants[i].RegistrantID
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "RegistrantName",
+              "Value": unallocatedRegistrants[i].RegistrantName
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "SortOrder",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": 0
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "TableID",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": this.advancedSessions[sessionIndex].tables.filter(ele => ele.Ordinal == this.advancedSessions[sessionIndex].tableOpened.Ordinal)[0].Ordinal
+              }
+            }]
+          });
+        }
+        if (this.advancedSessions[sessionIndex].tables.filter(ele => ele.Ordinal == this.advancedSessions[sessionIndex].tableOpened.Ordinal)[0].remainingUnallocatedRegistrantsSeats == i + 1) {
+          let increamentedValue = 0;
+          RegistrantsData.map(ele => {
+            this.seatallocationService.updateRegistrant(ele).subscribe(
+              result => {
+                increamentedValue = increamentedValue + 1;
+                if (increamentedValue == RegistrantsData.length) {
+                  this.seatallocationService.getRegistrants(this.eventID, this.advancedSessions[sessionIndex].Ordinal).subscribe(
+                    result1 => {
+                      let registrantsResult = [];
+                      result1.map((ele1: any, index) => {
+                        registrantsResult[index] = []
+                        ele1.Properties.$values.map(ele1 => {
+                          registrantsResult[index][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
+                        })
+                      })
+
+                      let unallocatedRegistrantsLength = registrantsResult.filter(ele1 => ele1.TableID == 0);
+                      let allocatedRegistrantsLength = registrantsResult.filter(ele1 => ele1.TableID != 0);
+
+                      let sessionData = new Array();
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "Ordinal",
+                        "Value": { "$type": "System.Int32", "$value": this.advancedSessions[sessionIndex].Ordinal }
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "TotalUnallocated",
+                        "Value": { "$type": "System.Int32", "$value": unallocatedRegistrantsLength.length }
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "TotalAllocated",
+                        "Value": { "$type": "System.Int32", "$value": allocatedRegistrantsLength.length }
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "TotalSeats",
+                        "Value": { "$type": "System.Int32", "$value": this.advancedSessions[sessionIndex].TotalSeats }
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "TotalTables",
+                        "Value": { "$type": "System.Int32", "$value": this.advancedSessions[sessionIndex].TotalTables }
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "Programs",
+                        "Value": this.advancedSessions[sessionIndex].Programs.toString()
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "SessionName",
+                        "Value": this.advancedSessions[sessionIndex].SessionName
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "EventID",
+                        "Value": this.advancedSessions[sessionIndex].EventID
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "SessionTimeStamp",
+                        "Value": this.advancedSessions[sessionIndex].SessionTimeStamp
+                      })
+
+                      this.seatallocationService.updateSession({ sessionID: this.advancedSessions[sessionIndex].Ordinal, session: sessionData }).subscribe(
+                        result => {
+                          this.toast.success("Auto Assign has been completed. Please wait while we are updating the records!!", "Success");
+                          this.getPrograms();
+                        }, error => {
+                          this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                        }
+                      )
+                    }, error1 => {
+                      this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                    }
+                  )
+                }
+              }, error => {
+                this.toast.error("Something went wrong!! Please try again later!!", "Error");
+              }
+            )
+          })
+        }
+      }
+    } else {
+      this.isLoading = false;
+    }
+  }
+
+  // manual assign the registrants to the selected table
+  async manualAssignAllToTable(sessionIndex) {
+    this.isLoading = true;
+    if (this.advancedSessions[sessionIndex].tables.filter(ele => ele.Ordinal == this.advancedSessions[sessionIndex].tableOpened.Ordinal)[0].remainingUnallocatedRegistrantsSeats > 0) {
+      let unallocatedRegistrants = this.advancedSessions[sessionIndex].unallocatedRegistrants.filter(ele => ele.multiSelect);
+      let RegistrantsData = [];
+
+      for (let i = 0; i < this.advancedSessions[sessionIndex].tables.filter(ele => ele.Ordinal == this.advancedSessions[sessionIndex].tableOpened.Ordinal)[0].remainingUnallocatedRegistrantsSeats; i++) {
+        if (unallocatedRegistrants.length > i) {
+          RegistrantsData.push({
+            registrantID: unallocatedRegistrants[i].Ordinal,
+            registrant: [{
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "Ordinal",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": unallocatedRegistrants[i].Ordinal
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "SessionID",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": unallocatedRegistrants[i].SessionID
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "EventID",
+              "Value": unallocatedRegistrants[i].EventID
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "RegistrantID",
+              "Value": unallocatedRegistrants[i].RegistrantID
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "RegistrantName",
+              "Value": unallocatedRegistrants[i].RegistrantName
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "SortOrder",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": 0
+              }
+            },
+            {
+              "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+              "Name": "TableID",
+              "Value": {
+                "$type": "System.Int32",
+                "$value": this.advancedSessions[sessionIndex].tables.filter(ele => ele.Ordinal == this.advancedSessions[sessionIndex].tableOpened.Ordinal)[0].Ordinal
+              }
+            }]
+          });
+        }
+        if (this.advancedSessions[sessionIndex].tables.filter(ele => ele.Ordinal == this.advancedSessions[sessionIndex].tableOpened.Ordinal)[0].remainingUnallocatedRegistrantsSeats == i + 1) {
+          let increamentedValue = 0;
+          RegistrantsData.map(ele => {
+            this.seatallocationService.updateRegistrant(ele).subscribe(
+              result => {
+                increamentedValue = increamentedValue + 1;
+                if (increamentedValue == RegistrantsData.length) {
+                  this.seatallocationService.getRegistrants(this.eventID, this.advancedSessions[sessionIndex].Ordinal).subscribe(
+                    result1 => {
+                      let registrantsResult = [];
+                      result1.map((ele1: any, index) => {
+                        registrantsResult[index] = []
+                        ele1.Properties.$values.map(ele1 => {
+                          registrantsResult[index][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
+                        })
+                      })
+
+                      let unallocatedRegistrantsLength = registrantsResult.filter(ele1 => ele1.TableID == 0);
+                      let allocatedRegistrantsLength = registrantsResult.filter(ele1 => ele1.TableID != 0);
+
+                      let sessionData = new Array();
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "Ordinal",
+                        "Value": { "$type": "System.Int32", "$value": this.advancedSessions[sessionIndex].Ordinal }
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "TotalUnallocated",
+                        "Value": { "$type": "System.Int32", "$value": unallocatedRegistrantsLength.length }
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "TotalAllocated",
+                        "Value": { "$type": "System.Int32", "$value": allocatedRegistrantsLength.length }
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "TotalSeats",
+                        "Value": { "$type": "System.Int32", "$value": this.advancedSessions[sessionIndex].TotalSeats }
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "TotalTables",
+                        "Value": { "$type": "System.Int32", "$value": this.advancedSessions[sessionIndex].TotalTables }
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "Programs",
+                        "Value": this.advancedSessions[sessionIndex].Programs.toString()
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "SessionName",
+                        "Value": this.advancedSessions[sessionIndex].SessionName
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "EventID",
+                        "Value": this.advancedSessions[sessionIndex].EventID
+                      })
+                      sessionData.push({
+                        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+                        "Name": "SessionTimeStamp",
+                        "Value": this.advancedSessions[sessionIndex].SessionTimeStamp
+                      })
+
+                      this.seatallocationService.updateSession({ sessionID: this.advancedSessions[sessionIndex].Ordinal, session: sessionData }).subscribe(
+                        result => {
+                          this.toast.success("Manual Assign has been completed. Please wait while we are updating the records!!", "Success");
+                          this.getPrograms();
+                        }, error => {
+                          this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                        }
+                      )
+                    }, error1 => {
+                      this.toast.error("Something went wrong!! Please try again later!!", "Error");
+                    }
+                  )
+                }
+              }, error => {
+                this.toast.error("Something went wrong!! Please try again later!!", "Error");
+              }
+            )
+          })
+        }
+      }
+    } else {
+      this.isLoading = false;
+    }
   }
 }
 

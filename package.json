@@ -25,10 +25,11 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "bootstrap": "^4.4.1",
-    "ngx-toastr": "11.3.3",
     "hammerjs": "^2.0.8",
     "ng-multiselect-dropdown": "^0.2.10",
     "ngx-color-picker": "^9.0.0",
+    "ngx-loading": "^8.0.0",
+    "ngx-toastr": "11.3.3",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"

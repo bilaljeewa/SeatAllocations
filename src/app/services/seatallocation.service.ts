@@ -48785,7 +48785,7 @@ export class SeatallocationService {
           "Name": "TableID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 0
+            "$value": 2
           }
         }]
       }
@@ -50841,6 +50841,56 @@ export class SeatallocationService {
     return of(data).pipe(delay(500));
   }
   // get registrants starts
+
+
+
+
+  // update registrant starts
+  public updateRegistrant(data): Observable<Sessions> {
+    if (this.live) return this.updateLiveRegistrant(data);
+    else return this.updateFakedRegistrant(data);
+  }
+
+  private updateLiveRegistrant(data): Observable<Sessions> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'RequestVerificationToken': this.token
+      })
+    }
+    let postRegistrantData = {
+      "$type": "Asi.Soa.Core.DataContracts.GenericEntityData, Asi.Contracts",
+      "EntityTypeName": "Psc_Event_Registrant",
+      "PrimaryParentEntityTypeName": "Standalone",
+      "Identity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Psc_Event_Registrant",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": [data.registrantID]
+        }
+      },
+      "PrimaryParentIdentity": {
+        "$type": "Asi.Soa.Core.DataContracts.IdentityData, Asi.Contracts",
+        "EntityTypeName": "Standalone",
+        "IdentityElements": {
+          "$type": "System.Collections.ObjectModel.Collection`1[[System.String, mscorlib]], mscorlib",
+          "$values": [data.registrantID]
+        }
+      },
+      "Properties": {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyDataCollection, Asi.Contracts",
+        "$values": data.registrant
+      }
+    }
+    let url = this.baseUrl + 'api/Psc_Event_Registrant/' + data.registrantID;
+    return this.httpClient.put(url, postRegistrantData, httpOptions).pipe(map((res: Sessions) => { return res; }));
+  }
+
+  private updateFakedRegistrant(data): Observable<Sessions> {
+    return of(data).pipe(delay(500));
+  }
+  // update session ends
 
 
 

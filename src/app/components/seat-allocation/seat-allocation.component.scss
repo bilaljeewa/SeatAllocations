@@ -134,6 +134,14 @@ button {
   outline: none;
 }
 
+.heightScroll {
+  max-height: 500px;
+}
+
+.heightScrollInner {
+  max-height: 200px;
+}
+
 .session-wrap {
   box-shadow: 0 0 10px rgba(123, 123, 123, 0.1);
   background: #fff;
