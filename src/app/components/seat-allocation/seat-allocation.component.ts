@@ -182,20 +182,21 @@ export class SeatAllocationComponent implements OnInit {
             }
           }
           if (this.advancedSessions.length == index + 1) {
-            this.advancedSessions.map((ele4, index4) => {
-              if (ele4['allocatedRegistrants'].length > 0) {
-                ele4['allocatedRegistrants'].map(ele1 => {
-                  ele1['tableName'] = "";
-                  let filteredTables = ele4.tables.filter(ele2 => ele2.Ordinal == ele1.TableID);
-                  if (filteredTables.length > 0) {
-                    ele1['tableName'] = filteredTables[0].TableName;
-                  }
-                })
-              }
-              if (this.advancedSessions.length == index4 + 1) {
-                this.isLoading = false;
-              }
-            })
+            this.isLoading = false;
+            // this.advancedSessions.map((ele4, index4) => {
+            //   if (ele4['allocatedRegistrants'].length > 0) {
+            //     ele4['allocatedRegistrants'].map(ele1 => {
+            //       ele1['tableName'] = "";
+            //       let filteredTables = ele4.tables.filter(ele2 => ele2.Ordinal == ele1.TableID);
+            //       if (filteredTables.length > 0) {
+            //         ele1['tableName'] = filteredTables[0].TableName;
+            //       }
+            //     })
+            //   }
+            //   if (this.advancedSessions.length == index4 + 1) {
+            //     this.isLoading = false;
+            //   }
+            // })
           }
         }, error => {
           this.toast.error("Something went wrong!! Please try again later!!", "Error");
