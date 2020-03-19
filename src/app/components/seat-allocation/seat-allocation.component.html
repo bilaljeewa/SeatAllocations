@@ -94,15 +94,15 @@
                                                         <div class="button-wrap text-right">
                                                             <button mat-raised-button color="primary" class="ml-2 mb-2"
                                                                 *ngIf="item.unallocatedRegistrants && item.unallocatedRegistrants.length>0 && item.tables && item.tables.length>0 && !item.multiSelectChecked && !item.multiSelectIndeterminate && item.tableOpened == null"
-                                                                (click)="autoAssignAll(i)">
+                                                                (click)="autoAssignAll(i); do($event);">
                                                                 Auto Assign All</button>
                                                             <button mat-raised-button color="primary" class="ml-2 mb-2"
                                                                 *ngIf="item.unallocatedRegistrants && item.unallocatedRegistrants.length>0 && item.tables && item.tables.length>0 && item.tableOpened != null && !item.multiSelectChecked && !item.multiSelectIndeterminate"
-                                                                (click)="autoAssignAllToTable(i)">
+                                                                (click)="autoAssignAllToTable(i); do($event);">
                                                                 Auto Assign To {{item.tableOpened.TableName}}</button>
                                                             <button mat-raised-button color="primary" class="ml-2 mb-2"
                                                                 *ngIf="item.unallocatedRegistrants && item.unallocatedRegistrants.length>0 && item.tables && item.tables.length>0 && item.tableOpened != null && (item.multiSelectChecked || item.multiSelectIndeterminate)"
-                                                                (click)="manualAssignAllToTable(i)">
+                                                                (click)="manualAssignAllToTable(i); do($event);">
                                                                 Assign Selection To
                                                                 {{item.tableOpened.TableName}}</button>
                                                         </div>
@@ -296,12 +296,15 @@
                                                                         </td>
                                                                         <td>{{ innerTableInner.RegistrantName }}</td>
                                                                         <td>
-                                                                            <button mat-icon-button color="primary">
+                                                                            <button mat-icon-button color="primary"
+                                                                                [matTooltip]="innerTableInner.RegistrantName"
+                                                                                matTooltipPosition="left">
                                                                                 <fa-icon class="exclaim"
                                                                                     [icon]="faInfo">
                                                                                 </fa-icon>
                                                                             </button>
-                                                                            <button mat-icon-button color="warn">
+                                                                            <button mat-icon-button color="warn"
+                                                                                (click)="deleteRegistrantFromTable(i, innerTableInner); do($event);">
                                                                                 <fa-icon class="exclaim"
                                                                                     [icon]="faTrashAlt">
                                                                                 </fa-icon>
@@ -326,11 +329,6 @@
                                                 </mat-expansion-panel>
                                             </div>
                                         </mat-accordion>
-                                        <div
-                                            class="top-buttons d-flex align-items-center justify-content-end pt-2 pt-md-3">
-                                            <button mat-raised-button class="mx-2">Cancel</button>
-                                            <button mat-raised-button color="primary" class="mx-2">Save</button>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

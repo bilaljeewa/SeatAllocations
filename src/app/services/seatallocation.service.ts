@@ -48849,7 +48849,7 @@ export class SeatallocationService {
           "Name": "TableID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 0
+            "$value": 2
           }
         }]
       }
@@ -48913,7 +48913,7 @@ export class SeatallocationService {
           "Name": "TableID",
           "Value": {
             "$type": "System.Int32",
-            "$value": 0
+            "$value": 2
           }
         }]
       }

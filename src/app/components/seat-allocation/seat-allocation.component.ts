@@ -264,10 +264,12 @@ export class SeatAllocationComponent implements OnInit {
             ele['allRegistrants'] = registrantsResult;
             ele['unallocatedRegistrants'] = registrantsResult.filter(ele1 => ele1.TableID == 0);
             ele['allocatedRegistrants'] = registrantsResult.filter(ele1 => ele1.TableID != 0);
-            ele.tables.map(ele1 => {
-              ele1['tablesAllocatedRegistrants'] = registrantsResult.filter(ele2 => ele2.TableID == ele1.Ordinal);
-              ele1['remainingUnallocatedRegistrantsSeats'] = parseInt(ele1.NumSeats) - parseInt(ele1['tablesAllocatedRegistrants'].length)
-            })
+            if (ele.tables.length > 0) {
+              ele.tables.map(ele1 => {
+                ele1['tablesAllocatedRegistrants'] = registrantsResult.filter(ele2 => ele2.TableID == ele1.Ordinal);
+                ele1['remainingUnallocatedRegistrantsSeats'] = parseInt(ele1.NumSeats) - parseInt(ele1['tablesAllocatedRegistrants'].length)
+              })
+            }
           }
           if (this.advancedSessions.length == index + 1) {
             this.isLoading = false;
@@ -1301,6 +1303,124 @@ export class SeatAllocationComponent implements OnInit {
           })
         }
       }
+    } else {
+      this.isLoading = false;
+    }
+  }
+
+  // unallocated registrant from table
+  async deleteRegistrantFromTable(sessionIndex, innerTableInner) {
+    this.isLoading = true;
+    if (innerTableInner) {
+      let registrantData = [{
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+        "Name": "Ordinal",
+        "Value": {
+          "$type": "System.Int32",
+          "$value": innerTableInner.Ordinal
+        }
+      },
+      {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+        "Name": "SessionID",
+        "Value": {
+          "$type": "System.Int32",
+          "$value": innerTableInner.SessionID
+        }
+      },
+      {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+        "Name": "EventID",
+        "Value": innerTableInner.EventID
+      },
+      {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+        "Name": "RegistrantID",
+        "Value": innerTableInner.RegistrantID
+      },
+      {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+        "Name": "RegistrantName",
+        "Value": innerTableInner.RegistrantName
+      },
+      {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+        "Name": "SortOrder",
+        "Value": {
+          "$type": "System.Int32",
+          "$value": 0
+        }
+      },
+      {
+        "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+        "Name": "TableID",
+        "Value": {
+          "$type": "System.Int32",
+          "$value": 0
+        }
+      }]
+
+      this.seatallocationService.updateRegistrant({ registrantID: innerTableInner.Ordinal, registrant: registrantData }).subscribe(
+        result => {
+          let sessionData = new Array();
+          sessionData.push({
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "Ordinal",
+            "Value": { "$type": "System.Int32", "$value": this.advancedSessions[sessionIndex].Ordinal }
+          })
+          sessionData.push({
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "TotalUnallocated",
+            "Value": { "$type": "System.Int32", "$value": this.advancedSessions[sessionIndex].TotalUnallocated + 1 }
+          })
+          sessionData.push({
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "TotalAllocated",
+            "Value": { "$type": "System.Int32", "$value": this.advancedSessions[sessionIndex].TotalAllocated - 1 }
+          })
+          sessionData.push({
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "TotalSeats",
+            "Value": { "$type": "System.Int32", "$value": this.advancedSessions[sessionIndex].TotalSeats }
+          })
+          sessionData.push({
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "TotalTables",
+            "Value": { "$type": "System.Int32", "$value": this.advancedSessions[sessionIndex].TotalTables }
+          })
+          sessionData.push({
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "Programs",
+            "Value": this.advancedSessions[sessionIndex].Programs.toString()
+          })
+          sessionData.push({
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "SessionName",
+            "Value": this.advancedSessions[sessionIndex].SessionName
+          })
+          sessionData.push({
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "EventID",
+            "Value": this.advancedSessions[sessionIndex].EventID
+          })
+          sessionData.push({
+            "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
+            "Name": "SessionTimeStamp",
+            "Value": this.advancedSessions[sessionIndex].SessionTimeStamp
+          })
+
+          this.seatallocationService.updateSession({ sessionID: this.advancedSessions[sessionIndex].Ordinal, session: sessionData }).subscribe(
+            result1 => {
+              this.toast.success("Registrant deleted successfully!!. Please wait while we are updating the records!!", "Success");
+              this.getPrograms();
+            }, error1 => {
+              this.toast.error("Something went wrong!! Please try again later!!", "Error");
+            }
+          )
+        }, error => {
+          this.toast.error("Something went wrong!! Please try again later!!", "Error");
+        }
+      )
     } else {
       this.isLoading = false;
     }
