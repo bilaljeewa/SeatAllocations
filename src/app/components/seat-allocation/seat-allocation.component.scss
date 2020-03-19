@@ -5,6 +5,9 @@
 :host ::ng-deep {
   .multiselect-dropdown {
     padding-bottom: 1.25em;
+    ul {
+      overflow-x: hidden !important;
+    }
   }
 
   .dropdown-list {
@@ -561,8 +564,6 @@ button {
     margin-bottom: 0.5rem;
   }
 
- 
-
   fieldset {
     min-width: 0;
     padding: 0;
@@ -586,7 +587,6 @@ button {
     vertical-align: baseline;
   }
 
-  
   output {
     display: inline-block;
   }
