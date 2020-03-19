@@ -2087,12 +2087,12 @@ export class SessionTableDialogComponent {
                       sessionData.push({
                         "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
                         "Name": "TotalUnallocated",
-                        "Value": { "$type": "System.Int32", "$value": this.data.session.TotalUnallocated }
+                        "Value": { "$type": "System.Int32", "$value": parseInt(this.data.session.TotalUnallocated) + this.data.sessionTable.tablesAllocatedRegistrants.length }
                       })
                       sessionData.push({
                         "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
                         "Name": "TotalAllocated",
-                        "Value": { "$type": "System.Int32", "$value": this.data.session.TotalAllocated }
+                        "Value": { "$type": "System.Int32", "$value": parseInt(this.data.session.TotalAllocated) - this.data.sessionTable.tablesAllocatedRegistrants.length }
                       })
                       sessionData.push({
                         "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
