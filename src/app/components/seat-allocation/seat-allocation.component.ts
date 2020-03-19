@@ -168,6 +168,7 @@ export class SeatAllocationComponent implements OnInit {
                 registrantsResult[index1][ele1.Name] = typeof (ele1.Value) == 'object' ? ele1.Value.$value : ele1.Value;
               })
             })
+            registrantsResult = registrantsResult.sort((a, b) => parseInt(a.SortOrder) - parseInt(b.SortOrder));
             ele['allRegistrants'] = [];
             ele['allRegistrants'] = registrantsResult;
             ele['unallocatedRegistrants'] = [];
@@ -1656,6 +1657,11 @@ export class SeatAllocationComponent implements OnInit {
         })
       }
     })
+  }
+
+  // open the print url in new tab
+  openNewTab(sessionIndex) {
+    window.open(`https://imistour21161.imiscloud.com/staff/SeatAllocationReport?Event Code=${this.advancedSessions[sessionIndex].EventID}&SessionID=${this.advancedSessions[sessionIndex].Ordinal}`, "_blank");
   }
 }
 

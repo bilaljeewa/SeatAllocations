@@ -56,7 +56,12 @@
                                 <div class="col-lg-2 col-md-12 ">
                                     <div
                                         class="d-flex align-items-center justify-content-lg-center justify-content-end h-100 action">
-                                        <button mat-icon-button color="warn">
+                                        <button mat-icon-button style="color: green;" (click)="do($event);"
+                                            *ngIf="item.TotalUnallocated == 0">
+                                            <fa-icon class="exclaim" [icon]="faCheckCircle"></fa-icon>
+                                        </button>
+                                        <button mat-icon-button color="warn" (click)="do($event);"
+                                            *ngIf="item.TotalUnallocated > 0">
                                             <fa-icon class="exclaim" [icon]="faExclamationTriangle"></fa-icon>
                                         </button>
                                         <button mat-raised-button color="primary" class="mx-2"
@@ -182,7 +187,7 @@
                                                 </mat-tab>
                                             </mat-tab-group>
                                             <div class="refresh-btn">
-                                                <button mat-icon-button color="primary">
+                                                <button (click)="do($event);" mat-icon-button color="primary">
                                                     <fa-icon class="exclaim" [icon]="faSyncAlt"></fa-icon>
                                                 </button>
                                             </div>
@@ -194,7 +199,7 @@
                                     <div class="table-list-wrap p-2 p-sm-3">
                                         <div
                                             class="top-buttons d-flex align-items-center justify-content-end mb-2 mb-md-3">
-                                            <button mat-raised-button class="">
+                                            <button mat-raised-button (click)="openNewTab(i); do($event);">
                                                 <span>Print</span>
                                                 <fa-icon class="mx-2 printpdf" [icon]="faFilePdf"></fa-icon>
                                             </button>

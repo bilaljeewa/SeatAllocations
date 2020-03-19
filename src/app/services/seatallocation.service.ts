@@ -48778,7 +48778,7 @@ export class SeatallocationService {
           "Name": "SortOrder",
           "Value": {
             "$type": "System.Int32",
-            "$value": 0
+            "$value": 2
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
@@ -48842,7 +48842,7 @@ export class SeatallocationService {
           "Name": "SortOrder",
           "Value": {
             "$type": "System.Int32",
-            "$value": 0
+            "$value": 3
           }
         }, {
           "$type": "Asi.Soa.Core.DataContracts.GenericPropertyData, Asi.Contracts",
