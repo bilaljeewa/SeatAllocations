@@ -48651,9 +48651,9 @@ export class SeatallocationService {
     }
     let url;
     if (sessionID)
-      url = this.baseUrl + 'api/Psc_Event_Registrant?EventID=' + eventID + '&SessionID=' + sessionID;
+      url = this.baseUrl + 'api/Psc_Event_Registrant?EventID=' + eventID + '&SessionID=' + sessionID + '&Limit=500';
     else
-      url = this.baseUrl + 'api/Psc_Event_Registrant?EventID=' + eventID;
+      url = this.baseUrl + 'api/Psc_Event_Registrant?EventID=' + eventID + '&Limit=500';
     return this.httpClient.get(url, httpOptions)
       .pipe(map((res: any) => {
         return res.Items.$values
